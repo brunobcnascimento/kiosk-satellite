@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:kiosk_satellite/managers/voice/assist_view.dart';
 import 'package:kiosk_satellite/ui/assist/assist_panels.dart';
 import 'package:kiosk_satellite/ui/assist/assist_skins.dart';
@@ -102,6 +105,64 @@ void main() {
       tester.view.reset();
     });
   }
+
+  // Voice Satellite LLM Tools serves its condition icons as SVG, which
+  // Image.network drops without a word (issue #1182).
+  testWidgets('the weather icon draws SVG and raster images', (tester) async {
+    Widget panel(String icon) => MaterialApp(
+      home: Scaffold(
+        body: AssistResultPanel(
+          result: AssistResult('weather', {
+            'condition_icon': icon,
+            'current_temperature': '72 °F',
+          }),
+          skin: assistSkins.first,
+          dark: false,
+          scale: 1,
+          resolve: (u) => 'http://ha$u',
+          onOpen: (_, _) {},
+        ),
+      ),
+    );
+    const svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">'
+        '<circle cx="24" cy="24" r="10" fill="#FFC107"/></svg>';
+    final requests = <String>[];
+    await tester.runAsync(
+      () => http.runWithClient(
+        () async {
+          await tester.pumpWidget(
+            panel('/api/voice_satellite_llm_tools/weather_icons/clear_day.svg'),
+          );
+          for (var i = 0; i < 20 && requests.isEmpty; i++) {
+            await Future<void>.delayed(const Duration(milliseconds: 10));
+          }
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+        },
+        () => MockClient((request) async {
+          requests.add('${request.url}');
+          return http.Response(svg, 200);
+        }),
+      ),
+    );
+    await tester.pump();
+    expect(requests, [
+      'http://ha/api/voice_satellite_llm_tools/weather_icons/clear_day.svg',
+    ]);
+    expect(find.byType(SvgPicture), findsOneWidget);
+    // The decoded picture, not the placeholder or the error builder.
+    expect(
+      find.byWidgetPredicate(
+        (w) => '${w.runtimeType}'.contains('RawPictureVectorGraphic'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(Image), findsNothing);
+
+    await tester.pumpWidget(panel('/local/sunny.png'));
+    expect(find.byType(SvgPicture), findsNothing);
+    expect(find.byType(Image), findsOneWidget);
+  });
 
   test('the panel picks what Voice Satellite shows first', () {
     expect(primaryResult(results)!.kind, 'videos');

@@ -10,6 +10,7 @@ All notable changes to Kiosk Satellite are documented here. Full release notes f
 
 ### Fixed
 - **The calendar's Schedule shows the rest of today.** The Today panel now scrolls as a whole, so every event under Later today can be reached. Before, the date, the weather and Up next could fill the panel and leave Later today as a heading with nothing under it. Since the list on the right starts tomorrow, those events showed nowhere. Short screens such as the Echo Show 5 now list Later today too. The date reads on one line, such as Tuesday 27, since the header already names the month (#1181).
+- **The weather panel shows the condition icon.** When you ask for the weather, the icon next to the temperature now shows up. Voice Satellite LLM Tools serves its icons as SVG images, which the panel could not draw, so the spot stayed empty (#1182).
 
 ## v2026.10.42 - 2026-10-27
 

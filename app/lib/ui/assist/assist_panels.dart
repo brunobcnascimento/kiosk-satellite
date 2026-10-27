@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 import '../../l10n/messages.dart';
@@ -474,6 +475,9 @@ class AssistResultPanel extends StatelessWidget {
         shadows: glow == null ? null : [Shadow(color: glow, blurRadius: 8)],
       );
 
+  static bool _isSvg(String url) =>
+      (Uri.tryParse(url)?.path ?? url).toLowerCase().endsWith('.svg');
+
   Widget _weather(BuildContext context, PanelStyle style, PanelShape shape) {
     final data = result.data;
     final forecast = [
@@ -507,7 +511,16 @@ class AssistResultPanel extends StatelessWidget {
           child: Row(
             spacing: 20,
             children: [
-              if (icon.isNotEmpty)
+              // Voice Satellite LLM Tools serves its condition icons as
+              // SVG, which Image.network cannot decode.
+              if (icon.isNotEmpty && _isSvg(icon))
+                SvgPicture.network(
+                  resolve(icon),
+                  width: 96,
+                  height: 96,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                )
+              else if (icon.isNotEmpty)
                 Image.network(
                   resolve(icon),
                   width: 96,
