@@ -30,6 +30,10 @@ void main() {
       expect(kioskLinkAction('ks://calendar/year'), isNull);
       expect(kioskLinkAction('ks://music-library'), {'type': 'music_library'});
       expect(kioskLinkAction('ks://music-library/albums'), isNull);
+      expect(kioskLinkAction('ks://voice'), {'type': 'voice_wake'});
+      expect(kioskLinkAction('ks://voice/stop'), {'type': 'voice_stop'});
+      expect(kioskLinkAction('ks://voice/mute'), {'type': 'voice_mute'});
+      expect(kioskLinkAction('ks://voice/unmute'), isNull);
     });
 
     test('camera links pick a view, the default view or close', () {

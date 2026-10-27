@@ -85,6 +85,15 @@ Map<String, Object?>? kioskLinkAction(String url) {
       };
     case 'music-library':
       return arg == null ? const {'type': 'music_library'} : null;
+    case 'voice':
+      // A dashboard's own push to talk and mute buttons (discussion
+      // #1179), with no per-kiosk entity ids to write into the view.
+      return switch (arg) {
+        null => const {'type': 'voice_wake'},
+        'stop' => const {'type': 'voice_stop'},
+        'mute' => const {'type': 'voice_mute'},
+        _ => null,
+      };
   }
   return null;
 }

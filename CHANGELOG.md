@@ -2,6 +2,11 @@
 
 All notable changes to Kiosk Satellite are documented here. Full release notes for each version are available on the [releases page](https://github.com/jxlarrea/kiosk-satellite/releases).
 
+## Unreleased
+
+### Added
+- **Voice links for dashboard buttons.** `ks://voice` starts a voice command, `ks://voice/stop` ends it or dismisses a ringing timer and `ks://voice/mute` mutes or unmutes the wake word. Point a button's tap action at one to get a push to talk or mute button that works on every kiosk, with no entity IDs in the dashboard. See [Dashboard Links](https://github.com/jxlarrea/kiosk-satellite/blob/main/docs/dashboard-links.md) (#1179).
+
 ## v2026.10.42 - 2026-10-27
 
 ### Added

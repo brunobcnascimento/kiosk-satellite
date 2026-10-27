@@ -34,6 +34,9 @@ A `ks://` link runs the same action a [gesture](gestures.md) can, with the same 
 | `ks://calendar` | Opens the [calendar](calendar.md) on its default view. |
 | `ks://calendar/<view>` | Opens the calendar on `day`, `week`, `month` or `schedule`. |
 | `ks://music-library` | Opens the [Music Library](music-library.md). It does nothing until a source is set up. |
+| `ks://voice` | Starts a voice command, as if the wake word fired. Requires [Voice Satellite](voice-satellite.md) to be on. |
+| `ks://voice/stop` | Dismisses a ringing timer, or ends the voice command in progress. |
+| `ks://voice/mute` | Mutes the wake word, or unmutes it when it is muted. The same mute as the Voice Satellite **Mute** switch in Home Assistant. |
 | `ks://hold` | Toggles hold mode, which pins the current view. |
 | `ks://ha-kiosk` | Toggles HA kiosk mode, the Home Assistant header and sidebar. |
 | `ks://android-settings` | Opens the Android Settings app with the kiosk running behind it. |
