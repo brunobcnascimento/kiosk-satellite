@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 const source = readFileSync(new URL('../lib/managers/browser/ws_filter_script.dart', import.meta.url), 'utf8').split("r'''")[1].split("'''")[0];
 
-async function page({ hook = true, config, deferredConfig = false } = {}) {
+async function page({ hook = true, config, deferredConfig = false, states = {} } = {}) {
   const timers = new Map();
   const listeners = {};
   const frames = [];
@@ -20,6 +20,10 @@ async function page({ hook = true, config, deferredConfig = false } = {}) {
     assignments = 0;
     get hass() { return this.value; }
     set hass(value) { this.value = value; this.assignments++; this.onHass?.(value); }
+  }
+  class AutoEntities {
+    get hass() { return this.value; }
+    set hass(value) { this.value = value; }
   }
   class Socket {
     handlers = [];
@@ -48,8 +52,10 @@ async function page({ hook = true, config, deferredConfig = false } = {}) {
     addEventListener: (type, fn) => { listeners[type] = fn; },
   };
   const registry = {
-    whenDefined: () => hook ? Promise.resolve(hook === 'incomplete' ? class {} : Root) : new Promise(resolve => { define = resolve; }),
-    get: () => hook === 'incomplete' ? class {} : hook ? Root : undefined,
+    whenDefined: name => name === 'auto-entities' ? Promise.resolve(AutoEntities)
+      : hook ? Promise.resolve(hook === 'incomplete' ? class {} : Root) : new Promise(resolve => { define = resolve; }),
+    get: name => name === 'auto-entities' ? AutoEntities
+      : hook === 'incomplete' ? class {} : hook ? Root : undefined,
   };
   const context = vm.createContext({
     window: { WebSocket: Socket, customElements: registry,
@@ -90,6 +96,7 @@ async function page({ hook = true, config, deferredConfig = false } = {}) {
     'sun.sun': { s: 'above_horizon' },
     'media_player.dynamic': { s: 'paused', a: { volume_level: 0.2 } },
     'sensor.other': { s: '10' },
+    ...states,
   } });
   async function drain() {
     for (let i = 0; i < 30; i++) {
@@ -103,7 +110,7 @@ async function page({ hook = true, config, deferredConfig = false } = {}) {
   }
   await drain();
   return {
-    context, get root() { return root; }, host, frames, warnings, emit, drain, listeners, requests, cfg, Root,
+    context, get root() { return root; }, host, frames, warnings, emit, drain, listeners, requests, cfg, Root, AutoEntities,
     api: context.window.__ksWs,
     navigate(path) {
       context.location.pathname = path;
@@ -447,6 +454,44 @@ test('repeated injection does not wrap the dashboard setter again', async () => 
   const setter = Object.getOwnPropertyDescriptor(p.Root.prototype, 'hass').set;
   vm.runInContext(source, p.context);
   assert.equal(Object.getOwnPropertyDescriptor(p.Root.prototype, 'hass').set, setter);
+});
+
+const groupView = { views: [{ path: 'home', cards: [{ type: 'custom:auto-entities',
+  filter: { include: [{ group: 'group.lights', state: 'on' }] }, card: { type: 'entities' } }] }] };
+const groupStates = {
+  'group.lights': { s: 'on', a: { entity_id: ['light.a'] } },
+  'light.a': { s: 'on' },
+  'light.b': { s: 'off' },
+};
+
+test('resolves auto-entities group filters to the group members (issue #1170)', async () => {
+  const p = await page({ config: groupView, states: groupStates });
+  assert.equal(p.api.stats().mode, 'filtering');
+  assert.equal(p.api.allow.has('light.a'), true);
+  assert.equal(p.api.allow.has('group.lights'), true);
+  assert.equal(p.api.allow.has('light.b'), false);
+  p.emit({ c: { 'light.b': { '+': { s: 'on' } } } });
+  assert.equal(p.host.hass.states['light.b'].state, 'off');
+});
+
+test('rebuilds the allowlist when an auto-entities group gains a member', async () => {
+  const p = await page({ config: groupView, states: groupStates });
+  p.emit({ c: { 'group.lights': { '+': { a: { entity_id: ['light.a', 'light.b'] } } } } });
+  await p.drain();
+  assert.equal(p.api.allow.has('light.b'), true);
+  p.emit({ c: { 'light.b': { '+': { s: 'on' } } } });
+  assert.equal(p.host.hass.states['light.b'].state, 'on');
+});
+
+test('hands auto-entities the plain hass so its own scan keeps the view filtered', async () => {
+  const p = await page({ config: groupView, states: groupStates });
+  const card = new p.AutoEntities();
+  card.hass = p.root.hass;
+  assert.equal(card.hass, p.host.hass);
+  Object.keys(card.hass.states).forEach(id => card.hass.states[id]);
+  assert.equal(p.api.stats().runtimeAll, false);
+  assert.equal(p.api.stats().mode, 'filtering');
+  assert.equal(p.api.allow.has('light.b'), false);
 });
 
 test('a custom page under /local/ keeps its own sockets and says so', () => {

@@ -370,6 +370,7 @@ const wsFilterScript = r'''
     }
     var wrapped = new Proxy(hass, {
       get: function (target, key, receiver) {
+        if (key === RAW) return target;
         return key === 'states' ? tracked : Reflect.get(target, key, receiver);
       }
     });
@@ -422,13 +423,44 @@ const wsFilterScript = r'''
     attach(document);
   }
 
+  // auto-entities lists hass.states and reads every state on each update to
+  // evaluate its filters, so a tracked hass made every view with one pass
+  // through (issue #1170). build() already resolved its filters into the
+  // allowlist or lifted the view, so hand it the plain hass. Its inner card
+  // gets the same object and only shows entities the filters matched.
+  var RAW = typeof Symbol === 'function' ? Symbol('ksRawHass') : '__ksRawHass';
+  function untrackAuto(ctor) {
+    var proto = ctor && ctor.prototype;
+    if (!proto || runtimePrototypes.has(proto)) return;
+    var owner = proto, descriptor;
+    while (owner && !descriptor) {
+      descriptor = Object.getOwnPropertyDescriptor(owner, 'hass');
+      owner = Object.getPrototypeOf(owner);
+    }
+    // Without the accessor the card keeps the tracked hass and its view
+    // passes through, as before.
+    if (!descriptor || !descriptor.get || !descriptor.set || !descriptor.configurable) return;
+    Object.defineProperty(proto, 'hass', {
+      configurable: true, enumerable: descriptor.enumerable,
+      get: descriptor.get,
+      set: function (hass) {
+        return descriptor.set.call(this, (hass && hass[RAW]) || hass);
+      }
+    });
+    runtimePrototypes.add(proto);
+  }
+
   function watchRuntime() {
     var registry = window.customElements;
     if (!registry || typeof Proxy === 'undefined') return;
     try { installRuntime(registry.get('hui-view')); }
     catch (e) { runtimeFailure(String(e)); }
+    try { untrackAuto(registry.get('auto-entities')); } catch (e) {}
     if (runtimeRegistries.has(registry)) return;
     runtimeRegistries.add(registry);
+    registry.whenDefined('auto-entities').then(function (ctor) {
+      try { untrackAuto(ctor || registry.get('auto-entities')); } catch (e) {}
+    });
     registry.whenDefined('hui-view').then(function (ctor) {
       // The old native registry can resolve with the polyfill's stand-in
       // after the real class has already been installed in the new registry.
@@ -476,10 +508,10 @@ const wsFilterScript = r'''
   // same identities HA itself resolves them with. Over-include on purpose:
   // volatile tests (state/attributes) never shrink the set and excludes are
   // ignored — an extra allowed entity costs a few updates, a missing one means
-  // a stale card. Filters we cannot resolve structurally (templates, name or
-  // group matches, boolean combinators) make the whole view unfilterable: the
+  // a stale card. Filters we cannot resolve structurally (templates, name
+  // matches, boolean combinators) make the whole view unfilterable: the
   // caller passes it through, which is always correct, just not faster.
-  var AUTO_STRUCT = ['domain', 'entity_id', 'area', 'label', 'device', 'integration'];
+  var AUTO_STRUCT = ['domain', 'entity_id', 'area', 'label', 'device', 'integration', 'group'];
   var AUTO_VOLATILE = ['state', 'attributes', 'last_changed', 'last_updated',
     'last_triggered', 'sort', 'options', 'type', 'active_choice'];
   function globRe(g) {
@@ -555,6 +587,17 @@ const wsFilterScript = r'''
           var e = ents[id];
           return !!e && (e.labels || []).some(function (l) { return wl.indexOf(l) >= 0; });
         });
+      }
+      // auto-entities matches the group's direct members, the ids in its
+      // entity_id attribute. The group itself stays on the allowlist, so a
+      // membership change reaches applyChange and rebuilds the list.
+      if (c.group != null) {
+        var members = new Set();
+        vals(c.group, 'group').forEach(function (g) {
+          acc.add(g);
+          addTargets(hass.states && hass.states[g], members);
+        });
+        preds.push(function (id) { return members.has(id); });
       }
       // Volatile-only include (a bare `state:` filter) legitimately spans the
       // whole instance; a per-view allowlist cannot bound it.
