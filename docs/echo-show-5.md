@@ -34,8 +34,6 @@ Pick the engine with **Wake word engine** under **Voice Satellite > Wake Word**,
 
 Amazon is the engine Echo devices shipped with, running stock wake word models. It needs Kiosk Satellite 2026.10.41 or newer. With **Amazon** picked, a **Wake word language** select shows up under the engine.
 
-Amazon's engine uses more CPU and memory than vsWakeWord while it listens.
-
 ## Volume
 
 Keep the Show's media volume at 70% and Kiosk Satellite's media player and assistant volumes at 100%. That fills a room, and the wake word still works over music. A fresh install of the image starts at these levels.
