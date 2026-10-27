@@ -9378,8 +9378,8 @@ const sendspinMaToken = SettingDef<String>(
 );
 
 /// The Music Assistant follower's side of [sendspinSonosInputs]: Music
-/// Assistant names a Sonos input as the player's active source, `tv` or
-/// `line_in`, with the input's name for a title. Off, the followed room
+/// Assistant names a Sonos or WiiM input as the player's active source,
+/// such as `tv`, `hdmi` or `line_in`, with the input's name for a title. Off, the followed room
 /// reads as idle while one plays, as it does on the Sonos source.
 const sendspinMaInputs = SettingDef<bool>(
   key: 'sendspin.ma_inputs',

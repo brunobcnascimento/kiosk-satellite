@@ -155,7 +155,8 @@ void main() {
   });
 
   // Music Assistant's Sonos provider names a home theater input `tv` and
-  // a line-in `line_in`, with the input's name as the title.
+  // a line-in `line_in`, with the input's name as the title. The WiiM
+  // provider uses `hdmi`, `optical`, `line_in` and `phono_in`.
   Map<String, Object?> input(String source, String name) => {
     ..._player(),
     'active_source': source,
@@ -178,6 +179,11 @@ void main() {
     expect(emitted.last, isNull);
     update(input('line_in', 'Line-in'));
     expect(emitted.last, isNull);
+    // The WiiM provider's TV, optical and phono inputs.
+    for (final source in ['hdmi', 'optical', 'phono_in']) {
+      update(input(source, 'TV'));
+      expect(emitted.last, isNull, reason: source);
+    }
     // Back to music, the card returns.
     update(_player());
     expect(emitted.last!['title'], 'Hey Jude');
@@ -207,6 +213,10 @@ void main() {
     expect(emitted.last!['playing'], isFalse);
     update({...input('tv', 'TV'), 'playback_state': 'idle'});
     expect(emitted.last, isNull);
+    update({...input('hdmi', 'TV'), 'current_media': null});
+    expect(emitted.last!['title'], 'TV');
+    update(input('phono_in', 'Phono In'));
+    expect(emitted.last!['title'], 'Phono');
   });
 
   test(

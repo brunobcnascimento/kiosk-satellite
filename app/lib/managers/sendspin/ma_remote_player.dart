@@ -46,9 +46,19 @@ class MaRemotePlayer implements RemotePlayer {
   /// television does not hold the screensaver off.
   final bool showInputs;
 
-  /// The active sources Music Assistant's Sonos provider gives a TV
-  /// (HDMI or optical) and a line-in input, with the names to show.
-  static const _inputs = {'tv': 'TV', 'line_in': 'Line-in'};
+  /// The active sources Music Assistant gives a TV (HDMI or optical),
+  /// line-in or phono input, with the names to show: `tv` and `line_in`
+  /// from the Sonos provider, `hdmi`, `optical`, `line_in` and `phono_in`
+  /// from the WiiM one. Matched by id, not by the source list's
+  /// capabilities, since some providers list music sources such as
+  /// Bluetooth with the same no-pause flags as an input.
+  static const _inputs = {
+    'tv': 'TV',
+    'hdmi': 'TV',
+    'optical': 'TV',
+    'line_in': 'Line-in',
+    'phono_in': 'Phono',
+  };
 
   static const _name = 'sendspin';
 
