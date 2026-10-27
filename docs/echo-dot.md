@@ -44,7 +44,7 @@ Pick the engine with **Wake word engine** under **Voice Satellite > Wake Word**,
 | vsWakeWord | The default. Its models ship with the app. |
 | microWakeWord | The engine of Home Assistant's voice hardware. Its models ship with the app, and it also offers the custom models Home Assistant has. |
 | openWakeWord | Its models ship with the app. |
-| Amazon | The engine the Dot shipped with, running Amazon's own wake word models. On the CM14.1 image it needs 2026.10.3 or newer. The [Echo Show 5](echo-show-5.md#wake-word) and [Echo Show 8](echo-show-8.md#wake-word) images offer it too. Other devices do not. |
+| Amazon | The engine the Dot shipped with, running the stock wake word models. On the CM14.1 image it needs 2026.10.3 or newer. The [Echo Show 5](echo-show-5.md#wake-word) and [Echo Show 8](echo-show-8.md#wake-word) images offer it too. Other devices do not. |
 
 The first three also take your own models. See [Custom wake word models](custom-wake-words.md).
 
