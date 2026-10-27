@@ -7,7 +7,7 @@ This setup has been verified on a 2nd generation Echo Show 5 (`cronos`) running 
 Kiosk Satellite also runs on the upstream port, but the image fixes what gets in its way there:
 
 - **The wake word works over music.** The image's echo cancellation and microphone tuning remove the speaker's sound from the Show's microphones, so the wake word works with music playing at high volume. See [Volume](#volume).
-- **Amazon's wake word engine.** The image runs Amazon's engine with its models for 17 locales, the same as the Echo Dot image. See [Wake Word](#wake-word).
+- **Stock wake word engine.** The image runs the Echo Show stock engine with its models. See [Wake Word](#wake-word).
 - **Kiosk Satellite installs itself.** Once the Show is on Wi-Fi, the latest Kiosk Satellite release is downloaded, installed, given every permission it needs and made the device owner. There are no adb commands to run and Kiosk Satellite's updates install without a confirmation.
 - **System updates.** Kiosk Satellite shows new releases of the image and installs them, also from Home Assistant. See [System Updates](#system-updates).
 - **More free memory.** The image leaves out the apps and services a kiosk does not use. With Kiosk Satellite on screen for an hour, about 405 MB of the Show's 1 GB stays available.
