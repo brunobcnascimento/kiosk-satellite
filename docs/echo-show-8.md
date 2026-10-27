@@ -32,7 +32,7 @@ Go through the setup wizard on the screen or at `http://<show ip>:2324` in a bro
 
 Pick the engine with **Wake word engine** under **Voice Satellite > Wake Word**, with the **VS Wake word engine** select in Home Assistant or in the setup wizard. The Show offers vsWakeWord, microWakeWord, openWakeWord and **Amazon**.
 
-Amazon is the engine Echo devices shipped with, running stock wake word models. It needs Kiosk Satellite 2026.10.41 or newer.With **Amazon** picked, a **Wake word language** select shows up under the engine.
+Amazon is the engine Echo devices shipped with, running stock wake word models. It needs Kiosk Satellite 2026.10.41 or newer. With **Amazon** picked, a **Wake word language** select shows up under the engine.
 
 ## Volume
 
