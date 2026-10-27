@@ -31,6 +31,7 @@ A frame is captured and published to the Camera entity under the following condi
 * **On an interval:** If **Continuous snapshots** is turned on.
 * **On motion:** Once per motion session, unless **Disable snapshots on detection** is turned on. When motion is detected, it captures a single frame upon arrival, rather than a continuous stream of frames while someone stands there.
 * **When requested:** Whenever Home Assistant explicitly asks the camera entity for a picture, ensuring a dashboard card or a system restart never returns a blank image.
+* **On a camera switch:** When you change **Camera** between front and back, so the entity shows what the new camera sees.
 
 **Disable snapshots on detection** applies to automatic detection captures only. It leaves detection running and does not remove previously captured images. Continuous snapshots, Home Assistant image requests, manual snapshots and RTSP streaming have their own controls.
 
