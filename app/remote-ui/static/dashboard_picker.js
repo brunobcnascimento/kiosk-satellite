@@ -51,6 +51,9 @@ export function loadDashboards() {
         // An app's sidebar panel (Music Assistant, Panalume): Home
         // Assistant shows its ingress page on its path, with no views.
         app: d.app === true,
+        // One of Home Assistant's own pages (Energy, History) or a page an
+        // integration adds: like an app, one page with no views.
+        builtIn: d.builtIn === true,
         title: d.custom === true ? haText('Custom Pages') : (d.title || d.url_path),
         iconPath: d.icon_path || null,
         views: views[i].filter((v) => v.route !== undefined && v.route !== '')
@@ -182,7 +185,7 @@ function glyph(iconPath, title, size) {
   return s;
 }
 
-const viewTitle = (d, v) => (v ? v.title : d.app ? d.title : haText('Whole dashboard'));
+const viewTitle = (d, v) => (v ? v.title : d.app || d.builtIn ? d.title : haText('Whole dashboard'));
 const viewIcon = (d, v) => (v ? v.iconPath : (d.iconPath || DASHBOARD_ICON));
 
 function square(d, v) {
@@ -204,6 +207,7 @@ function highlighted(text, query) {
 
 function countLabel(d) {
   if (d.app) return haText('Ingress page');
+  if (d.builtIn) return haText('Home Assistant page');
   if (!d.views.length) return haText('Builds its own views');
   if (d.custom) {
     return d.views.length === 1 ? haText('1 page')
@@ -414,7 +418,7 @@ function buildPicker({ title = null, selected = [], mode = 'select', showing = n
     };
     if (!d.views.length) {
       pane.appendChild(grid([null]));
-      if (!d.app) {
+      if (!d.app && !d.builtIn) {
         pane.appendChild(el('div', 'dp-note',
           haText('This dashboard builds its own views, so the kiosk opens it whole.')));
       }
@@ -483,7 +487,7 @@ function buildPicker({ title = null, selected = [], mode = 'select', showing = n
       if (d) {
         if (!d.views.length) {
           node.appendChild(viewRow(d, null, rowOpts(d, null)));
-          if (!d.app) {
+          if (!d.app && !d.builtIn) {
             node.appendChild(el('div', 'dp-note',
               haText('This dashboard builds its own views, so the kiosk opens it whole.')));
           }
@@ -667,8 +671,8 @@ export function dashboardField({ value = '', title, onPick, mode = 'select', sho
     } else {
       lead.appendChild(glyph(viewIcon(m.dashboard, m.view), viewTitle(m.dashboard, m.view), 20));
       lead.classList.add('primary');
-      // An app is its own page, so its name alone says it.
-      if (m.dashboard.app && !m.view) text.append(viewTitle(m.dashboard, m.view));
+      // An app or a built-in page is its own page, so its name alone says it.
+      if ((m.dashboard.app || m.dashboard.builtIn) && !m.view) text.append(viewTitle(m.dashboard, m.view));
       else {
         text.append(el('span', 'dp-field-dash', m.dashboard.title),
           el('span', 'dp-sep', ' / '), viewTitle(m.dashboard, m.view));

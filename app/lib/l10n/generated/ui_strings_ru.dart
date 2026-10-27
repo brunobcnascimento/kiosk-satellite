@@ -760,6 +760,9 @@ class UiStringsRu extends UiStrings {
   String get dashboardPickerIngressPage => 'Страница Ingress';
 
   @override
+  String get dashboardPickerBuiltInPage => 'Страница Home Assistant';
+
+  @override
   String get dashboardPickerWholeHelp =>
       'Эта панель создаёт виды сама, поэтому киоск открывает её целиком.';
 

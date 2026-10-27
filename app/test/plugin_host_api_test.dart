@@ -489,6 +489,12 @@ void main() {
                 'require_admin': false,
               },
               {'url_path': 'dashboard-cams', 'title': 'Cameras'},
+              {
+                'url_path': 'energy',
+                'title': 'Energy',
+                'icon': 'mdi:lightning-bolt',
+                'builtIn': true,
+              },
               {'url_path': '', 'title': 'Broken'},
             ]),
     );
@@ -496,6 +502,7 @@ void main() {
       if (p['url_path'] == 'dashboard-cams') {
         return const CommandResult.fail('could not read the dashboard');
       }
+      if (p['url_path'] == 'energy') return const CommandResult.ok([]);
       return const CommandResult.ok([
         {'route': 'home', 'title': 'Home', 'icon': 'mdi:sofa', 'cards': 12},
         {'route': 'garage', 'subview': true},
@@ -509,6 +516,7 @@ void main() {
         'title': 'Overview',
         'icon': 'mdi:home',
         'custom': false,
+        'builtIn': false,
         'views': [
           {
             'path': 'lovelace/home',
@@ -530,6 +538,16 @@ void main() {
         'title': 'Cameras',
         'icon': null,
         'custom': false,
+        'builtIn': false,
+        'views': [],
+      },
+      // One of Home Assistant's own pages, opened by its bare path.
+      {
+        'urlPath': 'energy',
+        'title': 'Energy',
+        'icon': 'mdi:lightning-bolt',
+        'custom': false,
+        'builtIn': true,
         'views': [],
       },
     ]);

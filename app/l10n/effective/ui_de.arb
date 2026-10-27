@@ -2700,6 +2700,30 @@
       ]
     }
   },
+  "dashboardPickerBuiltInPage": "Home Assistant-Seite",
+  "@dashboardPickerBuiltInPage": {
+    "context": "Dashboard picker",
+    "description": "Second line of one of Home Assistant's own pages in the dashboard list, such as Energy, History or Media, or of a page an integration adds.",
+    "x-locations": {
+      "device": [
+        "Settings > Home Assistant > Dashboard",
+        "Settings > Home Assistant > Dashboard View Rotation",
+        "Settings > Screensaver > Home Assistant Dashboard",
+        "Settings > Sendspin > Now Playing",
+        "Settings > Gestures",
+        "Setup > Dashboard"
+      ],
+      "remoteAdmin": [
+        "Home Assistant > Dashboard",
+        "Home Assistant > Dashboard View Rotation",
+        "Screensaver > Home Assistant Dashboard",
+        "Sendspin > Now Playing",
+        "Gestures",
+        "Overview > Go to view",
+        "Setup > Dashboard"
+      ]
+    }
+  },
   "dashboardPickerWholeHelp": "Dieses Dashboard erstellt seine Ansichten selbst, daher öffnet der Kiosk es als Ganzes.",
   "@dashboardPickerWholeHelp": {
     "context": "Dashboard picker",

@@ -4,6 +4,8 @@ Kiosk Satellite can show your own HTML pages in place of a Home Assistant dashbo
 
 To show an app's web interface, such as Music Assistant, Node-RED or Panalume, you do not need a custom page. Turn on **Show in sidebar** on the app's page in Home Assistant and it shows up in every dashboard picker after the dashboards.
 
+Home Assistant's own pages, such as Energy, Activity, History, Media and To-do lists, and the pages integrations add show up after the apps. Settings, Developer tools and other pages only administrators can open are left out.
+
 ## Add a page
 
 1. Put the page where the kiosk can load it. For a page in Home Assistant, copy it into the `www` folder of your Home Assistant configuration, for example `/config/www/kitchen.html`. Home Assistant serves it at `/local/kitchen.html`. If the `www` folder did not exist before, restart Home Assistant once so it starts serving it.

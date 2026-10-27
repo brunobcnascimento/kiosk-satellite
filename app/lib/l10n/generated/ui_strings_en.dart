@@ -755,6 +755,9 @@ class UiStringsEn extends UiStrings {
   String get dashboardPickerIngressPage => 'Ingress page';
 
   @override
+  String get dashboardPickerBuiltInPage => 'Home Assistant page';
+
+  @override
   String get dashboardPickerWholeHelp =>
       'This dashboard builds its own views, so the kiosk opens it whole.';
 

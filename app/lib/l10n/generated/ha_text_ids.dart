@@ -125,6 +125,7 @@ const haTextMessageIds = <String, String>{
   "Whole dashboard": "dashboardPickerWhole",
   "Builds its own views": "dashboardPickerBuildsOwn",
   "Ingress page": "dashboardPickerIngressPage",
+  "Home Assistant page": "dashboardPickerBuiltInPage",
   "This dashboard builds its own views, so the kiosk opens it whole.": "dashboardPickerWholeHelp",
   "1 view": "dashboardPickerOneView",
   "Could not reach Home Assistant": "dashboardPickerOffline",

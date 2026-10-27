@@ -39,6 +39,7 @@ class HaDashboard {
     this.views = const [],
     this.custom = false,
     this.app = false,
+    this.builtIn = false,
   });
 
   /// The dashboard's url_path.
@@ -53,6 +54,13 @@ class HaDashboard {
   /// An app's sidebar panel, such as Music Assistant: Home Assistant shows
   /// the app's ingress page on its path, with no views.
   final bool app;
+
+  /// One of Home Assistant's own pages, such as Energy or History, or a
+  /// page an integration adds. Like an app, it is one page with no views.
+  final bool builtIn;
+
+  /// An app or a built-in page: the pickers show it by its own name.
+  bool get page => app || builtIn;
 
   /// The name the pickers show, in the kiosk's language for Custom Pages.
   String label(BuildContext context) =>
@@ -122,6 +130,7 @@ abstract final class DashboardCatalog {
             icon: d['icon'] is String ? d['icon'] as String : null,
             custom: d['custom'] == true,
             app: d['app'] == true,
+            builtIn: d['builtIn'] == true,
             views: [
               // A dashboard whose views cannot be read opens whole, the
               // same as one that builds its own.
@@ -710,7 +719,7 @@ class _DashboardPickerState extends State<DashboardPicker> {
               ),
               if (d.whole) ...[
                 grid([null]),
-                if (!d.app) SliverToBoxAdapter(child: _WholeNote()),
+                if (!d.page) SliverToBoxAdapter(child: _WholeNote()),
               ] else ...[
                 grid(main),
                 if (subs.isNotEmpty) ...[
@@ -784,7 +793,7 @@ class _DashboardPickerState extends State<DashboardPicker> {
         children: [
           if (d.whole) ...[
             row(null),
-            if (!d.app) _WholeNote(),
+            if (!d.page) _WholeNote(),
           ] else ...[
             for (final v in main) row(v),
             if (subs.isNotEmpty) ...[
@@ -1027,7 +1036,7 @@ class _WholeNote extends StatelessWidget {
 }
 
 String _viewTitle(BuildContext context, HaDashboard d, HaView? view) =>
-    view?.title ?? (d.app ? d.title : haText(context, 'Whole dashboard'));
+    view?.title ?? (d.page ? d.title : haText(context, 'Whole dashboard'));
 
 String? _viewIcon(HaDashboard d, HaView? view) =>
     view == null ? (d.icon ?? 'mdi:view-dashboard') : view.icon;
@@ -1083,6 +1092,8 @@ class _DashboardRow extends StatelessWidget {
               : l10n(context).dashboardPickerPageCount('$count')
         : d.app
         ? haText(context, 'Ingress page')
+        : d.builtIn
+        ? haText(context, 'Home Assistant page')
         : d.whole
         ? haText(context, 'Builds its own views')
         : count == 1
@@ -1663,8 +1674,9 @@ class _DashboardFieldState extends State<DashboardField> {
                 child: Text.rich(
                   TextSpan(
                     children: [
-                      // An app is its own page, so its name alone says it.
-                      if (!d.app || v != null) ...[
+                      // An app or a built-in page is its own page, so its
+                      // name alone says it.
+                      if (!d.page || v != null) ...[
                         TextSpan(
                           text: d.label(context),
                           style: TextStyle(color: scheme.onSurfaceVariant),

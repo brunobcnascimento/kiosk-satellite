@@ -761,6 +761,9 @@ class UiStringsFr extends UiStrings {
   String get dashboardPickerIngressPage => 'Page Ingress';
 
   @override
+  String get dashboardPickerBuiltInPage => 'Page Home Assistant';
+
+  @override
   String get dashboardPickerWholeHelp =>
       'Ce tableau de bord génère ses propres vues, le kiosque l\'ouvre donc en entier.';
 

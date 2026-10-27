@@ -9,6 +9,7 @@
   "dashboardPickerWhole": "Tableau de bord entier",
   "dashboardPickerBuildsOwn": "Génère ses propres vues",
   "dashboardPickerIngressPage": "Page Ingress",
+  "dashboardPickerBuiltInPage": "Page Home Assistant",
   "dashboardPickerWholeHelp": "Ce tableau de bord génère ses propres vues, le kiosque l'ouvre donc en entier.",
   "dashboardPickerViewCount": "{count} vues",
   "dashboardPickerOneView": "1 vue",

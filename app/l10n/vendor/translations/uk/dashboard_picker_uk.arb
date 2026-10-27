@@ -9,6 +9,7 @@
   "dashboardPickerWhole": "Уся панель",
   "dashboardPickerBuildsOwn": "Створює власні види",
   "dashboardPickerIngressPage": "Сторінка Ingress",
+  "dashboardPickerBuiltInPage": "Сторінка Home Assistant",
   "dashboardPickerWholeHelp": "Ця панель створює власні види, тому кіоск відкриває її повністю.",
   "dashboardPickerViewCount": "Видів: {count}",
   "dashboardPickerOneView": "1 вид",

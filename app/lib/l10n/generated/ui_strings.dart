@@ -1448,6 +1448,12 @@ abstract class UiStrings {
   /// **'Ingress page'**
   String get dashboardPickerIngressPage;
 
+  /// Second line of one of Home Assistant's own pages in the dashboard list, such as Energy, History or Media, or of a page an integration adds.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Assistant page'**
+  String get dashboardPickerBuiltInPage;
+
   /// Note under the Whole dashboard choice.
   ///
   /// In en, this message translates to:

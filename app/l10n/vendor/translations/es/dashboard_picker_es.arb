@@ -9,6 +9,7 @@
   "dashboardPickerWhole": "Panel completo",
   "dashboardPickerBuildsOwn": "Genera sus propias vistas",
   "dashboardPickerIngressPage": "Página de ingress",
+  "dashboardPickerBuiltInPage": "Página de Home Assistant",
   "dashboardPickerWholeHelp": "Este panel genera sus propias vistas, así que el kiosko lo abre completo.",
   "dashboardPickerViewCount": "{count} vistas",
   "dashboardPickerOneView": "1 vista",

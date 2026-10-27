@@ -745,6 +745,9 @@ class UiStringsZh extends UiStrings {
   String get dashboardPickerIngressPage => 'Ingress 页面';
 
   @override
+  String get dashboardPickerBuiltInPage => 'Home Assistant 页面';
+
+  @override
   String get dashboardPickerWholeHelp => '此仪表盘会自动生成页面，因此 Kiosk 会打开整个仪表盘。';
 
   @override
@@ -15583,6 +15586,9 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get dashboardPickerIngressPage => 'Ingress 页面';
+
+  @override
+  String get dashboardPickerBuiltInPage => 'Home Assistant 页面';
 
   @override
   String get dashboardPickerWholeHelp => '此仪表盘会自动生成页面，因此 Kiosk 会打开整个仪表盘。';

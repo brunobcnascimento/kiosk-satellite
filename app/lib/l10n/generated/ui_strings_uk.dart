@@ -757,6 +757,9 @@ class UiStringsUk extends UiStrings {
   String get dashboardPickerIngressPage => 'Сторінка Ingress';
 
   @override
+  String get dashboardPickerBuiltInPage => 'Сторінка Home Assistant';
+
+  @override
   String get dashboardPickerWholeHelp =>
       'Ця панель створює власні види, тому кіоск відкриває її повністю.';
 

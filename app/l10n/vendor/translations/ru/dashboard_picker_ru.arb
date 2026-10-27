@@ -9,6 +9,7 @@
   "dashboardPickerWhole": "Вся панель",
   "dashboardPickerBuildsOwn": "Создаёт виды сама",
   "dashboardPickerIngressPage": "Страница Ingress",
+  "dashboardPickerBuiltInPage": "Страница Home Assistant",
   "dashboardPickerWholeHelp": "Эта панель создаёт виды сама, поэтому киоск открывает её целиком.",
   "dashboardPickerViewCount": "Видов: {count}",
   "dashboardPickerOneView": "1 вид",

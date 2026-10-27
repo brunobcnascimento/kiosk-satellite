@@ -9,6 +9,7 @@
   "dashboardPickerWhole": "Ganzes Dashboard",
   "dashboardPickerBuildsOwn": "Erstellt seine Ansichten selbst",
   "dashboardPickerIngressPage": "Ingress-Seite",
+  "dashboardPickerBuiltInPage": "Home Assistant-Seite",
   "dashboardPickerWholeHelp": "Dieses Dashboard erstellt seine Ansichten selbst, daher öffnet der Kiosk es als Ganzes.",
   "dashboardPickerViewCount": "{count} Ansichten",
   "dashboardPickerOneView": "1 Ansicht",

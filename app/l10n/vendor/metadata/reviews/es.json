@@ -23283,5 +23283,10 @@
     "source": "0d06f6d4bb26c1a1327282c3f6cf368312bb502829af813bf02af0ba6b2bd378",
     "translation": "8f2de368de30b719dbc71c008ea5a2c21101428cfe6184580f54d7897b92c0a9",
     "author": "Xavier Larrea"
+  },
+  "dashboardPickerBuiltInPage": {
+    "source": "58bb1ad1ea074f8822f2cdc65695be9709a18428ce4005e2e0b4b1a388d6eeae",
+    "translation": "b9537ae2f86c668e10f3a5187d84e036e48f2743fab8427c2fa97370e76f2e11",
+    "author": "Xavier Larrea"
   }
 }

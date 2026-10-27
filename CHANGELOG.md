@@ -6,6 +6,7 @@ All notable changes to Kiosk Satellite are documented here. Full release notes f
 
 ### Added
 - **Voice links for dashboard buttons.** `ks://voice` starts a voice command, `ks://voice/stop` ends it or dismisses a ringing timer and `ks://voice/mute` mutes or unmutes the wake word. Point a button's tap action at one to get a push to talk or mute button that works on every kiosk, with no entity IDs in the dashboard. See [Dashboard Links](https://github.com/jxlarrea/kiosk-satellite/blob/main/docs/dashboard-links.md) (#1179).
+- **Home Assistant's own pages in the dashboard pickers.** Energy, Activity, History, Media, To-do lists and the pages integrations add now show up in the dashboard pickers after the apps, on the device and in the remote admin. Pick one as the default dashboard, add it to the dashboard view rotation, use it as the screensaver's dashboard or a gesture's target, or select it from the ESPHome Dashboard view select. Plugins get them too, so a plugin setting that takes a page can offer Energy, and `getDashboards` marks them with `builtIn`. Settings, Developer tools and other pages only administrators can open are left out. See [Custom Pages](https://github.com/jxlarrea/kiosk-satellite/blob/main/docs/custom-pages.md) (#1180).
 
 ## v2026.10.42 - 2026-10-27
 

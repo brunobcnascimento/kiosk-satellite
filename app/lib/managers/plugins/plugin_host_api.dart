@@ -995,6 +995,7 @@ class PluginHostApi {
           'title': '${d['title'] ?? d['url_path']}',
           'icon': icon(d['icon']),
           'custom': d['custom'] == true,
+          'builtIn': d['builtIn'] == true,
           'views': [
             if (views[i].ok && views[i].data is List)
               for (final v in (views[i].data as List).whereType<Map>())

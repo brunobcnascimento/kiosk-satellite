@@ -760,6 +760,9 @@ class UiStringsDe extends UiStrings {
   String get dashboardPickerIngressPage => 'Ingress-Seite';
 
   @override
+  String get dashboardPickerBuiltInPage => 'Home Assistant-Seite';
+
+  @override
   String get dashboardPickerWholeHelp =>
       'Dieses Dashboard erstellt seine Ansichten selbst, daher öffnet der Kiosk es als Ganzes.';
 
