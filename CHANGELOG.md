@@ -14,6 +14,7 @@ All notable changes to Kiosk Satellite are documented here. Full release notes f
 - **A WiiM's TV input no longer brings up Now Playing.** With **Show TV and line-in** off, a WiiM followed through Music Assistant now reads as idle while it plays its TV, optical, line-in or phono input, so the screensaver stays in place. Only the Sonos input names were recognized before. With the setting on, these inputs show as TV, Line-in or Phono (#1172).
 
 ### Changed
+- **The reactive activity bar starts off on the Echo Shows.** A fresh install on an Echo Show running the [Kiosk Satellite image](https://github.com/jxlarrea/lineageos-echo-kiosk-satellite) turns off **Reactive activity bar**, since the Shows are not fast enough to animate it smoothly. The bar still shows, without following your voice and the answer. An upgrade, a restored backup, a settings import or a fleet profile keeps the value it had.
 - **Plugin actions follow the plugin's names.** A gesture that runs a plugin action now saves only the plugin and action IDs and shows the names the plugin has now, so a plugin that renames itself or its actions in an update no longer leaves the old names on the Gestures page.
 
 ## v2026.10.41 - 2026-10-26

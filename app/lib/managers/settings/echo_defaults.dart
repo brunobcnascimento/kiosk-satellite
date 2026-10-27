@@ -13,7 +13,9 @@ import 'settings_manager.dart';
 /// an Echo Show the kiosk is also the home screen: an app in the background
 /// loses the microphone on Android 11, and the home screen is what comes
 /// back whenever something else took the screen. Now Playing starts in the
-/// Horizontal layout there, which fits the Shows' wide screens. The Dot
+/// Horizontal layout there, which fits the Shows' wide screens. The reactive
+/// activity bar starts off, since the Shows' MT8163 cannot animate it
+/// smoothly. The Dot
 /// runs headless and has no home screen to be (HeadlessSettings pins it
 /// off).
 ///
@@ -50,6 +52,7 @@ class EchoDefaults {
           defs.esphomeRealMac: true,
           defs.homeLauncherEnabled: true,
           defs.sendspinFullscreenLayout: 'horizontal',
+          defs.voiceReactiveBar: false,
         },
         _ => const {},
       };

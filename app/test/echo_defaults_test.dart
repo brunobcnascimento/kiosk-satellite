@@ -61,13 +61,14 @@ void main() {
   });
 
   group('each image', () {
-    test('an Echo Show gets the real address, the home screen and the '
-        'Horizontal Now Playing', () async {
+    test('an Echo Show gets the real address, the home screen, the '
+        'Horizontal Now Playing and no reactive bar', () async {
       await boot({});
       await apply('echo');
       expect(settings.get(defs.esphomeRealMac), isTrue);
       expect(settings.get(defs.homeLauncherEnabled), isTrue);
       expect(settings.get(defs.sendspinFullscreenLayout), 'horizontal');
+      expect(settings.get(defs.voiceReactiveBar), isFalse);
       expect(settings.internal(EchoDefaults.marker), 'echo');
     });
 
@@ -78,6 +79,7 @@ void main() {
       expect(settings.get(defs.esphomeRealMac), isTrue);
       expect(settings.get(defs.homeLauncherEnabled), isFalse);
       expect(settings.get(defs.sendspinFullscreenLayout), 'vertical');
+      expect(settings.get(defs.voiceReactiveBar), isTrue);
       expect(settings.internal(EchoDefaults.marker), 'biscuit');
     });
 
@@ -96,6 +98,7 @@ void main() {
       expect(settings.get(defs.esphomeRealMac), isFalse);
       expect(settings.get(defs.homeLauncherEnabled), isFalse);
       expect(settings.get(defs.sendspinFullscreenLayout), 'vertical');
+      expect(settings.get(defs.voiceReactiveBar), isTrue);
       expect(settings.internal(EchoDefaults.marker), isEmpty);
     });
 
