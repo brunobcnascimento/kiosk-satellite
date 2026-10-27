@@ -2497,29 +2497,28 @@ class _TodayPanel extends StatelessWidget {
         if (e.allDay || _coversDay(e, today)) e,
     ];
     final forecast = args.forecast(today);
-    return Container(
-      padding: EdgeInsets.all(short ? 18 : 28),
-      decoration: BoxDecoration(
-        color: args.paint.raised,
-        border: args.paint.raisedBorder,
-        borderRadius: BorderRadius.circular(short ? 18 : 24),
-      ),
-      child: _PanelBody(
-        scrolls: short,
-        children: [
-          Text(
-            s.calendarToday.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
-              letterSpacing: .8,
-              color: scheme.secondary,
-            ),
+    return _PanelBody(
+      paint: args.paint,
+      short: short,
+      children: [
+        Text(
+          s.calendarToday.toUpperCase(),
+          style: TextStyle(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w600,
+            letterSpacing: .8,
+            color: scheme.secondary,
           ),
-          const SizedBox(height: 4),
-          Text(
-            '${DateFormat.EEEE().format(today)}\n'
-            '${DateFormat.MMMMd().format(today)}',
+        ),
+        const SizedBox(height: 4),
+        // The header already names the month, so the day and its number
+        // fit one line: Tuesday 27.
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            DateFormat.EEEE().add_d().format(today),
+            maxLines: 1,
             style: TextStyle(
               fontSize: short ? 28 : 40,
               fontWeight: FontWeight.w300,
@@ -2527,203 +2526,203 @@ class _TodayPanel extends StatelessWidget {
               letterSpacing: -.5,
             ),
           ),
-          if (forecast != null) ...[
-            const SizedBox(height: 8),
-            _Forecast(forecast: forecast, size: 15),
-          ],
-          // Today's all-day events, under the date they belong to.
-          if (allDay.isNotEmpty) ...[
-            SizedBox(height: short ? 10 : 14),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: [
-                for (final e in allDay)
-                  IntrinsicWidth(
-                    child: _Tile(
-                      colors: args.paint.strongs(e.calendars),
-                      radius: 9,
-                      height: short ? 26 : 30,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      lit: args.lit(e),
-                      onTap: () => args.onEvent(e),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          e.summary,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: _titleStyle(context, short ? 13 : 14),
-                        ),
+        ),
+        if (forecast != null) ...[
+          const SizedBox(height: 8),
+          _Forecast(forecast: forecast, size: 15),
+        ],
+        // Today's all-day events, under the date they belong to.
+        if (allDay.isNotEmpty) ...[
+          SizedBox(height: short ? 10 : 14),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final e in allDay)
+                IntrinsicWidth(
+                  child: _Tile(
+                    colors: args.paint.strongs(e.calendars),
+                    radius: 9,
+                    height: short ? 26 : 30,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    lit: args.lit(e),
+                    onTap: () => args.onEvent(e),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        e.summary,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: _titleStyle(context, short ? 13 : 14),
                       ),
                     ),
                   ),
-              ],
-            ),
-          ],
-          SizedBox(height: short ? 14 : 20),
-          if (next == null)
-            Text(s.calendarNothingElseToday, style: _mutedStyle(context, 15))
-          else
-            _Tile(
-              colors: args.paint.softs(next.calendars),
-              radius: short ? 14 : 18,
-              padding: EdgeInsets.all(short ? 14 : 18),
-              lit: args.lit(next),
-              onTap: () => args.onEvent(next),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
+                ),
+            ],
+          ),
+        ],
+        SizedBox(height: short ? 14 : 20),
+        if (next == null)
+          Text(s.calendarNothingElseToday, style: _mutedStyle(context, 15))
+        else
+          _Tile(
+            colors: args.paint.softs(next.calendars),
+            radius: short ? 14 : 18,
+            padding: EdgeInsets.all(short ? 14 : 18),
+            lit: args.lit(next),
+            onTap: () => args.onEvent(next),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      s.calendarUpNext.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: .6,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        calendarStartsIn(context, next.start, now),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: _mutedStyle(context, 12.5),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: short ? 6 : 10),
+                Text(
+                  next.summary,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: _titleStyle(context, short ? 19 : 24),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  [
+                    calendarWhen(context, next, on: today),
+                    if (next.location.isNotEmpty) next.location,
+                  ].join(' · '),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: _mutedStyle(context, 14),
+                ),
+                if (!short) ...[
+                  const SizedBox(height: 10),
                   Row(
                     children: [
-                      Text(
-                        s.calendarUpNext.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: .6,
-                        ),
+                      CalendarAvatarStack(
+                        container: args.container,
+                        entities: next.calendars,
+                        paint: args.paint,
+                        ring: args.paint.soft(next.calendars.first),
+                        size: 24,
                       ),
                       const SizedBox(width: 8),
                       Flexible(
                         child: Text(
-                          calendarStartsIn(context, next.start, now),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: _mutedStyle(context, 12.5),
+                          calendarNames(s, [
+                            for (final id in next.calendars)
+                              args.cal.source(id)?.name ?? id,
+                          ]),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: short ? 6 : 10),
-                  Text(
-                    next.summary,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: _titleStyle(context, short ? 19 : 24),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    [
-                      calendarWhen(context, next, on: today),
-                      if (next.location.isNotEmpty) next.location,
-                    ].join(' · '),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: _mutedStyle(context, 14),
-                  ),
-                  if (!short) ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        CalendarAvatarStack(
-                          container: args.container,
-                          entities: next.calendars,
-                          paint: args.paint,
-                          ring: args.paint.soft(next.calendars.first),
-                          size: 24,
-                        ),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            calendarNames(s, [
-                              for (final id in next.calendars)
-                                args.cal.source(id)?.name ?? id,
-                            ]),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
                 ],
-              ),
+              ],
             ),
-          if (!short && later.isNotEmpty) ...[
-            const SizedBox(height: 20),
-            Text(
-              s.calendarLaterToday.toUpperCase(),
-              style: TextStyle(
-                fontSize: 12.5,
-                fontWeight: FontWeight.w600,
-                letterSpacing: .6,
-                color: scheme.onSurfaceVariant,
-              ),
+          ),
+        if (later.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          Text(
+            s.calendarLaterToday.toUpperCase(),
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              letterSpacing: .6,
+              color: scheme.onSurfaceVariant,
             ),
-            const SizedBox(height: 6),
-            Expanded(
-              child: ScrollConfiguration(
-                behavior: const ScrollBehavior().copyWith(scrollbars: false),
-                child: ListView(
-                  padding: EdgeInsets.zero,
+          ),
+          const SizedBox(height: 6),
+          for (final e in later)
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () => args.onEvent(e),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7),
+                child: Row(
                   children: [
-                    for (final e in later)
-                      InkWell(
-                        borderRadius: BorderRadius.circular(8),
-                        onTap: () => args.onEvent(e),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 7),
-                          child: Row(
-                            children: [
-                              _Dot(colors: args.paint.bases(e.calendars)),
-                              const SizedBox(width: 12),
-                              SizedBox(
-                                width: 76,
-                                child: Text(
-                                  calendarTime(context, e.start),
-                                  style: _mutedStyle(context, 13.5),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  e.summary,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: _titleStyle(context, 14.5),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                    _Dot(colors: args.paint.bases(e.calendars)),
+                    const SizedBox(width: 12),
+                    SizedBox(
+                      width: 76,
+                      child: Text(
+                        calendarTime(context, e.start),
+                        style: _mutedStyle(context, 13.5),
                       ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        e.summary,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: _titleStyle(context, 14.5),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-          ],
         ],
-      ),
+      ],
     );
   }
 }
 
-/// The Today panel's contents: a column, or on a short panel, which has no
-/// Later today list to give way, one that scrolls under the edge fade
-/// when the date, the all-day events and Up next are taller than it.
+/// The Today panel's contents: one column that scrolls under the edge fade
+/// when the date, the all-day events, Up next and Later today are taller
+/// than the panel. Later today is the rest of today's events, so it never
+/// shrinks to fit what is left. The panel is its own Material, so the
+/// fade takes the raised color and runs to the rounded edge.
 class _PanelBody extends StatelessWidget {
-  const _PanelBody({required this.scrolls, required this.children});
+  const _PanelBody({
+    required this.paint,
+    required this.short,
+    required this.children,
+  });
 
-  final bool scrolls;
+  final CalendarPaint paint;
+  final bool short;
   final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
-    if (!scrolls) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      );
-    }
-    return EdgeFade(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: children,
+    return Material(
+      color: paint.raised,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(short ? 18 : 24),
+        side: paint.raisedBorder?.top ?? BorderSide.none,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: EdgeFade(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(short ? 18 : 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: children,
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:kiosk_satellite/app_container.dart';
 import 'package:kiosk_satellite/core/command_registry.dart';
 import 'package:kiosk_satellite/core/events.dart';
@@ -183,6 +184,55 @@ void main() {
     await tester.tap(find.text('Sam'));
     await tester.pump(const Duration(milliseconds: 50));
     expect(find.text('Soccer practice with a long name'), findsOneWidget);
+    await letGo(tester, c);
+  });
+
+  testWidgets('the Today panel reaches every event left today', (tester) async {
+    final c = await container();
+    // A tablet just tall enough for the roomy layout, where the date and Up
+    // next fill the panel.
+    tester.view.physicalSize = const Size(961, 601);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    c.calendar.opening = (view: 'schedule', date: null);
+    c.calendar.visible.value = true;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Stack(children: [CalendarOverlay(container: c)]),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 50));
+    // Spread over what is left of today, whatever the time.
+    final now = DateTime.now();
+    final left = addDays(dateOnly(now), 1).difference(now);
+    c.calendar.snapshot.value = CalendarSnapshot(
+      events: [
+        for (var i = 0; i < 6; i++)
+          CalendarEvent(
+            summary: 'Later $i',
+            start: now.add(left * (i + 1) ~/ 8),
+            end: now.add(left * (i + 1) ~/ 8 + left ~/ 16),
+            allDay: false,
+            calendars: const ['calendar.leo'],
+            location: 'Room $i',
+          ),
+      ],
+      link: CalendarLink.live,
+    );
+    await tester.pump(const Duration(milliseconds: 50));
+    // One line: the header already names the month.
+    expect(find.text(DateFormat.EEEE().add_d().format(now)), findsOneWidget);
+    final last = find.text('Later 5');
+    await tester.ensureVisible(last);
+    await tester.pump(const Duration(milliseconds: 50));
+    await tester.tap(last);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('Room 5'), findsWidgets);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('Done'));
+    await tester.pump(const Duration(milliseconds: 300));
     await letGo(tester, c);
   });
 
