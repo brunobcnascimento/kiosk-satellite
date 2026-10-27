@@ -12,6 +12,7 @@ Kiosk Satellite also runs on the upstream port, but the image fixes what gets in
 - **System updates.** Kiosk Satellite shows new releases of the image and installs them, also from Home Assistant. See [System Updates](#system-updates).
 - **More free memory.** The image leaves out the apps and services a kiosk does not use. With Kiosk Satellite on screen for an hour, about 405 MB of the Show's 1 GB stays available.
 - **Privacy and the screen on separate presses.** A short press of the button on top turns privacy on and off. Holding it for 3 seconds turns the screen on and off. See [The Button](#the-button).
+- **Steady Wi-Fi.** The Show keeps the access point it joined instead of moving between mesh nodes, which stalled audio and dropped Home Assistant.
 
 The image's guide lists every change.
 
