@@ -923,13 +923,32 @@ class HomeAssistantManager extends Manager {
         _returnHomeTimer = null;
         unawaited(_onScreensaverStart(nowPlaying: e.nowPlaying));
       } else {
+        // The touch that dismissed the screensaver gets its grace window
+        // now, once the dashboard is back in view. The stop lands a few
+        // awaits after the touch, so anything older than that was a
+        // control press that left the screensaver up.
+        final touched = _touchUnderScreensaverAt;
+        _touchUnderScreensaverAt = null;
+        if (touched != null &&
+            DateTime.now().difference(touched) < _dismissTouchWindow) {
+          _pauseRotationForTouch();
+        }
         _configureReturnHome();
       }
     });
     // Touch pauses rotation for the configured window so the current view
-    // can be used; each touch restarts that window.
+    // can be used; each touch restarts that window. Under the screensaver
+    // there is no view to keep usable (the ring is already frozen in
+    // place, see _rotationTick), so a touch there, a Now Playing control
+    // press, only leaves a timestamp for the dismissal above.
     bus.on<ActivityDetected>().listen((e) {
-      if (e.source == 'touch') _pauseRotationForTouch();
+      if (e.source == 'touch') {
+        if (_screensaverActive) {
+          _touchUnderScreensaverAt = DateTime.now();
+        } else {
+          _pauseRotationForTouch();
+        }
+      }
       _configureReturnHome();
     });
     // Any navigation counts as activity for the return-home clock: the
@@ -1004,6 +1023,15 @@ class HomeAssistantManager extends Manager {
   bool _voiceInteracting = false;
   bool _cameraViewActive = false;
   bool _screensaverActive = false;
+
+  /// When the last touch under the screensaver arrived, so the one that
+  /// dismisses it can still earn the touch pause once the dashboard shows.
+  DateTime? _touchUnderScreensaverAt;
+
+  /// How long after a touch a screensaver stop still counts as dismissed
+  /// by it. The stop runs a handful of awaited commands first, well under
+  /// a second on a healthy device.
+  static const _dismissTouchWindow = Duration(seconds: 5);
 
   /// Dashboard paths a soft navigation cannot resolve (strategy dashboards,
   /// redirect aliases), learned once and then hard-loaded directly instead of
