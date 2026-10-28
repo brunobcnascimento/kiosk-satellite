@@ -187,6 +187,7 @@ class DlnaManager extends Manager {
   /// connection pool and idle timer.
   http.Client? _notifyClient;
   StreamSubscription<SettingChanged>? _settingsSub;
+  StreamSubscription<NetworkStateChanged>? _networkSub;
   Timer? _aliveTimer;
   Timer? _restartDebounce;
   Timer? _failureStop;
@@ -238,6 +239,13 @@ class DlnaManager extends Manager {
         _transition = _transition.then((_) => _restart());
       });
     });
+    // A renderer that started before the network did had no address to
+    // serve or advertise, so it gave up and stayed down until someone
+    // toggled it. Scheduled reboots do this: the app is up before Wi-Fi.
+    _networkSub = bus.on<NetworkStateChanged>().listen((e) {
+      if (!e.up || !_settings.get(defs.dlnaEnabled)) return;
+      _transition = _transition.then((_) => _onNetworkUp());
+    });
     commands.register(
       Command(
         name: 'dlnaStatus',
@@ -265,6 +273,8 @@ class DlnaManager extends Manager {
     _restartDebounce?.cancel();
     await _settingsSub?.cancel();
     _settingsSub = null;
+    await _networkSub?.cancel();
+    _networkSub = null;
     await _stop();
     transportState.removeListener(_syncScreensaverHold);
     media.removeListener(_syncScreensaverHold);
@@ -273,6 +283,20 @@ class DlnaManager extends Manager {
   Future<void> _restart() async {
     await _stop();
     if (_settings.get(defs.dlnaEnabled)) await _start();
+  }
+
+  /// Start a renderer that is down, or move one whose address changed.
+  /// One still serving where it was only needs announcing again: the alives
+  /// sent while the network was down reached nobody.
+  Future<void> _onNetworkUp() async {
+    if (!_settings.get(defs.dlnaEnabled)) return;
+    final ip = await _localIp().catchError((_) => '');
+    if (_server != null && ip == _ip) {
+      _sendAlive();
+      return;
+    }
+    log.info(name, 'network available, restarting the renderer');
+    await _restart();
   }
 
   Future<void> _start() async {
