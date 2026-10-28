@@ -43618,6 +43618,84 @@
       ]
     }
   },
+  "settingScreensaverDashboardKioskTitle": "Remplacer le mode kiosque HA",
+  "@settingScreensaverDashboardKioskTitle": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Setting label.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardKioskDescription": "Choisissez ce que l'économiseur d'écran masque, indépendamment du mode kiosque HA.",
+  "@settingScreensaverDashboardKioskDescription": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Help below the setting.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideHeaderTitle": "Masquer l'en-tête",
+  "@settingScreensaverDashboardHideHeaderTitle": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Setting label.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideHeaderDescription": "Masquer la barre d'outils du tableau de bord et les onglets de vue sur l'économiseur d'écran.",
+  "@settingScreensaverDashboardHideHeaderDescription": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Help below the setting.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideSidebarTitle": "Masquer la barre latérale",
+  "@settingScreensaverDashboardHideSidebarTitle": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Setting label.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideSidebarDescription": "Masquer la barre de navigation latérale sur l'économiseur d'écran.",
+  "@settingScreensaverDashboardHideSidebarDescription": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Help below the setting.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
   "screensaverDashboardSection": "Économiseur d'écran tableau de bord Home Assistant",
   "@screensaverDashboardSection": {
     "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",

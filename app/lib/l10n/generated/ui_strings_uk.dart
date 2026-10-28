@@ -11726,6 +11726,30 @@ class UiStringsUk extends UiStrings {
       'Одинарні дотики взаємодіють із панеллю керування замість закриття заставки.';
 
   @override
+  String get settingScreensaverDashboardKioskTitle =>
+      'Перевизначити режим кіоска HA';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      'Виберіть, що приховує заставка, окремо від режиму кіоска HA.';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle =>
+      'Приховати заголовок';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      'Приховувати панель інструментів панелі керування та вкладки видів на заставці.';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle =>
+      'Приховати бічну панель';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      'Приховувати навігаційну бічну панель на заставці.';
+
+  @override
   String get screensaverDashboardSection =>
       'Заставка панелі керування Home Assistant';
 

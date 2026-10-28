@@ -43618,6 +43618,84 @@
       ]
     }
   },
+  "settingScreensaverDashboardKioskTitle": "HA kioskmodus overschrijven",
+  "@settingScreensaverDashboardKioskTitle": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Setting label.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardKioskDescription": "Kies wat de schermbeveiliging verbergt, los van de HA-kioskmodus.",
+  "@settingScreensaverDashboardKioskDescription": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Help below the setting.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideHeaderTitle": "Kopbalk verbergen",
+  "@settingScreensaverDashboardHideHeaderTitle": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Setting label.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideHeaderDescription": "Verberg de dashboardwerkbalk en tabbladen met weergaven op de schermbeveiliging.",
+  "@settingScreensaverDashboardHideHeaderDescription": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Help below the setting.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideSidebarTitle": "Zijbalk verbergen",
+  "@settingScreensaverDashboardHideSidebarTitle": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Setting label.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
+  "settingScreensaverDashboardHideSidebarDescription": "Verberg de navigatiezijbalk op de schermbeveiliging.",
+  "@settingScreensaverDashboardHideSidebarDescription": {
+    "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",
+    "description": "Help below the setting.",
+    "x-locations": {
+      "device": [
+        "Settings > Screensaver > Home Assistant Dashboard screensaver"
+      ],
+      "remoteAdmin": [
+        "Screensaver > Home Assistant Dashboard screensaver"
+      ]
+    }
+  },
   "screensaverDashboardSection": "Home Assistant-dashboard als schermbeveiliging",
   "@screensaverDashboardSection": {
     "context": "Settings:Screensaver:Home Assistant Dashboard screensaver",

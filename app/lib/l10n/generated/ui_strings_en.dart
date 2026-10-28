@@ -11597,6 +11597,27 @@ class UiStringsEn extends UiStrings {
       'Single taps interact with the dashboard instead of dismissing.';
 
   @override
+  String get settingScreensaverDashboardKioskTitle => 'HA kiosk mode override';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      'Choose what the screensaver hides, separate from HA kiosk mode.';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle => 'Hide the header';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      'Hide the dashboard toolbar and view tabs on the screensaver.';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle => 'Hide the sidebar';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      'Hide the navigation sidebar on the screensaver.';
+
+  @override
   String get screensaverDashboardSection =>
       'Home Assistant Dashboard screensaver';
 

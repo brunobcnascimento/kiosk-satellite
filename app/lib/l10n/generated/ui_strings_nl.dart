@@ -11739,6 +11739,28 @@ class UiStringsNl extends UiStrings {
       'Enkele tikken werken met het dashboard en sluiten de schermbeveiliging niet af.';
 
   @override
+  String get settingScreensaverDashboardKioskTitle =>
+      'HA kioskmodus overschrijven';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      'Kies wat de schermbeveiliging verbergt, los van de HA-kioskmodus.';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle => 'Kopbalk verbergen';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      'Verberg de dashboardwerkbalk en tabbladen met weergaven op de schermbeveiliging.';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle => 'Zijbalk verbergen';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      'Verberg de navigatiezijbalk op de schermbeveiliging.';
+
+  @override
   String get screensaverDashboardSection =>
       'Home Assistant-dashboard als schermbeveiliging';
 

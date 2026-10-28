@@ -509,7 +509,10 @@ class _KioskScreenState extends State<KioskScreen>
     // page in place, with no reload and nothing lost from it.
     if (e.key == defs.haKioskMode.key ||
         e.key == defs.haKioskHideHeader.key ||
-        e.key == defs.haKioskHideSidebar.key) {
+        e.key == defs.haKioskHideSidebar.key ||
+        e.key == defs.screensaverDashboardKiosk.key ||
+        e.key == defs.screensaverDashboardHideHeader.key ||
+        e.key == defs.screensaverDashboardHideSidebar.key) {
       await _applyKioskMode();
       return;
     }
@@ -889,6 +892,7 @@ class _KioskScreenState extends State<KioskScreen>
     c.sendspin.nowPlaying.addListener(_syncVolumeKeys);
     c.pageState.pageDark.addListener(_pageDarkChanged);
     c.screensaver.activeView.addListener(_syncVolumeKeys);
+    c.screensaver.dashboardShowing.addListener(_applyKioskMode);
     // The build and the native key routing both follow these surfaces.
     c.browser.overlayUrl.addListener(_onOverlayChanged);
     c.launcher.visible.addListener(_onOverlayChanged);
@@ -1114,11 +1118,7 @@ class _KioskScreenState extends State<KioskScreen>
       injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
     ),
     UserScript(
-      source: kioskModeApplyJs(
-        apply: c.settings.get(defs.haKioskMode),
-        hideHeader: c.settings.get(defs.haKioskHideHeader),
-        hideSidebar: c.settings.get(defs.haKioskHideSidebar),
-      ),
+      source: _kioskModeJs,
       injectionTime: UserScriptInjectionTime.AT_DOCUMENT_START,
     ),
     // Reports the Home Assistant socket closing, so a dashboard that is not
@@ -1241,15 +1241,29 @@ class _KioskScreenState extends State<KioskScreen>
       ),
   ];
 
+  /// Kiosk mode as the page should have it now. The Home Assistant
+  /// Dashboard screensaver can hide its own choice of header and sidebar
+  /// while it shows (issue #1183), whatever HA kiosk mode says.
+  String get _kioskModeJs {
+    final s = c.settings;
+    if (c.screensaver.dashboardShowing.value &&
+        s.get(defs.screensaverDashboardKiosk)) {
+      return kioskModeApplyJs(
+        apply: true,
+        hideHeader: s.get(defs.screensaverDashboardHideHeader),
+        hideSidebar: s.get(defs.screensaverDashboardHideSidebar),
+      );
+    }
+    return kioskModeApplyJs(
+      apply: s.get(defs.haKioskMode),
+      hideHeader: s.get(defs.haKioskHideHeader),
+      hideSidebar: s.get(defs.haKioskHideSidebar),
+    );
+  }
+
   /// Apply or tear down kiosk mode against the current page.
   Future<void> _applyKioskMode() async {
-    await c.browser.runJs(
-      kioskModeApplyJs(
-        apply: c.settings.get(defs.haKioskMode),
-        hideHeader: c.settings.get(defs.haKioskHideHeader),
-        hideSidebar: c.settings.get(defs.haKioskHideSidebar),
-      ),
-    );
+    await c.browser.runJs(_kioskModeJs);
   }
 
   /// Open the settings screen (One UI-style split view on wide screens).
@@ -1584,6 +1598,7 @@ class _KioskScreenState extends State<KioskScreen>
     c.sendspin.nowPlaying.removeListener(_syncVolumeKeys);
     c.pageState.pageDark.removeListener(_pageDarkChanged);
     c.screensaver.activeView.removeListener(_syncVolumeKeys);
+    c.screensaver.dashboardShowing.removeListener(_applyKioskMode);
     c.browser.overlayUrl.removeListener(_onOverlayChanged);
     c.launcher.visible.removeListener(_onOverlayChanged);
     c.intercom.rosterVisible.removeListener(_onOverlayChanged);

@@ -3807,6 +3807,18 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingScreensaverDashboardDoubleTapTitle,
       'settingScreensaverDashboardDoubleTapDescription' =>
         strings.settingScreensaverDashboardDoubleTapDescription,
+      'settingScreensaverDashboardKioskTitle' =>
+        strings.settingScreensaverDashboardKioskTitle,
+      'settingScreensaverDashboardKioskDescription' =>
+        strings.settingScreensaverDashboardKioskDescription,
+      'settingScreensaverDashboardHideHeaderTitle' =>
+        strings.settingScreensaverDashboardHideHeaderTitle,
+      'settingScreensaverDashboardHideHeaderDescription' =>
+        strings.settingScreensaverDashboardHideHeaderDescription,
+      'settingScreensaverDashboardHideSidebarTitle' =>
+        strings.settingScreensaverDashboardHideSidebarTitle,
+      'settingScreensaverDashboardHideSidebarDescription' =>
+        strings.settingScreensaverDashboardHideSidebarDescription,
       'screensaverDashboardSection' => strings.screensaverDashboardSection,
       'screensaverModeUrl' => strings.screensaverModeUrl,
       'screensaverCalendarSection' => strings.screensaverCalendarSection,

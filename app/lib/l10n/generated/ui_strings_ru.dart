@@ -11689,6 +11689,29 @@ class UiStringsRu extends UiStrings {
       'Одиночные касания взаимодействуют с панелью вместо закрытия.';
 
   @override
+  String get settingScreensaverDashboardKioskTitle =>
+      'Переопределить режим киоска HA';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      'Выберите, что скрывает заставка, отдельно от режима киоска HA.';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle => 'Скрыть заголовок';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      'Скрыть панель инструментов и вкладки видов на заставке.';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle =>
+      'Скрыть боковую панель';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      'Скрыть боковую панель навигации на заставке.';
+
+  @override
   String get screensaverDashboardSection => 'Заставка «Панель Home Assistant»';
 
   @override

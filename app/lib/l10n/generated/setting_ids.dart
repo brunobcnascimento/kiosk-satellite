@@ -324,6 +324,18 @@ const settingMessageIds = <String, Map<String, String>>{
     "title": "settingScreensaverDashboardDoubleTapTitle",
     "description": "settingScreensaverDashboardDoubleTapDescription",
   },
+  "screensaver.dashboard_kiosk": {
+    "title": "settingScreensaverDashboardKioskTitle",
+    "description": "settingScreensaverDashboardKioskDescription",
+  },
+  "screensaver.dashboard_hide_header": {
+    "title": "settingScreensaverDashboardHideHeaderTitle",
+    "description": "settingScreensaverDashboardHideHeaderDescription",
+  },
+  "screensaver.dashboard_hide_sidebar": {
+    "title": "settingScreensaverDashboardHideSidebarTitle",
+    "description": "settingScreensaverDashboardHideSidebarDescription",
+  },
   "screensaver.calendar_view": {
     "title": "settingScreensaverCalendarViewTitle",
     "description": "settingScreensaverCalendarViewDescription",

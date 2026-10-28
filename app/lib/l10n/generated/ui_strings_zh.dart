@@ -11045,6 +11045,27 @@ class UiStringsZh extends UiStrings {
       '单击与仪表盘交互，而非关闭屏保。';
 
   @override
+  String get settingScreensaverDashboardKioskTitle => '覆盖 HA Kiosk 模式';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      '单独选择屏保隐藏的内容，不受 HA Kiosk 模式影响。';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle => '隐藏顶栏';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      '在屏保上隐藏仪表盘工具栏和页面标签。';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle => '隐藏侧边栏';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      '在屏保上隐藏导航侧边栏。';
+
+  @override
   String get screensaverDashboardSection => 'Home Assistant 仪表盘屏保';
 
   @override
@@ -25886,6 +25907,27 @@ class UiStringsZhCn extends UiStringsZh {
   @override
   String get settingScreensaverDashboardDoubleTapDescription =>
       '单击与仪表盘交互，而非关闭屏保。';
+
+  @override
+  String get settingScreensaverDashboardKioskTitle => '覆盖 HA Kiosk 模式';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      '单独选择屏保隐藏的内容，不受 HA Kiosk 模式影响。';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle => '隐藏顶栏';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      '在屏保上隐藏仪表盘工具栏和页面标签。';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle => '隐藏侧边栏';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      '在屏保上隐藏导航侧边栏。';
 
   @override
   String get screensaverDashboardSection => 'Home Assistant 仪表盘屏保';

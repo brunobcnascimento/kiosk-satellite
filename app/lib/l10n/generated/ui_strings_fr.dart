@@ -11813,6 +11813,29 @@ class UiStringsFr extends UiStrings {
       'Les appuis simples interagissent avec le tableau de bord au lieu de fermer l\'économiseur d\'écran.';
 
   @override
+  String get settingScreensaverDashboardKioskTitle =>
+      'Remplacer le mode kiosque HA';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      'Choisissez ce que l\'économiseur d\'écran masque, indépendamment du mode kiosque HA.';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle => 'Masquer l\'en-tête';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      'Masquer la barre d\'outils du tableau de bord et les onglets de vue sur l\'économiseur d\'écran.';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle =>
+      'Masquer la barre latérale';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      'Masquer la barre de navigation latérale sur l\'économiseur d\'écran.';
+
+  @override
   String get screensaverDashboardSection =>
       'Économiseur d\'écran tableau de bord Home Assistant';
 

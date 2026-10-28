@@ -214,6 +214,8 @@ Shows a Home Assistant dashboard view as the screensaver. Selecting the mode rev
 
 The view opens in the dashboard's own web view with the same in-page navigation view rotation uses, so Home Assistant does not reload and the Voice Satellite integration keeps running. When the screensaver ends, the dashboard goes back to the view it was on before. With **Return to home dashboard view** on it goes to the home view instead. If something in Home Assistant navigated the dashboard while the screensaver was up, it stays where that navigation left it.
 
+The screensaver follows **HA kiosk mode** by default. Turn on **HA kiosk mode override** to pick what it hides with its own **Hide the header** and **Hide the sidebar** switches. They apply only while the screensaver is up, so the dashboard can keep its header and sidebar for moving between views and the screensaver can still fill the screen.
+
 A tap anywhere dismisses the screensaver without pressing the card under the finger. Turn on **Double tap to dismiss** to use the dashboard while the screensaver is up. Single taps then press buttons, move sliders and open popups, and a double tap dismisses the screensaver. Motion, face, proximity and person detection, the brightness settings, the schedule, widgets and the At a Glance row work as in the other modes. When no view is picked the screensaver keeps whatever the dashboard shows. Like Dim, this mode keeps the dashboard rendering, so **Pause dashboard during screensaver** does not apply.
 
 ## Slideshow Behavior

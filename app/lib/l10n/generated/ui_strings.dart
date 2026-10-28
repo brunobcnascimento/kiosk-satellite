@@ -20267,6 +20267,42 @@ abstract class UiStrings {
   /// **'Single taps interact with the dashboard instead of dismissing.'**
   String get settingScreensaverDashboardDoubleTapDescription;
 
+  /// Setting label.
+  ///
+  /// In en, this message translates to:
+  /// **'HA kiosk mode override'**
+  String get settingScreensaverDashboardKioskTitle;
+
+  /// Help below the setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what the screensaver hides, separate from HA kiosk mode.'**
+  String get settingScreensaverDashboardKioskDescription;
+
+  /// Setting label.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the header'**
+  String get settingScreensaverDashboardHideHeaderTitle;
+
+  /// Help below the setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the dashboard toolbar and view tabs on the screensaver.'**
+  String get settingScreensaverDashboardHideHeaderDescription;
+
+  /// Setting label.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the sidebar'**
+  String get settingScreensaverDashboardHideSidebarTitle;
+
+  /// Help below the setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the navigation sidebar on the screensaver.'**
+  String get settingScreensaverDashboardHideSidebarDescription;
+
   /// Label, status or guidance in this section.
   ///
   /// In en, this message translates to:

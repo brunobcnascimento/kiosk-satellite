@@ -11855,6 +11855,30 @@ class UiStringsDe extends UiStrings {
       'Ein einfacher Tipp ermöglicht die Interaktion mit dem Dashboard, anstatt den Bildschirmschoner zu schließen.';
 
   @override
+  String get settingScreensaverDashboardKioskTitle =>
+      'HA-Kioskmodus überschreiben';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      'Lege fest, was der Bildschirmschoner ausblendet, unabhängig vom HA-Kioskmodus.';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle =>
+      'Kopfzeile ausblenden';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      'Blendet die Dashboard-Symbolleiste und die Registerkarten der Ansichten im Bildschirmschoner aus.';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle =>
+      'Seitenleiste ausblenden';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      'Blendet die Navigations-Seitenleiste im Bildschirmschoner aus.';
+
+  @override
   String get screensaverDashboardSection =>
       'Bildschirmschoner: Home-Assistant-Dashboard';
 

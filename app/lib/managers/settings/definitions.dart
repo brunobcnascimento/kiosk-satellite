@@ -2197,6 +2197,44 @@ const screensaverDashboardDoubleTap = SettingDef<bool>(
   dependsOnValue: 'dashboard',
 );
 
+// The screensaver's own header and sidebar choice (issue #1183), applied
+// only while the mode shows and whatever HA kiosk mode says. Off follows
+// HA kiosk mode, as the screensaver always did.
+const screensaverDashboardKiosk = SettingDef<bool>(
+  key: 'screensaver.dashboard_kiosk',
+  type: SettingType.boolean,
+  defaultValue: false,
+  title: 'HA kiosk mode override',
+  description:
+      'Choose what the screensaver hides, separate from HA kiosk mode.',
+  category: 'Screensaver',
+  section: 'Home Assistant Dashboard screensaver',
+  dependsOn: 'screensaver.mode',
+  dependsOnValue: 'dashboard',
+);
+
+const screensaverDashboardHideHeader = SettingDef<bool>(
+  key: 'screensaver.dashboard_hide_header',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'Hide the header',
+  description: 'Hide the dashboard toolbar and view tabs on the screensaver.',
+  category: 'Screensaver',
+  section: 'Home Assistant Dashboard screensaver',
+  dependsOn: 'screensaver.dashboard_kiosk',
+);
+
+const screensaverDashboardHideSidebar = SettingDef<bool>(
+  key: 'screensaver.dashboard_hide_sidebar',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'Hide the sidebar',
+  description: 'Hide the navigation sidebar on the screensaver.',
+  category: 'Screensaver',
+  section: 'Home Assistant Dashboard screensaver',
+  dependsOn: 'screensaver.dashboard_kiosk',
+);
+
 // The Calendar mode opens on this view, on today. Its own setting, not
 // the calendar's Default view, so the kiosk menu can open on one view and
 // the screensaver show another.
@@ -13339,6 +13377,9 @@ const List<SettingDef<Object>> allSettings = [
   screensaverCameraViewName,
   screensaverDashboardView,
   screensaverDashboardDoubleTap,
+  screensaverDashboardKiosk,
+  screensaverDashboardHideHeader,
+  screensaverDashboardHideSidebar,
   screensaverCalendarView,
   // The Widgets group: corner overlays riding over the mode panels above,
   // so it sits between them and the other overlay group, At a Glance.

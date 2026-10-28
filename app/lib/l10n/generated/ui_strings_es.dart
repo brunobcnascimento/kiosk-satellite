@@ -11815,6 +11815,30 @@ class UiStringsEs extends UiStrings {
       'Un solo toque permite interactuar con el panel de control en lugar de cerrar el protector de pantalla.';
 
   @override
+  String get settingScreensaverDashboardKioskTitle =>
+      'Anular el modo kiosko de HA';
+
+  @override
+  String get settingScreensaverDashboardKioskDescription =>
+      'Elige qué oculta el protector de pantalla, aparte del modo kiosko de HA.';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderTitle =>
+      'Ocultar la cabecera';
+
+  @override
+  String get settingScreensaverDashboardHideHeaderDescription =>
+      'Oculta la barra de herramientas del panel de control y las pestañas de las vistas en el protector de pantalla.';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarTitle =>
+      'Ocultar la barra lateral';
+
+  @override
+  String get settingScreensaverDashboardHideSidebarDescription =>
+      'Oculta la barra lateral de navegación en el protector de pantalla.';
+
+  @override
   String get screensaverDashboardSection =>
       'Protector de pantalla: Panel de control de Home Assistant';
 

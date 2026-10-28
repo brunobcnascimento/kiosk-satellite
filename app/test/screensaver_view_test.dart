@@ -317,6 +317,37 @@ void main() {
       expect(defs.screensaverDashboardDoubleTap.dependsOn, 'screensaver.mode');
       expect(defs.screensaverDashboardDoubleTap.dependsOnValue, 'dashboard');
     });
+
+    // The mode's own header and sidebar choice (issue #1183) swaps in on
+    // this signal and goes back to HA kiosk mode once it drops.
+    test('the dashboard reports itself shown until the dismissal', () async {
+      await buildDashboard(const {});
+      expect(saver.dashboardShowing.value, isTrue);
+      saver.notifyActivity('touch');
+      await pumpEventQueue();
+      expect(saver.dashboardShowing.value, isFalse);
+    });
+
+    test('other modes never report the dashboard shown', () async {
+      await build('website');
+      await saver.start();
+      await pumpEventQueue();
+      expect(saver.dashboardShowing.value, isFalse);
+    });
+
+    test('the override reveals its switches only when on', () async {
+      await build('dashboard');
+      expect(settings.visible(defs.screensaverDashboardKiosk), isTrue);
+      expect(settings.visible(defs.screensaverDashboardHideHeader), isFalse);
+      expect(settings.visible(defs.screensaverDashboardHideSidebar), isFalse);
+      await settings.set(defs.screensaverDashboardKiosk, true);
+      expect(settings.visible(defs.screensaverDashboardHideHeader), isTrue);
+      expect(settings.visible(defs.screensaverDashboardHideSidebar), isTrue);
+      // The switches go with the mode, through the override's own gate.
+      await settings.set(defs.screensaverMode, 'clock');
+      expect(settings.visible(defs.screensaverDashboardKiosk), isFalse);
+      expect(settings.visible(defs.screensaverDashboardHideHeader), isFalse);
+    });
   });
 
   // The Website screensaver's zoom level: a page built for a monitor lands
