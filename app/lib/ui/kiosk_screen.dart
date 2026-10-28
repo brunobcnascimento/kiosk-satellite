@@ -1750,15 +1750,24 @@ class _KioskScreenState extends State<KioskScreen>
                           ValueListenableBuilder<bool>(
                             valueListenable: c.browser.renderingFrozenState,
                             child: child,
-                            builder: (context, frozen, child) => Offstage(
-                              // Skip platform view compositing only after the
-                              // browser confirms it is safe to hide the dashboard.
-                              offstage:
-                                  (view == 'weather_mood' ||
-                                      view == 'celestial') &&
-                                  frozen,
-                              child: child,
-                            ),
+                            builder: (context, frozen, child) =>
+                                ValueListenableBuilder<bool>(
+                                  valueListenable: c.voice.covers,
+                                  child: child,
+                                  // Skip platform view compositing only after
+                                  // the browser confirms it is safe to hide
+                                  // the dashboard: under the two screensavers
+                                  // that draw every frame, and under a voice
+                                  // turn whose backdrop hides the screen.
+                                  builder: (context, covers, child) => Offstage(
+                                    offstage:
+                                        (view == 'weather_mood' ||
+                                            view == 'celestial' ||
+                                            covers) &&
+                                        frozen,
+                                    child: child,
+                                  ),
+                                ),
                           ),
                     ),
                   ),

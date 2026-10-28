@@ -90,6 +90,17 @@ class VoiceManager extends Manager {
   /// What the assist overlay draws.
   final view = ValueNotifier<AssistView>(AssistView.hidden);
 
+  /// Whether the overlay hides everything under it: a full screen turn
+  /// with an opaque backdrop, or a see-through one once its blurred
+  /// capture of the screen is in place. The kiosk screen then takes the
+  /// dashboard's platform view out of the frame. With it in, Flutter
+  /// draws every frame through an image reader and wraps it in a bitmap
+  /// on the Java side, whose native allocations trigger a garbage
+  /// collection every few frames and block the main thread while one
+  /// runs: on an Echo Show 8 the overlay's animations stalled for 100 to
+  /// 800 ms at a time with the collector on 60 percent of a core.
+  final covers = ValueNotifier<bool>(false);
+
   /// The turn in Home Assistant's assist_satellite states, as the Voice
   /// Satellite sensor reports it. Home Assistant's own satellite entity
   /// stays idle through a realtime conversation, which runs no pipeline.

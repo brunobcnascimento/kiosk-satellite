@@ -122,6 +122,36 @@ class _AssistOverlayState extends State<AssistOverlay>
   ui.Image? _frozen;
   int _frozenGen = 0;
 
+  /// The fade in has finished: before that the screen under the overlay
+  /// still shows through it, so it cannot be hidden yet.
+  bool _fadedIn = false;
+
+  /// Whether the backdrop hides the screen under it: opaque, or blurred
+  /// once the capture is in place. Lens Flares and the plugin skins draw
+  /// over the live screen, and a docked bubble sits on it.
+  bool _backdropCovers(AssistView view) {
+    if (view.docked || _pluginSkin(view)) return false;
+    final skin = assistSkinById(
+      c.settings.get(defs.voiceSkinOf(view.assistant)),
+    );
+    final chosen = c.settings.get(defs.voiceBackgroundOpacity).toDouble();
+    final opacity = chosen < 0 ? skin.light.opacity : chosen / 100;
+    return opacity >= 0.99 || (skin.blur > 0 && _frozen != null);
+  }
+
+  /// Reports whether the overlay hides the screen: the kiosk screen drops
+  /// the dashboard's platform view from the frame and the browser stops
+  /// compositing it. Hiding waits for the fade in; the report that it no
+  /// longer covers goes out the moment a hide starts, so the dashboard is
+  /// drawing again under the fade out.
+  void _syncCovers() {
+    final view = c.voice.view.value;
+    final covers = _fadedIn && view.visible && _backdropCovers(view);
+    if (c.voice.covers.value == covers) return;
+    c.voice.covers.value = covers;
+    c.browser.setCovered('voice', covered: covers);
+  }
+
   /// Frame timings while the overlay is up, reported through voiceStatus
   /// so a skin's cost on a device can be read remotely.
   final _timings = <FrameTiming>[];
@@ -179,6 +209,7 @@ class _AssistOverlayState extends State<AssistOverlay>
       setState(() {
         if (e.key == defs.voiceDockPosition.key) _readDockPosition();
       });
+      _syncCovers();
     });
     _errorSub = c.voice.notices.stream.listen(_onNotice);
     _clearedSub = c.voice.clearedNotices.stream.listen(_onCleared);
@@ -190,6 +221,8 @@ class _AssistOverlayState extends State<AssistOverlay>
     c.plugins.installed.removeListener(_onPlugins);
     c.plugins.enabled.removeListener(_onPlugins);
     _watchFrames(false);
+    _fadedIn = false;
+    _syncCovers();
     _frozenGen++;
     _frozen?.dispose();
     _settingsSub?.cancel();
@@ -209,6 +242,7 @@ class _AssistOverlayState extends State<AssistOverlay>
 
   void _onPlugins() {
     if (mounted && _shown.visible) setState(() {});
+    _syncCovers();
   }
 
   void _onView() {
@@ -216,6 +250,10 @@ class _AssistOverlayState extends State<AssistOverlay>
     if (!mounted) return;
     _watchFrames(next.visible);
     if (next.visible) _clock.running = true;
+    if (!next.visible) {
+      _fadedIn = false;
+      _syncCovers();
+    }
     // A docked conversation has no backdrop to blur.
     if (next.visible && !_shown.visible && !next.docked) {
       unawaited(_freezeBackdrop(next));
@@ -235,6 +273,7 @@ class _AssistOverlayState extends State<AssistOverlay>
         _lightbox = null;
       }
     });
+    _syncCovers();
   }
 
   Future<void> _freezeBackdrop(AssistView view) async {
@@ -280,6 +319,7 @@ class _AssistOverlayState extends State<AssistOverlay>
       _frozen?.dispose();
       _frozen = blurred;
     });
+    _syncCovers();
   }
 
   void _onNotice(VoiceNotice notice) {
@@ -336,6 +376,10 @@ class _AssistOverlayState extends State<AssistOverlay>
         duration: Duration(milliseconds: visible ? 300 : 400),
         curve: Curves.ease,
         onEnd: () {
+          if (c.voice.view.value.visible && mounted) {
+            _fadedIn = true;
+            _syncCovers();
+          }
           if (!c.voice.view.value.visible && mounted) {
             _clock.running = false;
             setState(() {
