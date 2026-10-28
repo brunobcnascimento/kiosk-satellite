@@ -500,8 +500,15 @@ class RealtimeSession {
   /// Playback this loud (of full scale) is the voice speaking.
   static const voiced = 0.02;
 
-  /// A chunk this quiet, or near the room's own level, holds no echo.
+  /// A chunk this quiet, or near the room's own level, or well under what
+  /// counts as the user ([_bargeInThreshold] over [quietUnderBargeIn]),
+  /// holds no echo worth waiting for. The room's level is only measured
+  /// while nothing plays, so a conversation started over music has none,
+  /// and over ducked music the canceller leaves a residual that sits
+  /// around this level: on a Galaxy Tab S8 a median of 100 and a p90 of
+  /// 270, which kept an answer "settling" for 10 s against the bare 150.
   static const quietLevel = 150;
+  static const quietUnderBargeIn = 4;
 
   bool _settled = false;
   int _quietVoiced = 0;
@@ -650,7 +657,10 @@ class RealtimeSession {
   /// and ends the settling once there are enough in a row.
   void _watchSettling(int level) {
     if (_settled || _playingRaw < voiced) return;
-    final quiet = level <= math.max(quietLevel, _room.level * 3);
+    final quiet = level <= math.max(
+      math.max(quietLevel, _room.level * 3),
+      _bargeInThreshold ~/ quietUnderBargeIn,
+    );
     _quietVoiced = quiet ? _quietVoiced + 1 : 0;
     final from = _answerFrom;
     if (_quietVoiced >= settledAfter &&
