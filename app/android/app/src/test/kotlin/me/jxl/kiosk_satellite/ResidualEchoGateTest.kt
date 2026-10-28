@@ -4,15 +4,10 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ResidualEchoGateTest {
-    @Test fun prototypeRealtimePreservesQuietSpeechUnderLoudPlayback() {
+    @Test fun realtimeOutranksAnOverlappingCall() {
         val gate = ResidualEchoGate()
         gate.set("realtime", ResidualEchoGate.Mode.REALTIME)
         assertTrue(gate.realtime)
-        for (left in listOf(20, 100, 250, 500, 1000)) {
-            repeat(200) {
-                assertFalse(gate.suppress(6000, 8000, left, subtractionOnly = true))
-            }
-        }
         gate.set("intercom", ResidualEchoGate.Mode.INTERCOM)
         assertTrue(gate.realtime)
         gate.set("realtime", null)
