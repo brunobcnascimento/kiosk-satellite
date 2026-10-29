@@ -111,6 +111,7 @@ Configures direct integration with local Sonos hardware.
 | Layout mode | Vertical | Vertical stacks artwork, track details and controls. Horizontal splits standalone Now Playing into equal artwork and controls halves. Album art only fills the screen with artwork and shows track details and controls for a few seconds after a tap. Ignored while shown alongside a screensaver. |
 | Show media controls | on | Displays transport buttons and a progress bar over the background artwork. When enabled, a top-right close button appears and paused tracks remain on screen until the paused timeout expires. |
 | Double tap to dismiss | off | Allows a double tap anywhere on the standalone Now Playing view to dismiss it, removing the close button. Taps on controls or queue rows do not trigger dismissal. Ignored while shown alongside a screensaver. |
+| Always show close button | off | Keeps the close button while **Double tap to dismiss** is on, for anyone who does not know the gesture. |
 | Dismiss "Now Playing" on motion | off | When disabled, motion events will not dismiss the standalone music display. Ignored while Now Playing is shown alongside a screensaver. Shared layouts follow the screensaver's detection settings. |
 | After dismissing | Default | The dashboard view to show after Now Playing is dismissed. **Default** follows **Return to home dashboard view**. **Last view** goes back to the view the kiosk showed when the screensaver started. **Chosen view** opens the view picked in **Dashboard view**. |
 | Dashboard view | none | Shown with **Chosen view**. The view to open after Now Playing is dismissed, picked from your Home Assistant dashboards. |
@@ -222,7 +223,7 @@ The Large card format adds touch-friendly previous, play/pause, and next control
 
 Card behavior:
 * **Paused State**: Remains on screen with a play button until the configured pause timeout expires.
-* **Dismissal**: On the standalone Now Playing view with media controls enabled, tap the close button or enable **Double tap to dismiss** and double tap the background. The physical back button also dismisses the view. When shown alongside a screensaver, tap the screensaver panel instead.
+* **Dismissal**: On the standalone Now Playing view with media controls enabled, tap the close button or enable **Double tap to dismiss** and double tap the background. Turn on **Always show close button** to offer both. The physical back button also dismisses the view. When shown alongside a screensaver, tap the screensaver panel instead.
 * **Voice Interactions**: The card hides automatically during active voice interactions and reappears when the interaction ends.
 * **Track Transitions**: Retains the previous track artwork briefly during stream buffering to eliminate visual flickering.
 

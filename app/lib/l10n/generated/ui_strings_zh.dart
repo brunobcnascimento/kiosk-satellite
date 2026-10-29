@@ -9213,6 +9213,13 @@ class UiStringsZh extends UiStrings {
       '双击“正在播放”页面的任意位置即可关闭页面，不显示关闭按钮。“正在播放”与屏保同时显示时，此设置不生效。';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle => '始终显示关闭按钮';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      '开启“双击关闭”时仍显示关闭按钮。';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle => '音乐开始播放时打开“正在播放”';
 
   @override
@@ -24029,6 +24036,13 @@ class UiStringsZhCn extends UiStringsZh {
   @override
   String get settingSendspinFullscreenDoubleTapDescription =>
       '双击“正在播放”页面的任意位置即可关闭页面，不显示关闭按钮。“正在播放”与屏保同时显示时，此设置不生效。';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonTitle => '始终显示关闭按钮';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      '开启“双击关闭”时仍显示关闭按钮。';
 
   @override
   String get settingSendspinFullscreenOnPlayTitle => '音乐开始播放时打开“正在播放”';

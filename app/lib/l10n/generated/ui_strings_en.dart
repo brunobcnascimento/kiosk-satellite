@@ -9654,6 +9654,14 @@ class UiStringsEn extends UiStrings {
       'A double tap anywhere on the Now Playing view dismisses it. The close button won\'t be shown. Ignored while Now Playing is shown alongside a screensaver.';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle =>
+      'Always show close button';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      'Show the close button while Double tap to dismiss is on.';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle =>
       'Launch Now Playing when music starts playing';
 

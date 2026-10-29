@@ -9824,6 +9824,14 @@ class UiStringsFr extends UiStrings {
       'Un double appui n\'importe où sur la vue Lecture en cours la ferme. Le bouton de fermeture ne sera pas affiché. Ignoré tant que Lecture en cours est affichée aux côtés d\'un économiseur d\'écran.';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle =>
+      'Toujours afficher le bouton de fermeture';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      'Affiche le bouton de fermeture même quand Double appui pour fermer est activé.';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle =>
       'Lancer Lecture en cours quand la musique démarre';
 

@@ -191,7 +191,8 @@ class _SendspinFullscreenViewState extends State<SendspinFullscreenView> {
           e.key == defs.sendspinFullscreenTextScale.key ||
           e.key == defs.sendspinFullscreenButtonScale.key ||
           e.key == defs.sendspinFullscreenLayout.key ||
-          e.key == defs.sendspinFullscreenDoubleTap.key) {
+          e.key == defs.sendspinFullscreenDoubleTap.key ||
+          e.key == defs.sendspinFullscreenCloseButton.key) {
         _onLayoutChanged();
       }
     });
@@ -275,11 +276,15 @@ class _SendspinFullscreenViewState extends State<SendspinFullscreenView> {
         baseControlsScale *
         c.settings.get(defs.sendspinFullscreenButtonScale).toDouble() /
         100;
-    // Double tap to dismiss (issue #409) replaces the close button: the
-    // manager runs the tap chain on touches off the controls.
+    // Double tap to dismiss (issue #409) replaces the close button unless
+    // it is kept on (issue #1203): the manager runs the tap chain on
+    // touches off the controls.
     final doubleTap =
         controls && c.settings.get(defs.sendspinFullscreenDoubleTap);
-    final showClose = controls && !doubleTap && !widget.alongsideScreensaver;
+    final showClose =
+        controls &&
+        (!doubleTap || c.settings.get(defs.sendspinFullscreenCloseButton)) &&
+        !widget.alongsideScreensaver;
     final showPlayerChip =
         c.settings.get(defs.sendspinSpeakerPill) &&
         c.sendspin.playerChipName.isNotEmpty;

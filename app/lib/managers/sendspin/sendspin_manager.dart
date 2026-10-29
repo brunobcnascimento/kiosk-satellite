@@ -1420,6 +1420,7 @@ class SendspinManager extends Manager {
         'sendspin.fullscreen_return_view',
         'sendspin.fullscreen_queue',
         'sendspin.fullscreen_double_tap',
+        'sendspin.fullscreen_close_button',
         'sendspin.fullscreen_on_play',
         'sendspin.fullscreen_shortcut',
         'sendspin.fullscreen_motion',

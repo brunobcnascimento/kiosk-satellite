@@ -9748,6 +9748,14 @@ class UiStringsUk extends UiStrings {
       'Подвійний дотик будь-де у режимі «Зараз грає» закриває його. Кнопка закриття не показуватиметься. Ігнорується, коли «Зараз грає» показано поруч із заставкою.';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle =>
+      'Завжди показувати кнопку закриття';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      'Показує кнопку закриття, навіть коли «Подвійний дотик для закриття» увімкнено.';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle =>
       'Відкривати «Зараз грає» при початку музики';
 

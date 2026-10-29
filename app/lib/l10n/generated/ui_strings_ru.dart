@@ -9725,6 +9725,14 @@ class UiStringsRu extends UiStrings {
       'Двойное касание где угодно на виде «Сейчас играет» закрывает его. Кнопка закрытия не показывается. Игнорируется, пока «Сейчас играет» показан рядом с заставкой.';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle =>
+      'Всегда показывать кнопку закрытия';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      'Показывает кнопку закрытия, даже когда «Двойное касание для закрытия» включено.';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle =>
       'Открывать «Сейчас играет» при старте музыки';
 

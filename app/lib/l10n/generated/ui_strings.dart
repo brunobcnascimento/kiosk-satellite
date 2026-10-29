@@ -16847,6 +16847,18 @@ abstract class UiStrings {
   /// **'A double tap anywhere on the Now Playing view dismisses it. The close button won\'t be shown. Ignored while Now Playing is shown alongside a screensaver.'**
   String get settingSendspinFullscreenDoubleTapDescription;
 
+  /// Setting label: keep the X button that closes Now Playing even when Double tap to dismiss is on.
+  ///
+  /// In en, this message translates to:
+  /// **'Always show close button'**
+  String get settingSendspinFullscreenCloseButtonTitle;
+
+  /// Help below this setting. 'Double tap to dismiss' is the name of the setting just above it.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the close button while Double tap to dismiss is on.'**
+  String get settingSendspinFullscreenCloseButtonDescription;
+
   /// Setting label.
   ///
   /// In en, this message translates to:

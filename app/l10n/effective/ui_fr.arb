@@ -36515,6 +36515,32 @@
       ]
     }
   },
+  "settingSendspinFullscreenCloseButtonTitle": "Toujours afficher le bouton de fermeture",
+  "@settingSendspinFullscreenCloseButtonTitle": {
+    "context": "Settings > Media Player > Now Playing > User Interface",
+    "description": "Setting label: keep the X button that closes Now Playing even when Double tap to dismiss is on.",
+    "x-locations": {
+      "device": [
+        "Settings > Media Player > Now Playing > User Interface"
+      ],
+      "remoteAdmin": [
+        "Media Player > Now Playing > User Interface"
+      ]
+    }
+  },
+  "settingSendspinFullscreenCloseButtonDescription": "Affiche le bouton de fermeture même quand Double appui pour fermer est activé.",
+  "@settingSendspinFullscreenCloseButtonDescription": {
+    "context": "Settings > Media Player > Now Playing > User Interface",
+    "description": "Help below this setting. 'Double tap to dismiss' is the name of the setting just above it.",
+    "x-locations": {
+      "device": [
+        "Settings > Media Player > Now Playing > User Interface"
+      ],
+      "remoteAdmin": [
+        "Media Player > Now Playing > User Interface"
+      ]
+    }
+  },
   "settingSendspinFullscreenOnPlayTitle": "Lancer Lecture en cours quand la musique démarre",
   "@settingSendspinFullscreenOnPlayTitle": {
     "context": "Settings > Media Player > Now Playing > User Interface",

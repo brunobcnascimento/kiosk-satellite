@@ -2972,6 +2972,10 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingSendspinFullscreenDoubleTapTitle,
       'settingSendspinFullscreenDoubleTapDescription' =>
         strings.settingSendspinFullscreenDoubleTapDescription,
+      'settingSendspinFullscreenCloseButtonTitle' =>
+        strings.settingSendspinFullscreenCloseButtonTitle,
+      'settingSendspinFullscreenCloseButtonDescription' =>
+        strings.settingSendspinFullscreenCloseButtonDescription,
       'settingSendspinFullscreenOnPlayTitle' =>
         strings.settingSendspinFullscreenOnPlayTitle,
       'settingSendspinFullscreenOnPlayDescription' =>

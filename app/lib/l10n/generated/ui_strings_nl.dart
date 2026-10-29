@@ -9765,6 +9765,14 @@ class UiStringsNl extends UiStrings {
       'Dubbeltik op een willekeurige plek in Speelt nu om de weergave te sluiten. De sluitknop wordt dan niet getoond. Wordt genegeerd als Speelt nu naast een schermbeveiliging staat.';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle =>
+      'Sluitknop altijd tonen';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      'Toont de sluitknop ook als Dubbele tik om af te sluiten aan staat.';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle =>
       'Speelt nu openen wanneer muziek begint';
 

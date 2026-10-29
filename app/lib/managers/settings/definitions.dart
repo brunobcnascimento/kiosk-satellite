@@ -9832,6 +9832,21 @@ const sendspinFullscreenDoubleTap = SettingDef<bool>(
   dependsOn: 'sendspin.fullscreen_controls',
 );
 
+/// Keep the close button while [sendspinFullscreenDoubleTap] is on (issue
+/// #1203): on a family wall tablet not everyone knows the gesture, so the
+/// button stays for them and the double tap for everyone else.
+const sendspinFullscreenCloseButton = SettingDef<bool>(
+  key: 'sendspin.fullscreen_close_button',
+  type: SettingType.boolean,
+  defaultValue: false,
+  title: 'Always show close button',
+  description: 'Show the close button while Double tap to dismiss is on.',
+  category: 'Sendspin',
+  subpage: 'Now Playing',
+  section: 'User Interface',
+  dependsOn: 'sendspin.fullscreen_double_tap',
+);
+
 /// Bring the view up the moment playback starts rather than waiting for
 /// the idle timeout: the display is the point of the music and someone
 /// who queued a song from their phone expects the wall to show it now.
@@ -13675,6 +13690,7 @@ const List<SettingDef<Object>> allSettings = [
   sendspinFullscreenButtonScale,
   sendspinFullscreenLayout,
   sendspinFullscreenDoubleTap,
+  sendspinFullscreenCloseButton,
   sendspinFullscreenMotion,
   sendspinFullscreenReturn,
   sendspinFullscreenReturnView,

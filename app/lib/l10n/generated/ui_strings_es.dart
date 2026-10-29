@@ -9829,6 +9829,14 @@ class UiStringsEs extends UiStrings {
       'Tocar dos veces cualquier parte de Reproduciendo Ahora cierra la vista. No se muestra el botón de cierre. No se aplica cuando Reproduciendo Ahora se muestra junto al protector de pantalla.';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle =>
+      'Mostrar siempre el botón de cierre';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      'Muestra el botón de cierre aunque Tocar dos veces para cerrar esté activado.';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle =>
       'Abrir Reproduciendo Ahora al empezar la música';
 

@@ -9875,6 +9875,14 @@ class UiStringsDe extends UiStrings {
       'Ein Doppeltipp an einer beliebigen Stelle von „Jetzt läuft“ schließt die Ansicht. Es wird keine Schließen-Schaltfläche angezeigt. Gilt nicht, wenn „Jetzt läuft“ neben dem Bildschirmschoner angezeigt wird.';
 
   @override
+  String get settingSendspinFullscreenCloseButtonTitle =>
+      'Schließen-Schaltfläche immer anzeigen';
+
+  @override
+  String get settingSendspinFullscreenCloseButtonDescription =>
+      'Zeigt die Schließen-Schaltfläche auch, wenn „Zum Schließen doppeltippen“ an ist.';
+
+  @override
   String get settingSendspinFullscreenOnPlayTitle =>
       '„Jetzt läuft“ beim Start der Wiedergabe öffnen';
 
