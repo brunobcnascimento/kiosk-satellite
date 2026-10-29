@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <vector>
 
+#include "sendspin/artwork_role.h"
 #include "sendspin/client.h"
 #include "sendspin/controller_role.h"
 #include "sendspin/metadata_role.h"
@@ -163,6 +164,7 @@ std::optional<sendspin::SendspinControllerCommand> command_value(const char* nam
 
 class Bridge final : public sendspin::PlayerRoleListener,
                      public sendspin::MetadataRoleListener,
+                     public sendspin::ArtworkRoleListener,
                      public sendspin::ControllerRoleListener,
                      public sendspin::SendspinClientListener,
                      public sendspin::SendspinNetworkProvider {
@@ -182,6 +184,7 @@ public:
     jmethodID mid_mute_changed = nullptr;
     jmethodID mid_static_delay_changed = nullptr;
     jmethodID mid_metadata = nullptr;
+    jmethodID mid_artwork = nullptr;
     jmethodID mid_group_update = nullptr;
     jmethodID mid_controller_state = nullptr;
     jmethodID mid_time_sync = nullptr;
@@ -226,6 +229,15 @@ public:
     };
     std::optional<Report> report;
     uint32_t skew_ms = 0;
+
+    // The server's latest cover, encoded, for a kiosk that cannot load the
+    // metadata's artwork_url. Only the shown frame is kept: the decode thread
+    // fills `art_next` and the display swaps it in at the server timestamp.
+    // Dart pulls the bytes by sequence number, and only when it needs them.
+    std::mutex art_mutex;
+    std::vector<uint8_t> art_next;
+    std::vector<uint8_t> art_frame;
+    int32_t art_seq = 0;
     int64_t paused_at_us = 0;  // steady clock, when the last paused report landed
 
     // How far a resume may land from the paused position and still be taken
@@ -435,6 +447,46 @@ public:
 
     void on_metadata_clear() override { this->report.reset(); }
 
+    // --- ArtworkRoleListener -----------------------------------------------
+
+    void on_image_decode(uint8_t slot, const uint8_t* data, size_t length,
+                         sendspin::SendspinImageFormat /*format*/) override {
+        if (slot != 0) return;
+        std::lock_guard<std::mutex> lock(this->art_mutex);
+        this->art_next.assign(data, data + length);
+    }
+
+    void on_image_display(uint8_t slot, uint32_t /*lateness_ms*/) override {
+        if (slot != 0) return;
+        int32_t seq;
+        {
+            std::lock_guard<std::mutex> lock(this->art_mutex);
+            this->art_frame = std::move(this->art_next);
+            this->art_next = {};
+            seq = ++this->art_seq;
+        }
+        this->notify_artwork(seq);
+    }
+
+    void on_image_clear(uint8_t slot) override {
+        if (slot != 0) return;
+        {
+            std::lock_guard<std::mutex> lock(this->art_mutex);
+            this->art_frame = {};
+            this->art_next = {};
+            ++this->art_seq;
+        }
+        this->notify_artwork(0);
+    }
+
+    // [seq] names the frame now shown, 0 when there is none.
+    void notify_artwork(int32_t seq) {
+        JNIEnv* env = get_env();
+        if (env == nullptr) return;
+        env->CallVoidMethod(this->callbacks, this->mid_artwork, static_cast<jint>(seq));
+        clear_exception(env);
+    }
+
     // --- ControllerRoleListener --------------------------------------------
 
     void on_controller_state(const sendspin::ServerStateControllerObject& state) override {
@@ -549,7 +601,7 @@ Java_me_jxl_kiosk_1satellite_sendspin_NativeSendspin_nativeCreate(
     JNIEnv* env, jobject /*thiz*/, jobject callbacks, jstring client_id, jstring name,
     jstring product_name, jstring manufacturer, jstring software_version, jint server_port,
     jint audio_buffer_capacity, jint fixed_delay_us, jint initial_static_delay_ms,
-    jintArray formats) {
+    jintArray formats, jint artwork_size) {
     start_stderr_pump();
 
     auto bridge = std::make_unique<Bridge>();
@@ -566,6 +618,7 @@ Java_me_jxl_kiosk_1satellite_sendspin_NativeSendspin_nativeCreate(
         env, cls, "onMetadata",
         "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;"
         "Ljava/lang/String;IIJJJ)V");
+    bridge->mid_artwork = require_method(env, cls, "onArtwork", "(I)V");
     bridge->mid_group_update =
         require_method(env, cls, "onGroupUpdate", "(ILjava/lang/String;Ljava/lang/String;)V");
     bridge->mid_controller_state = require_method(
@@ -615,10 +668,19 @@ Java_me_jxl_kiosk_1satellite_sendspin_NativeSendspin_nativeCreate(
     bridge->controller = &bridge->client->add_controller();
     bridge->metadata = &bridge->client->add_metadata();
 
+    // One album channel, square, sized by the shell to the screen. The
+    // server fits the cover inside it.
+    sendspin::ArtworkRoleConfig artwork_config;
+    auto side = static_cast<uint16_t>(std::clamp(static_cast<int>(artwork_size), 256, 2048));
+    artwork_config.preferred_formats = {
+        {sendspin::SendspinImageSource::ALBUM, sendspin::SendspinImageFormat::JPEG, side, side}};
+    auto& artwork = bridge->client->add_artwork(std::move(artwork_config));
+
     bridge->player->set_listener(bridge.get());
     bridge->player->set_static_delay_adjustable(true);
     bridge->controller->set_listener(bridge.get());
     bridge->metadata->set_listener(bridge.get());
+    artwork.set_listener(bridge.get());
     bridge->client->set_listener(bridge.get());
     bridge->client->set_network_provider(bridge.get());
 
@@ -793,6 +855,26 @@ Java_me_jxl_kiosk_1satellite_sendspin_NativeSendspin_nativeGetTrackDurationMs(JN
                                                                               jlong handle) {
     Bridge* bridge = bridge_from(handle);
     return bridge != nullptr ? bridge->duration_ms.load() : 0;
+}
+
+// The shown cover's bytes when [seq] is still the shown frame, else null.
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_me_jxl_kiosk_1satellite_sendspin_NativeSendspin_nativeGetArtwork(JNIEnv* env,
+                                                                      jobject /*thiz*/,
+                                                                      jlong handle, jint seq) {
+    Bridge* bridge = bridge_from(handle);
+    if (bridge == nullptr) return nullptr;
+    std::lock_guard<std::mutex> lock(bridge->art_mutex);
+    if (seq != bridge->art_seq || bridge->art_frame.empty()) return nullptr;
+    auto length = static_cast<jsize>(bridge->art_frame.size());
+    jbyteArray out = env->NewByteArray(length);
+    if (out == nullptr) {
+        clear_exception(env);
+        return nullptr;
+    }
+    env->SetByteArrayRegion(out, 0, length,
+                            reinterpret_cast<const jbyte*>(bridge->art_frame.data()));
+    return out;
 }
 
 extern "C" JNIEXPORT jlong JNICALL

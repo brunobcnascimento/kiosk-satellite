@@ -229,6 +229,11 @@ class SendspinBridge(
                     if (serverCommands.isNotEmpty()) publishCommands()
                     result.success(true)
                 }
+                // The server's cover frame, pulled only when Dart shows it.
+                "artworkFrame" -> {
+                    val seq = call.argument<Int>("seq") ?: 0
+                    result.success(if (seq != 0) session?.artwork(seq) else null)
+                }
                 // Cover bytes for the media session, fetched on the Dart
                 // side, which knows which self-signed hosts to trust.
                 "setArtwork" -> {
@@ -622,6 +627,10 @@ class SendspinBridge(
         override fun onStreamActiveChanged(active: Boolean) {
             streamActive = active
             recomputePlaying()
+        }
+
+        override fun onArtwork(seq: Int) {
+            emit("artworkChanged", mapOf("seq" to seq))
         }
     }
 }

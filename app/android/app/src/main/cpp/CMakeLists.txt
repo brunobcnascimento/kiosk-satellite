@@ -14,10 +14,11 @@ FetchContent_Declare(
     GIT_TAG        254603c283bc137aa2f748ff5b2c99a39c56faf2
 )
 
-# Player, controller, and metadata are the roles the app uses. Artwork arrives
-# via the metadata artwork_url, and the spectrum tap runs on decoded PCM in the
-# shell, so those roles stay out of the binary.
-set(SENDSPIN_ENABLE_ARTWORK OFF CACHE BOOL "" FORCE)
+# Player, controller, metadata and artwork are the roles the app uses. The
+# artwork role carries the cover as bytes for a kiosk that cannot reach the
+# metadata's artwork_url. The spectrum tap runs on decoded PCM in the shell, so
+# the color and visualizer roles stay out of the binary.
+set(SENDSPIN_ENABLE_ARTWORK ON CACHE BOOL "" FORCE)
 set(SENDSPIN_ENABLE_COLOR OFF CACHE BOOL "" FORCE)
 set(SENDSPIN_ENABLE_VISUALIZER OFF CACHE BOOL "" FORCE)
 

@@ -44,6 +44,12 @@ interface NativeSendspinCallbacks {
         timestampUs: Long,
     )
 
+    /**
+     * The server's cover changed: [seq] names the frame now shown, 0 when it
+     * was cleared. The bytes stay native until [NativeSendspin.nativeGetArtwork].
+     */
+    fun onArtwork(seq: Int)
+
     /** playbackState: -1 unknown, 0 stopped, 1 playing. */
     fun onGroupUpdate(playbackState: Int, groupId: String?, groupName: String?)
 
@@ -92,7 +98,8 @@ object NativeSendspin {
     /**
      * [formats] is a flattened list of supported formats, four ints each:
      * codec id, channels, sample rate, bit depth. Order is the advertised
-     * preference order. Returns 0 on failure.
+     * preference order. [artworkSize] is the side of the square box the
+     * server fits covers into. Returns 0 on failure.
      */
     external fun nativeCreate(
         callbacks: NativeSendspinCallbacks,
@@ -106,6 +113,7 @@ object NativeSendspin {
         fixedDelayUs: Int,
         initialStaticDelayMs: Int,
         formats: IntArray,
+        artworkSize: Int,
     ): Long
 
     external fun nativeStart(handle: Long): Boolean
@@ -137,6 +145,9 @@ object NativeSendspin {
     external fun nativeGetTrackProgressMs(handle: Long): Int
 
     external fun nativeGetTrackDurationMs(handle: Long): Int
+
+    /** The cover's encoded bytes while [seq] is still the shown frame, else null. */
+    external fun nativeGetArtwork(handle: Long, seq: Int): ByteArray?
 
     /** steady_clock microseconds, the clock domain of [nativeNotifyAudioPlayed]. */
     external fun nativeMonotonicTimeUs(): Long

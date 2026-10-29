@@ -323,15 +323,103 @@ class SendspinManager extends Manager {
   Future<Uint8List?> loadArtwork(String url) =>
       _covers.load(url, artworkFetcher);
 
-  /// The local stream's cover URL last handed to the native media session.
+  /// The local stream's cover URL, as the server's metadata names it.
   String _sessionArtUrl = '';
+
+  /// Covers the server sends as bytes on the Sendspin artwork role. A
+  /// kiosk on a VLAN without internet cannot load a radio stream's or a
+  /// streaming service's cover from its own CDN, and a frame needs no
+  /// download, so it comes first. The URL is the fallback for a track the
+  /// server sends no frame for. One source per track: with a frame, the URL
+  /// is never fetched, and the frame stays on the native side until shown.
+  static const artworkFrameScheme = 'sendspin-artwork:';
+
+  /// Frame numbers start over with each run, and the queue's thumbnail
+  /// cache keeps what it draws on disk, so each key names its run too.
+  static final _artRun = DateTime.now().millisecondsSinceEpoch.toRadixString(
+    36,
+  );
+
+  /// The frame the native side holds, 0 when there is none.
+  int _artFrameSeq = 0;
+
+  /// The artwork URL that frame belongs to, null while it waits for its
+  /// track: Music Assistant sends a track's frame just before its metadata.
+  String? _artFrameFor;
+
+  /// What the card shows for [_sessionArtUrl]: its frame, the URL itself,
+  /// or the previous track's cover while a frame may still come.
+  String? _sessionArtShown;
+
+  /// Whether [_sessionArtUrl] itself loaded, which a late frame leaves be.
+  bool _sessionArtLoaded = false;
+
+  /// A progress update can bring a track's URL before its frame: how long
+  /// the URL waits for one before it is fetched instead.
+  Timer? _artFrameWait;
+  static const _artFrameWaitTime = Duration(seconds: 2);
+
+  /// A wait ran out with no frame since the server connected: it does not
+  /// send them, so its URLs load at once.
+  bool _artFramesUnsent = false;
+
+  void _onArtworkChanged(int seq) {
+    if (seq == 0) {
+      _artFrameSeq = 0;
+      _artFrameFor = null;
+      return;
+    }
+    // A frame while the current URL has none of its own is that track's.
+    // Otherwise it is the next track's, whose metadata follows.
+    final current = _sessionArtUrl.isNotEmpty && _artFrameFor != _sessionArtUrl;
+    _artFramesUnsent = false;
+    _artFrameSeq = seq;
+    _artFrameFor = current ? _sessionArtUrl : null;
+    if (current && !_sessionArtLoaded) _showSessionArt(publish: true);
+  }
+
+  /// A new cover URL from the server's metadata, empty for a track without.
+  void _onSessionArtUrl(String url) {
+    _sessionArtUrl = url;
+    _sessionArtLoaded = false;
+    _artFrameWait?.cancel();
+    _artFrameWait = null;
+    if (url.isEmpty) {
+      _sessionArtShown = null;
+      return;
+    }
+    if (_artFrameSeq != 0 && _artFrameFor == null) _artFrameFor = url;
+    if (_artFrameFor == url || _artFramesUnsent) return _showSessionArt();
+    _artFrameWait = Timer(_artFrameWaitTime, () {
+      _artFrameWait = null;
+      if (_artFrameSeq == 0) _artFramesUnsent = true;
+      if (_sessionArtUrl == url) _showSessionArt(publish: true);
+    });
+  }
+
+  /// Show the current track's frame, or its URL when it has none.
+  void _showSessionArt({bool publish = false}) {
+    final frame = _artFrameSeq != 0 && _artFrameFor == _sessionArtUrl;
+    final shown = frame
+        ? '$artworkFrameScheme$_artRun-$_artFrameSeq'
+        : _sessionArtUrl;
+    _artFrameWait?.cancel();
+    _artFrameWait = null;
+    if (shown == _sessionArtShown) return;
+    _sessionArtShown = shown;
+    if (frame) log.info(name, 'cover frame $_artFrameSeq for $_sessionArtUrl');
+    _status = {..._status, 'artworkUrl': shown};
+    if (publish && _remote == null) _publishNowPlaying();
+    unawaited(_pushSessionArtwork(_sessionArtUrl, shown));
+  }
 
   /// Hand the local stream's cover to the native media session, which
   /// cannot fetch it itself: the Music Assistant image proxy is often
   /// self-signed, and [fetchArtwork] knows which hosts to trust.
-  Future<void> _pushSessionArtwork(String url) async {
-    final bytes = await loadArtwork(url);
-    if (url != _sessionArtUrl) return;
+  Future<void> _pushSessionArtwork(String url, String source) async {
+    final bytes = await loadArtwork(source);
+    if (url != _sessionArtUrl || source != _sessionArtShown) return;
+    if (source == url && bytes != null) _sessionArtLoaded = true;
     try {
       await _channel.invokeMethod('setArtwork', {'url': url, 'bytes': bytes});
     } catch (e) {
@@ -350,6 +438,17 @@ class SendspinManager extends Manager {
     // An AirPlay sender's, kept by the receiver.
     if (url.startsWith(AirPlayPlayer.artworkScheme)) {
       return AirPlayManager.artworkFor(url);
+    }
+    // A Sendspin server's cover frame, held by the native engine.
+    if (url.startsWith(artworkFrameScheme)) {
+      final seq = int.tryParse(url.split('-').last) ?? 0;
+      try {
+        return await _channel.invokeMethod<Uint8List>('artworkFrame', {
+          'seq': seq,
+        });
+      } catch (_) {
+        return null;
+      }
     }
     HttpClient? client;
     try {
@@ -1035,6 +1134,10 @@ class SendspinManager extends Manager {
           : const <String, Object?>{};
       switch (call.method) {
         case 'stateChanged':
+          // A new connection may be to a server that sends frames.
+          if (map['connected'] == true && _status['connected'] != true) {
+            _artFramesUnsent = false;
+          }
           _status = {..._status, ...map};
           _remoteMediaChanged();
           _playerChanged();
@@ -1044,13 +1147,14 @@ class SendspinManager extends Manager {
             'server=${map['serverName']} synced=${map['synced']}',
           );
         case 'metadataChanged':
-          final art = map['artworkUrl'];
-          if (art is String &&
-              art.isNotEmpty &&
-              art != 'null' &&
-              art != _sessionArtUrl) {
-            _sessionArtUrl = art;
-            unawaited(_pushSessionArtwork(art));
+          final title = map['title'];
+          final track = title is String && title.isNotEmpty && title != 'null';
+          // The card's cover is whatever stands for the URL: its frame,
+          // the URL itself or, for a moment, the cover before.
+          var art = '${map['artworkUrl'] ?? ''}';
+          if (art == 'null') art = '';
+          if (art.isNotEmpty ? art != _sessionArtUrl : track) {
+            _onSessionArtUrl(art);
           }
           // A progress-only update carries no title, and the server may
           // send literal "null" strings: absent fields must not clobber
@@ -1061,8 +1165,6 @@ class SendspinManager extends Manager {
           // the server's queue time was taken instead (see
           // _rebaseFromQueue): its extrapolation is the thing that
           // drifts, and every push would drag the bar back to it.
-          final title = map['title'];
-          final track = title is String && title.isNotEmpty && title != 'null';
           if (track && title != _status['title']) _maPositionAt = 0;
           if (track) {
             _status = {
@@ -1084,11 +1186,16 @@ class SendspinManager extends Manager {
               if (e.value != null &&
                   '${e.value}' != 'null' &&
                   '${e.value}'.isNotEmpty &&
+                  e.key != 'artworkUrl' &&
                   (e.key != 'positionMs' || engineTime))
                 e.key: e.value,
+            if (map.containsKey('artworkUrl') && _sessionArtShown != null)
+              'artworkUrl': _sessionArtShown,
             if (engineTime || map.containsKey('title'))
               'receivedAt': DateTime.now().millisecondsSinceEpoch,
           };
+        case 'artworkChanged':
+          _onArtworkChanged((map['seq'] as num?)?.toInt() ?? 0);
         case 'volumeChanged':
           _status = {..._status, ...map};
           // A server-commanded media volume applied natively; persist it

@@ -695,7 +695,8 @@ void main() {
           'title': 'Song',
           'artworkUrl': 'https://ma.local/a',
         });
-        await Future<void>.delayed(const Duration(milliseconds: 10));
+        // A server that sends no cover frames: the URL after one wait.
+        await Future<void>.delayed(const Duration(milliseconds: 2100));
         expect(pushes(), hasLength(1));
         final args = pushes().single.arguments as Map;
         expect(args['url'], 'https://ma.local/a');
@@ -719,6 +720,139 @@ void main() {
         expect((pushes().last.arguments as Map)['url'], 'https://ma.local/b');
       },
     );
+
+    test('the server\'s cover frame comes before the URL', () async {
+      await build(
+        extra: {
+          'ks.sendspin.player': '',
+          'ks.sendspin.player_source': '',
+          'ks.sendspin.enabled': true,
+        },
+      );
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final native = <MethodCall>[];
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        native.add(call);
+        if (call.method == 'artworkFrame') {
+          final seq = (call.arguments as Map)['seq'] as int;
+          return Uint8List.fromList([seq, seq]);
+        }
+        return true;
+      });
+      final asked = <String>[];
+      sendspin.artworkFetcher = (url) async {
+        if (url.startsWith(SendspinManager.artworkFrameScheme)) {
+          return sendspin.fetchArtwork(url);
+        }
+        asked.add(url);
+        return Uint8List.fromList([7]);
+      };
+      const codec = StandardMethodCodec();
+      Future<void> fromNative(String method, Map<String, Object?> args) =>
+          messenger.handlePlatformMessage(
+            channel.name,
+            codec.encodeMethodCall(MethodCall(method, args)),
+            (_) {},
+          );
+      Iterable<MethodCall> pulls() =>
+          native.where((c) => c.method == 'artworkFrame');
+      String? shown() => sendspin.nowPlaying.value?['artworkUrl'] as String?;
+      Matcher frame(int seq) =>
+          matches(RegExp('^sendspin-artwork:[0-9a-z]+-$seq\$'));
+      await fromNative('playingChanged', {'playing': true});
+      // Music Assistant sends the frame just before the track.
+      await fromNative('artworkChanged', {'seq': 1});
+      await fromNative('metadataChanged', {
+        'title': 'A',
+        'artworkUrl': 'https://cdn/a.jpg',
+      });
+      expect(shown(), frame(1));
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(pulls(), hasLength(1));
+      final push = native.lastWhere((c) => c.method == 'setArtwork');
+      expect((push.arguments as Map)['url'], 'https://cdn/a.jpg');
+      expect((push.arguments as Map)['bytes'], [1, 1]);
+      // The engine re-sends the whole track with each update.
+      await fromNative('metadataChanged', {
+        'title': 'A',
+        'artworkUrl': 'https://cdn/a.jpg',
+      });
+      expect(shown(), frame(1));
+      // The next track's frame waits for its metadata.
+      await fromNative('artworkChanged', {'seq': 2});
+      expect(shown(), frame(1));
+      await fromNative('metadataChanged', {
+        'title': 'B',
+        'artworkUrl': 'https://cdn/b.jpg',
+      });
+      expect(shown(), frame(2));
+      // A progress update can bring the URL first: the cover before stays
+      // until the frame lands.
+      await fromNative('metadataChanged', {
+        'title': 'C',
+        'artworkUrl': 'https://cdn/c.jpg',
+      });
+      expect(shown(), frame(2));
+      await fromNative('artworkChanged', {'seq': 3});
+      expect(shown(), frame(3));
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(asked, isEmpty);
+      // No frame at all: the URL after a short wait.
+      await fromNative('metadataChanged', {
+        'title': 'D',
+        'artworkUrl': 'https://cdn/d.jpg',
+      });
+      expect(shown(), frame(3));
+      await Future<void>.delayed(const Duration(milliseconds: 2100));
+      expect(shown(), 'https://cdn/d.jpg');
+      expect(asked, ['https://cdn/d.jpg']);
+      // A frame after the URL loaded leaves it be.
+      await fromNative('artworkChanged', {'seq': 4});
+      expect(shown(), 'https://cdn/d.jpg');
+      expect(pulls(), hasLength(3));
+    });
+
+    test('a server that sends no frames gets the URL after one wait', () async {
+      await build(
+        extra: {
+          'ks.sendspin.player': '',
+          'ks.sendspin.player_source': '',
+          'ks.sendspin.enabled': true,
+        },
+      );
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final native = <MethodCall>[];
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        native.add(call);
+        return true;
+      });
+      sendspin.artworkFetcher = (url) async => Uint8List.fromList([1]);
+      const codec = StandardMethodCodec();
+      Future<void> fromNative(String method, Map<String, Object?> args) =>
+          messenger.handlePlatformMessage(
+            channel.name,
+            codec.encodeMethodCall(MethodCall(method, args)),
+            (_) {},
+          );
+      await fromNative('playingChanged', {'playing': true});
+      // The first track waits for a frame that never comes.
+      await fromNative('metadataChanged', {
+        'title': 'A',
+        'artworkUrl': 'https://ma.local/a',
+      });
+      expect(sendspin.nowPlaying.value?['artworkUrl'], isNull);
+      await Future<void>.delayed(const Duration(milliseconds: 2100));
+      expect(sendspin.nowPlaying.value?['artworkUrl'], 'https://ma.local/a');
+      // After that the server's URLs load at once.
+      await fromNative('metadataChanged', {
+        'title': 'B',
+        'artworkUrl': 'https://ma.local/b',
+      });
+      expect(sendspin.nowPlaying.value?['artworkUrl'], 'https://ma.local/b');
+      expect(native.where((c) => c.method == 'artworkFrame'), isEmpty);
+    });
 
     test('a track with no album or cover clears the one before\'s', () async {
       await build(
@@ -747,6 +881,8 @@ void main() {
         'album': 'Cigarettes After Sex',
         'artworkUrl': 'https://ma.local/a',
       });
+      // A server that sends no cover frames: the URL after one wait.
+      await Future<void>.delayed(const Duration(milliseconds: 2100));
       expect(sendspin.nowPlaying.value?['artworkUrl'], 'https://ma.local/a');
       // A local file from Home Assistant's media: tags, no album or cover.
       await fromNative('metadataChanged', {

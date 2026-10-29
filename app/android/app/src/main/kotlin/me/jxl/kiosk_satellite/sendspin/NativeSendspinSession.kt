@@ -47,6 +47,8 @@ class NativeSendspinSession(
         /** The server's controller state: what it accepts, and the shuffle and repeat it is in. */
         fun onControllerState(commands: List<String>, shuffle: Boolean, repeat: String)
         fun onStreamActiveChanged(active: Boolean)
+        /** The server's cover frame changed; see [NativeSendspinCallbacks.onArtwork]. */
+        fun onArtwork(seq: Int)
     }
 
     companion object {
@@ -120,6 +122,10 @@ class NativeSendspinSession(
             NativeSendspin.CODEC_OPUS,
             NativeSendspin.CODEC_PCM,
         )
+        // Covers come at the screen's short side, which is as large as Now
+        // Playing ever draws one.
+        val metrics = context.resources.displayMetrics
+        val artworkSize = minOf(metrics.widthPixels, metrics.heightPixels)
         val formats = ArrayList<Int>()
         for (codec in codecs) {
             for (channels in intArrayOf(2, 1)) {
@@ -139,6 +145,7 @@ class NativeSendspinSession(
             fixedDelayUs = 0,
             initialStaticDelayMs = prefs.getInt(PREF_STATIC_DELAY, 0),
             formats = formats.toIntArray(),
+            artworkSize = artworkSize,
         )
         if (handle == 0L) {
             Log.e(TAG, "nativeCreate failed")
@@ -160,6 +167,7 @@ class NativeSendspinSession(
                     fixedDelayUs = 0,
                     initialStaticDelayMs = prefs.getInt(PREF_STATIC_DELAY, 0),
                     formats = formats.toIntArray(),
+                    artworkSize = artworkSize,
                 )
                 startedNative = handle != 0L && NativeSendspin.nativeStart(handle)
                 attempt++
@@ -323,6 +331,10 @@ class NativeSendspinSession(
         }
     }
 
+    /** The shown cover frame's bytes while [seq] is still current. */
+    fun artwork(seq: Int): ByteArray? =
+        if (handle != 0L) NativeSendspin.nativeGetArtwork(handle, seq) else null
+
     fun setNetworkReady(ready: Boolean) {
         if (handle != 0L) NativeSendspin.nativeSetNetworkReady(handle, ready)
     }
@@ -462,6 +474,8 @@ class NativeSendspinSession(
             this@NativeSendspinSession.durationMs = durationMs.coerceAtLeast(0L)
             events.onMetadata(title, artist, album, artworkUrl, progressMs, durationMs)
         }
+
+        override fun onArtwork(seq: Int) = events.onArtwork(seq)
 
         override fun onGroupUpdate(playbackState: Int, groupId: String?, groupName: String?) {
             when (playbackState) {
