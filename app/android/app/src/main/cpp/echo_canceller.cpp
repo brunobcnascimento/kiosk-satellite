@@ -81,8 +81,8 @@ constexpr float kQuietReferencePower = 1e-7f;
 // reference has been quiet for a third of a second, and at least at
 // -60 dBFS, below which it does not matter; the mask then works, and
 // stands aside again once the level falls within 3 dB of the floor or
-// under -66 dBFS. The floor follows a drop quickly and a rise slowly,
-// never reads below -80 dBFS (a capture that starts with digital silence
+// under -66 dBFS. The floor follows a drop quickly and a rise slowly (a
+// voice in a pause must not lift it), never reads below -80 dBFS (a capture that starts with digital silence
 // must not pin it at zero) and counts only once a second of quiet has
 // been seen; before that only the fixed levels apply.
 constexpr float kActiveReferencePower = 3.2e-5f;
@@ -91,7 +91,9 @@ constexpr float kEvidenceAlpha = 1.f / kEvidenceFrames;
 constexpr int kFloorAfterQuietFrames = 30;
 constexpr int kFloorFrames = 100;
 constexpr float kFloorFallAlpha = 0.1f;
-constexpr float kFloorRiseAlpha = 1.f / 1000;
+// The floor rises at most 2 dB a second (0.02 dB a frame) so a voice in a
+// pause cannot lift it to its own level, as a fraction of the gap did.
+constexpr float kFloorRisePerFrame = 1.0046f;
 constexpr float kFloorLeast = 1e-8f;
 constexpr float kEngageOverFloorDb = 6.f;
 constexpr float kReleaseOverFloorDb = 3.f;
@@ -212,6 +214,17 @@ public:
                 gains[i] += weight * Sigmoid(a);
             }
         }
+    }
+
+    // Back to the state the network starts a window from. Called when the
+    // mask comes back after standing aside: the state it froze with then
+    // describes a sound that ended seconds ago, and the network was never
+    // trained to continue from one. A zero state is what every training
+    // window began with.
+    void Restart() {
+        for (Run& run : runs) std::fill(run.state.begin(), run.state.end(), 0.f);
+        runs[0].age = 0;
+        runs[1].age = kHorizon / 2;
     }
 
     int bands = 0, hidden = 0, layers = 0, inputs = 0, outputs = 0;
@@ -345,9 +358,18 @@ void EchoCanceller::Process(const int16_t* microphone, const int16_t* reference,
         quietReferenceFrames_ = 0;
     }
     if (quietReferenceFrames_ > kFloorAfterQuietFrames) {
+        // The floor is the room with nothing playing, and the pause between
+        // two answers is also where the user talks: the first answer of a
+        // conversation was cut short by a voice 30 dB over the room, and a
+        // floor that followed it made the next answer's echo look like no
+        // echo at all, so the mask stood aside through it. Hence the
+        // floor settles on the quietest of its first frames and afterwards
+        // rises only a little per frame, however loud the pause is, while
+        // it still drops at once.
         if (floorFrames_ == 0) floor_ = microphonePower;
+        else if (floorFrames_ < kFloorFrames) floor_ = std::min(floor_, microphonePower);
         else if (microphonePower < floor_) floor_ += kFloorFallAlpha * (microphonePower - floor_);
-        else floor_ += kFloorRiseAlpha * (microphonePower - floor_);
+        else floor_ = std::min(microphonePower, floor_ * kFloorRisePerFrame);
         if (floorFrames_ < kFloorFrames) ++floorFrames_;
     } else if (referencePower >= kActiveReferencePower) {
         const float levelDb = PowerDb(microphonePower);
@@ -363,6 +385,14 @@ void EchoCanceller::Process(const int16_t* microphone, const int16_t* reference,
         }
     }
     const bool masking = model_ && engaged_ && quietReferenceFrames_ < kQuietReferenceFrames;
+    // The mask only steps while it works, so across a pause in playback
+    // its state stands still. Coming back, it starts the window over
+    // rather than continue from a state about a sound that is gone: on a
+    // captured conversation that took the first seconds of the answer
+    // after a barge-in from a median of 65 to 22, and the next answer's
+    // from 114 to 42.
+    if (masking && !masking_) model_->Restart();
+    masking_ = masking;
 
     // 4. The gains, on the filter's output when masking and on the
     // microphone itself otherwise.

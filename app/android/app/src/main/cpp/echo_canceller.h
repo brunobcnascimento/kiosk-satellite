@@ -66,6 +66,7 @@ private:
     float microphoneEvidenceDb_ = 0.f;
     int evidenceFrames_ = 0;
     bool engaged_ = true;
+    bool masking_ = false;
 
     double highPassZ1_ = 0, highPassZ2_ = 0;
     double highPassB0_, highPassB1_, highPassB2_, highPassA1_, highPassA2_;
