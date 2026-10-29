@@ -44,9 +44,14 @@ include(speexdsp.cmake)
 add_library(kiosk_echo SHARED echo_jni.cpp echo_canceller.cpp)
 target_compile_features(kiosk_echo PRIVATE cxx_std_17)
 target_compile_options(kiosk_echo PRIVATE -Wall -Wextra)
-# The mask's matrix loops and its sigmoids are the canceller's cost. Fast
-# math lets the compiler vectorize and inline them: 40% less time on an
-# armv7 Echo Show 8, with an output within rounding of the strict build.
-set_source_files_properties(echo_canceller.cpp PROPERTIES COMPILE_OPTIONS "-O3;-ffast-math")
+# The mask's matrix loops run on NEON with half precision weights, which
+# a 32-bit build only converts in hardware with the fp16 extension (every
+# NEON core from the Cortex-A9 on; the code checks at run time and takes
+# a scalar path without it). Fast math vectorizes the rest.
+set(echo_options "-O3;-ffast-math")
+if(ANDROID_ABI STREQUAL "armeabi-v7a")
+    list(APPEND echo_options "-mfpu=neon-fp16")
+endif()
+set_source_files_properties(echo_canceller.cpp PROPERTIES COMPILE_OPTIONS "${echo_options}")
 find_library(android-lib android)
 target_link_libraries(kiosk_echo PRIVATE speexdsp ${android-lib} ${log-lib})

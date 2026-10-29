@@ -38,7 +38,10 @@ add_library(speexdsp STATIC
     ${speexdsp_SOURCE_DIR}/libspeexdsp/kiss_fftr.c)
 target_compile_definitions(speexdsp PUBLIC FLOATING_POINT USE_KISS_FFT EXPORT=)
 target_compile_definitions(speexdsp PRIVATE VAR_ARRAYS)
-target_compile_options(speexdsp PRIVATE -w -O2)
+# The MDF filter's spectral loops vectorize under fast math: a third less
+# time on a Cortex-A53, with the filter's output within rounding of the
+# strict build (69 dB down on a captured conversation).
+target_compile_options(speexdsp PRIVATE -w -O3 -ffast-math)
 target_include_directories(speexdsp PUBLIC
     ${speexdsp_SOURCE_DIR}/include
     ${speexdsp_BINARY_DIR}/include
