@@ -50,8 +50,6 @@ const intercomTextMessageIds = <String, String>{
   "Intercom key": "settingIntercomKeyTitle",
   "Kiosks with the same key can call each other. Fleet Management can sync it.": "settingIntercomKeyDescription",
   "Made when the intercom is enabled": "settingIntercomKeyPlaceholder",
-  "Show in the kiosk menu": "settingIntercomMenuTitle",
-  "Add an Intercom entry to the kiosk menu.": "settingIntercomMenuDescription",
   "Answer mode": "settingIntercomAnswerModeTitle",
   "Ring asks on the screen. Answer automatically opens the call after a chime.": "settingIntercomAnswerModeDescription",
   "Ring for": "settingIntercomRingSecondsTitle",

@@ -19,7 +19,7 @@ Navigate to **Settings > Screensaver** (available in the on device settings and 
 | Use a black screen instead | off | Appears when **Turn screen off after** is greater than 0. Shows a plain black screen at zero brightness without powering off the panel. Hides widgets, timers, notifications and Now Playing. |
 | Wake to screensaver | Off | Picks what brings the screensaver back instead of the dashboard after the screen has turned off: motion, face, proximity, person, the power button and touch. The **Turn screen off after** countdown starts over. See [Turning the Screen Off](#turning-the-screen-off). |
 | Pixel shift | off | Periodically shifts on screen elements every minute to prevent image retention on OLED displays. Not applicable to Black mode. |
-| Show in the kiosk menu | on | Keeps the **Start Screensaver** entry in the kiosk menu. Turn it off to shorten the menu on a device that never starts the screensaver by hand. The idle timeout, gestures, the ESPHome switch and the API commands still start it. |
+| Show in the kiosk menu | on | Opens [Device > User Interface > Drawer menu items](drawer-menu.md), where the **Start Screensaver** entry is turned on or off. Turn it off to shorten the menu on a device that never starts the screensaver by hand. The idle timeout, gestures, the ESPHome switch and the API commands still start it. |
 | Follow Android animation settings | off | Pauses Weather Mood and the Celestial twinkle on a still frame while Android's **Transition animation scale** is off in Developer options. Turn it on to save CPU on low-power devices where the animation scales are zeroed. |
 | Screensaver mode | Black | Selects the active screensaver display mode. Options for the chosen mode appear directly below this selector. |
 

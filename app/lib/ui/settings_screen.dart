@@ -33,6 +33,7 @@ import '../managers/screensaver/screensaver_manager.dart'
 import '../managers/screensaver/screensaver_widgets.dart';
 import '../managers/device/wifi_mac.dart'
     show WifiMacIdentity, WifiMacSource, wifiMacIdentity;
+import '../managers/kiosk/drawer_items.dart';
 import '../managers/settings/definitions.dart';
 import '../managers/person/person_sensor_manager.dart' show LogAccess;
 import '../managers/sendspin/session_player.dart' show SessionPlayer;
@@ -941,6 +942,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: _SubpageNav(
                           open: _openSubpage,
                           close: () => setState(() => _subpage = null),
+                          land: _landOn,
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
@@ -1076,6 +1078,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  void _landOn(String category, String? subpage, String anchor) {
+    final index = _categories.indexWhere((c) => c.$1 == category);
+    if (index < 0) return;
+    setState(() {
+      _selected = index;
+      _showResults = false;
+      _subpage = subpage;
+      _landing = anchor;
+      _landingEpoch++;
+    });
   }
 
   void _openSubpage(String category, String subpage) {
@@ -1312,10 +1326,15 @@ class _SubpageNav extends InheritedWidget {
   const _SubpageNav({
     required this.open,
     required this.close,
+    required this.land,
     required super.child,
   });
 
   final void Function(String category, String subpage) open;
+
+  /// Opens [category] (and [subpage] where the row sits on one) and lands
+  /// on the row [anchor], the way a search result does.
+  final void Function(String category, String? subpage, String anchor) land;
 
   /// Back to the category pane, for a page that closes itself (a profile
   /// just deleted).
@@ -1350,6 +1369,42 @@ void openSettingsSubpage(
         category: category,
         subpage: subpage,
       ),
+    ),
+  );
+}
+
+/// Go to the row of the setting [key] wherever it lives, for a row that
+/// links to another one ([SettingDef.linksTo]): the wide split view moves
+/// its rail and pane there, a phone pushes the page. Either way the row is
+/// scrolled to and blinked, like a search result.
+void openSettingRow(BuildContext context, AppContainer container, String key) {
+  final def = allSettings.where((d) => d.key == key).firstOrNull;
+  if (def == null) return;
+  final nav = _SubpageNav.maybeOf(context);
+  if (nav != null) {
+    nav.land(def.category, def.subpage, key);
+    return;
+  }
+  final title = _categories
+      .where((c) => c.$1 == def.category)
+      .map((c) => c.$2)
+      .firstOrNull;
+  if (title == null) return;
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => def.subpage == null
+          ? CategorySettingsScreen(
+              container: container,
+              title: title,
+              category: def.category,
+              landingAnchor: key,
+            )
+          : SubpageSettingsScreen(
+              container: container,
+              category: def.category,
+              subpage: def.subpage!,
+              landingAnchor: key,
+            ),
     ),
   );
 }
@@ -2451,7 +2506,7 @@ class _CategoryContentState extends State<_CategoryContent> {
             ],
           ),
         ] else if (widget.category == 'Alarms') ...[
-          // Show in the kiosk menu on its own untitled card, then the list
+          // The Drawer menu items link on its own untitled card, then the list
           // itself (the full screen overlay, opened from here), then the
           // defaults, then Voice Alarms. Mirrored on the remote's Alarms
           // page.
@@ -11106,6 +11161,26 @@ class SettingTile extends StatelessWidget {
       SearchLandingTarget(id: def.key, child: _tile(context));
 
   Widget _tile(BuildContext context) {
+    // A row that stands for another setting: a plain row to it, mirrored
+    // on the remote (rows.js).
+    if (def.linksTo case final target?) {
+      return ListTile(
+        title: Text(def.localizedTitle(context)),
+        subtitle: Text(def.localizedDescription(context)),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => openSettingRow(context, c, target),
+      );
+    }
+    // The kiosk menu's rows (issue #1194): picked and arranged in the
+    // shared picker, never typed as JSON.
+    if (def.key == uiDrawerItems.key) {
+      return ListTile(
+        title: Text(def.localizedTitle(context)),
+        subtitle: Text(def.localizedDescription(context)),
+        trailing: const Icon(Icons.edit_outlined),
+        onTap: () => _pickDrawerItems(context),
+      );
+    }
     switch (def.type) {
       case SettingType.boolean:
         return SwitchListTile(
@@ -11673,6 +11748,39 @@ class SettingTile extends StatelessWidget {
           if (list.find(id) case final app?)
             {'package': app.id, 'label': app.name},
       ]),
+    );
+    onChanged();
+  }
+
+  /// Drawer menu items through the shared picker: the rows on, in the
+  /// order they are arranged there. Every row the menu can show is
+  /// listed, whether or not it has anything to do on this kiosk yet, a
+  /// stopped plugin's actions included. The save keeps only what was
+  /// listed, so an action its plugin dropped goes with it.
+  Future<void> _pickDrawerItems(BuildContext context) async {
+    final spec = drawerItemSpec(context, c);
+    final items = DrawerItems.decode(c.settings.get(uiDrawerItems));
+    final all = [
+      for (final action in drawerPluginActions(c))
+        drawerPluginItem('${action['pluginId']}', '${action['command']}'),
+      ...drawerItemOrder,
+    ];
+    final ids = await showItemMultiPicker(
+      context,
+      title: def.localizedTitle(context),
+      spec: spec,
+      selected: items.arrange(all),
+    );
+    if (ids == null) return;
+    await c.settings.setFromJson(
+      uiDrawerItems.key,
+      DrawerItems(
+        shown: ids,
+        hidden: {
+          for (final id in all)
+            if (!ids.contains(id)) id,
+        },
+      ).encode(),
     );
     onChanged();
   }

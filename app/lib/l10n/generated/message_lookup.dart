@@ -246,6 +246,8 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'drawerThemeDark' => strings.drawerThemeDark,
       'drawerThemeLight' => strings.drawerThemeLight,
       'drawerThemeAndroid' => strings.drawerThemeAndroid,
+      'drawerItemsSearch' => strings.drawerItemsSearch,
+      'drawerItemsSettingsKept' => strings.drawerItemsSettingsKept,
       'drawerUpdateAvailable' => strings.drawerUpdateAvailable,
       'drawerUpdateChecking' => strings.drawerUpdateChecking,
       'drawerUpdateCurrent' => strings.drawerUpdateCurrent,
@@ -843,7 +845,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'libraryGroup' => strings.libraryGroup,
       'libraryGroupAll' => strings.libraryGroupAll,
       'libraryGroupHint' => strings.libraryGroupHint,
-      'settingLibraryMenuDescription' => strings.settingLibraryMenuDescription,
       'settingKioskAllowMusicLibraryDescription' =>
         strings.settingKioskAllowMusicLibraryDescription,
       'libraryPageHint' => strings.libraryPageHint,
@@ -1278,8 +1279,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingScreensaverWeatherAlarmTakeoverTitle,
       'settingScreensaverWeatherAlarmTakeoverDescription' =>
         strings.settingScreensaverWeatherAlarmTakeoverDescription,
-      'settingAlarmsMenuTitle' => strings.settingAlarmsMenuTitle,
-      'settingAlarmsMenuDescription' => strings.settingAlarmsMenuDescription,
       'settingAlarmsVolumeTitle' => strings.settingAlarmsVolumeTitle,
       'settingAlarmsVolumeDescription' =>
         strings.settingAlarmsVolumeDescription,
@@ -1361,9 +1360,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingCalendarWeatherEntityTitle,
       'settingCalendarWeatherEntityDescription' =>
         strings.settingCalendarWeatherEntityDescription,
-      'settingCalendarMenuTitle' => strings.settingCalendarMenuTitle,
-      'settingCalendarMenuDescription' =>
-        strings.settingCalendarMenuDescription,
       'settingCalendarIdleCloseMinutesTitle' =>
         strings.settingCalendarIdleCloseMinutesTitle,
       'settingCalendarIdleCloseMinutesDescription' =>
@@ -2108,6 +2104,10 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'deviceToastIntercom' => strings.deviceToastIntercom,
       'deviceToastAppLauncher' => strings.deviceToastAppLauncher,
       'deviceToastPlugins' => strings.deviceToastPlugins,
+      'settingUiDrawerItemsTitle' => strings.settingUiDrawerItemsTitle,
+      'settingUiDrawerItemsDescription' =>
+        strings.settingUiDrawerItemsDescription,
+      'settingShowInKioskMenuTitle' => strings.settingShowInKioskMenuTitle,
       'settingDlnaEnabledTitle' => strings.settingDlnaEnabledTitle,
       'settingDlnaEnabledDescription' => strings.settingDlnaEnabledDescription,
       'settingDlnaAudioBackgroundTitle' =>
@@ -2350,8 +2350,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingHaHoldReleaseMinutesTitle,
       'settingHaHoldReleaseMinutesDescription' =>
         strings.settingHaHoldReleaseMinutesDescription,
-      'settingHaHoldMenuTitle' => strings.settingHaHoldMenuTitle,
-      'settingHaHoldMenuDescription' => strings.settingHaHoldMenuDescription,
       'haHoldHint' => strings.haHoldHint,
       'haNever' => strings.haNever,
       'settingDisableSuspendTitle' => strings.settingDisableSuspendTitle,
@@ -2462,8 +2460,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingHaKioskHideSidebarTitle,
       'settingHaKioskHideSidebarDescription' =>
         strings.settingHaKioskHideSidebarDescription,
-      'settingHaKioskMenuTitle' => strings.settingHaKioskMenuTitle,
-      'settingHaKioskMenuDescription' => strings.settingHaKioskMenuDescription,
       'settingHaDashboardCarouselTitle' =>
         strings.settingHaDashboardCarouselTitle,
       'settingHaDashboardCarouselDescription' =>
@@ -2538,9 +2534,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'settingIntercomKeyTitle' => strings.settingIntercomKeyTitle,
       'settingIntercomKeyDescription' => strings.settingIntercomKeyDescription,
       'settingIntercomKeyPlaceholder' => strings.settingIntercomKeyPlaceholder,
-      'settingIntercomMenuTitle' => strings.settingIntercomMenuTitle,
-      'settingIntercomMenuDescription' =>
-        strings.settingIntercomMenuDescription,
       'intercomNeedsAdmin' => strings.intercomNeedsAdmin,
       'intercomAdminHelp' => strings.intercomAdminHelp,
       'intercomChangeKey' => strings.intercomChangeKey,
@@ -2815,9 +2808,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'settingLockdownEnabledTitle' => strings.settingLockdownEnabledTitle,
       'settingLockdownEnabledDescription' =>
         strings.settingLockdownEnabledDescription,
-      'settingLockdownMenuTitle' => strings.settingLockdownMenuTitle,
-      'settingLockdownMenuDescription' =>
-        strings.settingLockdownMenuDescription,
       'settingLockdownBlackoutTitle' => strings.settingLockdownBlackoutTitle,
       'settingLockdownBlackoutDescription' =>
         strings.settingLockdownBlackoutDescription,
@@ -2871,10 +2861,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingSendspinDismissKeepsPlayingTitle,
       'settingSendspinDismissKeepsPlayingDescription' =>
         strings.settingSendspinDismissKeepsPlayingDescription,
-      'settingSendspinPlayerShortcutTitle' =>
-        strings.settingSendspinPlayerShortcutTitle,
-      'settingSendspinPlayerShortcutDescription' =>
-        strings.settingSendspinPlayerShortcutDescription,
       'mediaFloatingPage' => strings.mediaFloatingPage,
       'mediaFloatingHint' => strings.mediaFloatingHint,
       'mediaCompact' => strings.mediaCompact,
@@ -2932,10 +2918,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'settingSendspinMaTokenTitle' => strings.settingSendspinMaTokenTitle,
       'settingSendspinMaTokenDescription' =>
         strings.settingSendspinMaTokenDescription,
-      'settingSendspinMaShortcutTitle' =>
-        strings.settingSendspinMaShortcutTitle,
-      'settingSendspinMaShortcutDescription' =>
-        strings.settingSendspinMaShortcutDescription,
       'settingSendspinMaOpenFullscreenTitle' =>
         strings.settingSendspinMaOpenFullscreenTitle,
       'settingSendspinMaOpenFullscreenDescription' =>
@@ -3004,10 +2986,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingSendspinFullscreenReturnViewTitle,
       'settingSendspinFullscreenReturnViewDescription' =>
         strings.settingSendspinFullscreenReturnViewDescription,
-      'settingSendspinFullscreenShortcutTitle' =>
-        strings.settingSendspinFullscreenShortcutTitle,
-      'settingSendspinFullscreenShortcutDescription' =>
-        strings.settingSendspinFullscreenShortcutDescription,
       'settingSendspinSpeakerPillTitle' =>
         strings.settingSendspinSpeakerPillTitle,
       'settingSendspinSpeakerPillDescription' =>
@@ -3734,9 +3712,6 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingScreensaverPixelShiftTitle,
       'settingScreensaverPixelShiftDescription' =>
         strings.settingScreensaverPixelShiftDescription,
-      'settingScreensaverMenuTitle' => strings.settingScreensaverMenuTitle,
-      'settingScreensaverMenuDescription' =>
-        strings.settingScreensaverMenuDescription,
       'settingScreensaverFollowAnimationScaleTitle' =>
         strings.settingScreensaverFollowAnimationScaleTitle,
       'settingScreensaverFollowAnimationScaleDescription' =>

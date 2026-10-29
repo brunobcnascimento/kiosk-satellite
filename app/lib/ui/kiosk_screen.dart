@@ -331,47 +331,12 @@ class _KioskScreenState extends State<KioskScreen>
   }
 
   /// Whether the locked kiosk still offers the edge swipe: the owner opted
-  /// in, and at least one allowed action would actually show — a menu with
-  /// nothing in it is worse than no menu.
-  bool get _quickMenuAvailable {
-    if (!c.settings.get(defs.kioskAllowDrawer)) return false;
-    final hasCameras =
-        c.camera.config.defaultView?.cameraIds.isNotEmpty ?? false;
-    // Mirrors the drawer's own conditions per entry: an allowed action
-    // whose entry would not actually render must not count.
-    final hasMusic =
-        c.settings.get(defs.sendspinMaShortcut) &&
-        musicAssistantWebUrl(c.settings.get(defs.sendspinMaUrl)) != null;
-    final hasPlayer =
-        c.settings.get(defs.sendspinPlayerActive) &&
-        (c.settings.get(defs.sendspinPlayerShortcut) ||
-            (c.settings.get(defs.sendspinFullscreen) &&
-                c.settings.get(defs.sendspinFullscreenShortcut)));
-    final hasApps =
-        c.settings.get(defs.launcherEnabled) && c.launcher.kioskApps.isNotEmpty;
-    final hasHold = c.settings.get(defs.haHoldMenu);
-    return c.plugins.drawerActions.isNotEmpty ||
-        c.settings.get(defs.kioskAllowDashboard) ||
-        (c.settings.get(defs.kioskAllowHaKiosk) &&
-            c.settings.get(defs.haKioskMenu)) ||
-        (c.settings.get(defs.kioskAllowScreensaver) &&
-            c.settings.get(defs.screensaverMenu)) ||
-        c.settings.get(defs.kioskAllowTheme) ||
-        (c.settings.get(defs.kioskAllowCamera) && hasCameras) ||
-        (c.settings.get(defs.kioskAllowMusic) && hasMusic) ||
-        (c.settings.get(defs.kioskAllowSendspinPlayer) && hasPlayer) ||
-        (c.settings.get(defs.kioskAllowHold) && hasHold) ||
-        (c.settings.get(defs.kioskAllowLockdown) &&
-            c.settings.get(defs.lockdownMenu)) ||
-        (c.settings.get(defs.kioskAllowApps) && hasApps) ||
-        (c.settings.get(defs.kioskAllowAlarms) &&
-            c.settings.get(defs.alarmsMenu)) ||
-        (c.settings.get(defs.kioskAllowCalendar) &&
-            c.settings.get(defs.calendarMenu)) ||
-        (c.settings.get(defs.kioskAllowMusicLibrary) &&
-            c.settings.get(defs.libraryMenu) &&
-            c.musicLibrary.available.isNotEmpty);
-  }
+  /// in, and at least one row would actually show in the quick-actions
+  /// menu. A menu with nothing in it is worse than no menu, and the drawer
+  /// answers which rows it draws itself.
+  bool get _quickMenuAvailable =>
+      c.settings.get(defs.kioskAllowDrawer) &&
+      KioskDrawer.visibleItems(c, restricted: true).isNotEmpty;
 
   /// Pull-to-refresh as the user experiences it: the Web Browsing toggle,
   /// minus the kiosk protection that switches the gesture off while the
@@ -666,25 +631,17 @@ class _KioskScreenState extends State<KioskScreen>
       }
       return;
     }
-    // The Music Assistant shortcut and the address it opens both decide
-    // whether the drawer offers the entry at all, as do the HA Kiosk Mode
-    // and Start Screensaver menu toggles (issue #473), and the drawer is
-    // built from here — so a flip in the remote admin shows up on the
-    // device without waiting for the next rebuild.
-    if (e.key == defs.sendspinMaShortcut.key ||
+    // Drawer menu items (issue #1194) and the Music Assistant address
+    // decide which rows the drawer offers, and the drawer is built from
+    // here, so a change in the remote admin shows up on the device without
+    // waiting for the next rebuild.
+    if (e.key == defs.uiDrawerItems.key ||
         e.key == defs.sendspinMaUrl.key ||
-        e.key == defs.haKioskMenu.key ||
-        e.key == defs.screensaverMenu.key ||
-        e.key == defs.lockdownMenu.key ||
         e.key == defs.intercomEnabled.key ||
-        e.key == defs.intercomMenu.key ||
         e.key == defs.kioskAllowIntercom.key ||
         e.key == defs.kioskAllowAlarms.key ||
-        e.key == defs.alarmsMenu.key ||
         e.key == defs.kioskAllowCalendar.key ||
-        e.key == defs.calendarMenu.key ||
         e.key == defs.kioskAllowMusicLibrary.key ||
-        e.key == defs.libraryMenu.key ||
         e.key == defs.remoteEnabled.key ||
         e.key == defs.remoteFleetDiscovery.key) {
       setState(() {});

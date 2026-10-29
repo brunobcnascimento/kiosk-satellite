@@ -50,8 +50,8 @@ Pick a weather entity under **Weather** to add the daily forecast to each day in
 | Default view | Week | The view the calendar opens on. |
 | Week starts on | Language default | Sunday, Monday or Saturday, or the first day the device language uses. |
 | Weather | None | The weather entity for the daily forecast. |
-| Show in the kiosk menu | On | Adds Calendar to the kiosk menu. The restricted menu also needs **Calendar** under **Kiosk Mode, Allowed Actions**. |
 | Close when idle | 2 minutes | Returns to the dashboard after no touch for this long. Never keeps it open. The screensaver also closes it when it starts. It does not apply to the Calendar screensaver. |
+| Show in the kiosk menu | On | Opens [Device > User Interface > Drawer menu items](drawer-menu.md), where the Calendar entry is turned on or off. The restricted menu also needs **Calendar** under **Kiosk Mode, Allowed Actions**. |
 
 ## How it reads Home Assistant
 

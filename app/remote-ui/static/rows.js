@@ -43,6 +43,8 @@ import {
 } from './pickers.js';
 import { loadSettings, refreshRealMacNote, syncSubpages, updateCelestialLocationRow, updateCelestialPermissionRows, updateClockNightAdminRows, updateOnvifEventsRows, updatePersonSensorRows, updateRtspRows } from './settings.js';
 import { dashboardField } from './dashboard_picker.js';
+import { drawerItemsText, openDrawerItemsPicker } from './drawer_items.js';
+import { SEARCH_CATEGORY_TABS, jumpToResult } from './search.js';
 import { updatePlayerRow } from './panels.js';
 import {
   attachSlider,
@@ -630,6 +632,53 @@ export function settingRow(s) {
     bindUpdate(field.el, () => field.setText(text()));
     row.classList.add('dp-field-row');
     row.appendChild(field.el);
+    return row;
+  }
+
+  // A row that stands for another setting (linksTo): a plain row to it,
+  // landing on its row the way a search result does. Mirrors the device.
+  if (s.linksTo) {
+    row.classList.add('setting-link');
+    const chev = document.createElement('span');
+    chev.className = 'chev';
+    chev.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+      + ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<path d="m9 18 6-6-6-6"/></svg>';
+    row.appendChild(chev);
+    row.addEventListener('click', () => {
+      const target = (state.settings || []).find((o) => o.key === s.linksTo);
+      const tab = target && SEARCH_CATEGORY_TABS[target.category];
+      if (tab) jumpToResult({ tab, key: target.key, sub: target.subpage });
+    });
+    return row;
+  }
+
+  // The kiosk menu's rows (issue #1194), picked and arranged in the shared
+  // picker like the device's. The summary names the rows on.
+  if (s.key === 'ui.drawer_items') {
+    const value = () => (state.settings || []).find((o) => o.key === s.key)?.value ?? s.value;
+    const val = document.createElement('span');
+    val.className = 'device';
+    val.style.cssText =
+      'flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap';
+    const paint = () => { val.textContent = drawerItemsText(value()); };
+    paint();
+    const btn = document.createElement('button');
+    btn.className = 'btn-ghost'; btn.textContent = launcherText('Edit');
+    btn.style.flex = 'none';
+    btn.addEventListener('click', async () => {
+      const remoteOn = (state.settings || []).find((o) => o.key === 'remote.enabled')?.value === true;
+      const picked = await openDrawerItemsPicker(value(), remoteOn);
+      if (picked == null) return;
+      await save(picked);
+      paint();
+    });
+    const controls = document.createElement('div');
+    controls.style.cssText =
+      'display:flex; gap:10px; align-items:center; min-width:0; max-width:60%; flex:0 1 auto';
+    controls.append(val, btn);
+    row.appendChild(controls);
+    row.updateSetting = () => { paint(); return true; };
     return row;
   }
 

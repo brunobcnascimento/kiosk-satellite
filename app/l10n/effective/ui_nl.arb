@@ -3541,6 +3541,32 @@
       ]
     }
   },
+  "drawerItemsSearch": "Menu-items zoeken",
+  "@drawerItemsSearch": {
+    "context": "Settings:Device:User Interface",
+    "description": "Search box hint in the picker of the drawer menu's items.",
+    "x-locations": {
+      "device": [
+        "Settings > Device > User Interface > Drawer menu items"
+      ],
+      "remoteAdmin": [
+        "Device > User Interface > Drawer menu items"
+      ]
+    }
+  },
+  "drawerItemsSettingsKept": "Altijd zichtbaar zolang beheer op afstand uit staat.",
+  "@drawerItemsSettingsKept": {
+    "context": "Settings:Device:User Interface",
+    "description": "Note under the Settings item in the drawer menu items picker. It cannot be hidden while the remote admin is off.",
+    "x-locations": {
+      "device": [
+        "Settings > Device > User Interface > Drawer menu items"
+      ],
+      "remoteAdmin": [
+        "Device > User Interface > Drawer menu items"
+      ]
+    }
+  },
   "drawerVersion": "Versie {version}",
   "@drawerVersion": {
     "context": "Device:Drawer:Updates",
@@ -12095,19 +12121,6 @@
       }
     }
   },
-  "settingLibraryMenuDescription": "Voeg de optie Muziekbibliotheek toe aan het kioskmenu.",
-  "@settingLibraryMenuDescription": {
-    "context": "Music Library",
-    "description": "Setting description.",
-    "x-locations": {
-      "device": [
-        "Settings > Media Player > Music Library"
-      ],
-      "remoteAdmin": [
-        "Media Player > Music Library"
-      ]
-    }
-  },
   "settingKioskAllowMusicLibraryDescription": "Muziek bladeren en afspelen op een luidspreker.",
   "@settingKioskAllowMusicLibraryDescription": {
     "context": "Music Library",
@@ -17840,32 +17853,6 @@
       ]
     }
   },
-  "settingAlarmsMenuTitle": "Toon in het kioskmenu",
-  "@settingAlarmsMenuTitle": {
-    "context": "Settings > Alarms",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Alarms > Show in the kiosk menu"
-      ],
-      "remoteAdmin": [
-        "Alarms > Show in the kiosk menu"
-      ]
-    }
-  },
-  "settingAlarmsMenuDescription": "Voeg de optie Alarmen toe aan het kioskmenu.",
-  "@settingAlarmsMenuDescription": {
-    "context": "Settings > Alarms",
-    "description": "Setting description.",
-    "x-locations": {
-      "device": [
-        "Settings > Alarms > Show in the kiosk menu"
-      ],
-      "remoteAdmin": [
-        "Alarms > Show in the kiosk menu"
-      ]
-    }
-  },
   "settingAlarmsVolumeTitle": "Alarmvolume",
   "@settingAlarmsVolumeTitle": {
     "context": "Settings > Alarms",
@@ -18536,32 +18523,6 @@
       ],
       "remoteAdmin": [
         "Calendar > Weather"
-      ]
-    }
-  },
-  "settingCalendarMenuTitle": "Toon in het kioskmenu",
-  "@settingCalendarMenuTitle": {
-    "context": "Settings > Calendar > Kiosk",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Calendar > Show in the kiosk menu"
-      ],
-      "remoteAdmin": [
-        "Calendar > Show in the kiosk menu"
-      ]
-    }
-  },
-  "settingCalendarMenuDescription": "Voeg de optie Agenda toe aan het kioskmenu.",
-  "@settingCalendarMenuDescription": {
-    "context": "Settings > Calendar > Kiosk",
-    "description": "Setting description.",
-    "x-locations": {
-      "device": [
-        "Settings > Calendar > Show in the kiosk menu"
-      ],
-      "remoteAdmin": [
-        "Calendar > Show in the kiosk menu"
       ]
     }
   },
@@ -27895,6 +27856,53 @@
       ]
     }
   },
+  "settingUiDrawerItemsTitle": "Items in het zijmenu",
+  "@settingUiDrawerItemsTitle": {
+    "context": "Settings:Device:User Interface",
+    "description": "Setting label. Also the label of the rows on other pages that open this setting.",
+    "x-locations": {
+      "device": [
+        "Settings > Device > User Interface"
+      ],
+      "remoteAdmin": [
+        "Device > User Interface"
+      ]
+    }
+  },
+  "settingUiDrawerItemsDescription": "Kies welke items het zijmenu toont en in welke volgorde.",
+  "@settingUiDrawerItemsDescription": {
+    "context": "Settings:Device:User Interface",
+    "description": "Help below this setting and below the rows on other pages that open it.",
+    "x-locations": {
+      "device": [
+        "Settings > Device > User Interface"
+      ],
+      "remoteAdmin": [
+        "Device > User Interface"
+      ]
+    }
+  },
+  "settingShowInKioskMenuTitle": "Toon in het kioskmenu",
+  "@settingShowInKioskMenuTitle": {
+    "context": "Settings",
+    "description": "Label of a row on a feature's page that opens Device > User Interface > Drawer menu items, where the feature's kiosk menu entry is turned on or off.",
+    "x-locations": {
+      "device": [
+        "Settings > Alarms",
+        "Settings > Calendar",
+        "Settings > App Launcher",
+        "Settings > Media Player > Music Assistant",
+        "Settings > Media Player > Music Library"
+      ],
+      "remoteAdmin": [
+        "Alarms",
+        "Calendar",
+        "App Launcher",
+        "Media Player > Music Assistant",
+        "Media Player > Music Library"
+      ]
+    }
+  },
   "settingDlnaEnabledTitle": "DLNA-renderer inschakelen",
   "@settingDlnaEnabledTitle": {
     "context": "Settings > DLNA Renderer",
@@ -30698,32 +30706,6 @@
       ]
     }
   },
-  "settingHaHoldMenuTitle": "Toon in het kioskmenu",
-  "@settingHaHoldMenuTitle": {
-    "context": "Settings:Home Assistant Setup:Hold mode",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Home Assistant Setup > Hold mode"
-      ],
-      "remoteAdmin": [
-        "Home Assistant Setup > Hold mode"
-      ]
-    }
-  },
-  "settingHaHoldMenuDescription": "Voegt een menuoptie toe waarmee je de wachtstand in- en uitschakelt.",
-  "@settingHaHoldMenuDescription": {
-    "context": "Settings:Home Assistant Setup:Hold mode",
-    "description": "Help below the setting.",
-    "x-locations": {
-      "device": [
-        "Settings > Home Assistant Setup > Hold mode"
-      ],
-      "remoteAdmin": [
-        "Home Assistant Setup > Hold mode"
-      ]
-    }
-  },
   "haHoldHint": "Huidige weergave vasthouden, automatisch uitschakelen en menuoptie",
   "@haHoldHint": {
     "context": "Settings:Home Assistant Setup:Hold mode",
@@ -32040,32 +32022,6 @@
       ]
     }
   },
-  "settingHaKioskMenuTitle": "Toon in het kioskmenu",
-  "@settingHaKioskMenuTitle": {
-    "context": "Settings:Home Assistant Setup:User Interface",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Home Assistant Setup > User Interface"
-      ],
-      "remoteAdmin": [
-        "Home Assistant Setup > User Interface"
-      ]
-    }
-  },
-  "settingHaKioskMenuDescription": "Voeg een menuoptie toe waarmee je de HA-kioskmodus in- en uitschakelt.",
-  "@settingHaKioskMenuDescription": {
-    "context": "Settings:Home Assistant Setup:User Interface",
-    "description": "Help below the setting.",
-    "x-locations": {
-      "device": [
-        "Settings > Home Assistant Setup > User Interface"
-      ],
-      "remoteAdmin": [
-        "Home Assistant Setup > User Interface"
-      ]
-    }
-  },
   "settingHaDashboardCarouselTitle": "Dashboardcarrousel inschakelen",
   "@settingHaDashboardCarouselTitle": {
     "context": "Settings:Home Assistant Setup:User Interface",
@@ -32771,32 +32727,6 @@
   "@settingIntercomKeyPlaceholder": {
     "context": "Settings > Intercom",
     "description": "Placeholder for the key before the intercom is enabled.",
-    "x-locations": {
-      "device": [
-        "Settings > Intercom"
-      ],
-      "remoteAdmin": [
-        "Intercom"
-      ]
-    }
-  },
-  "settingIntercomMenuTitle": "Toon in het kioskmenu",
-  "@settingIntercomMenuTitle": {
-    "context": "Settings > Intercom",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Intercom"
-      ],
-      "remoteAdmin": [
-        "Intercom"
-      ]
-    }
-  },
-  "settingIntercomMenuDescription": "Voeg een intercomoptie toe aan het kioskmenu.",
-  "@settingIntercomMenuDescription": {
-    "context": "Settings > Intercom",
-    "description": "Help below this setting.",
     "x-locations": {
       "device": [
         "Settings > Intercom"
@@ -35121,26 +35051,6 @@
       ]
     }
   },
-  "settingLockdownMenuTitle": "Toon in het kioskmenu",
-  "@settingLockdownMenuTitle": {
-    "context": "Lockdown Mode > Show in the kiosk menu",
-    "description": "Setting label.",
-    "x-locations": {
-      "remoteAdmin": [
-        "Lockdown Mode > Show in the kiosk menu"
-      ]
-    }
-  },
-  "settingLockdownMenuDescription": "Voeg een optie voor de vergrendelingsmodus toe aan het kioskmenu. Ontgrendel het scherm met het afsluitgebaar, via beheer op afstand of via Home Assistant.",
-  "@settingLockdownMenuDescription": {
-    "context": "Lockdown Mode > Show in the kiosk menu",
-    "description": "Help below this setting.",
-    "x-locations": {
-      "remoteAdmin": [
-        "Lockdown Mode > Show in the kiosk menu"
-      ]
-    }
-  },
   "settingLockdownBlackoutTitle": "Scherm zwart maken",
   "@settingLockdownBlackoutTitle": {
     "context": "Lockdown Mode > Blackout screen",
@@ -35572,32 +35482,6 @@
   },
   "settingSendspinDismissKeepsPlayingDescription": "Veeg de zwevende speler van het scherm om deze te verbergen zonder de muziek te stoppen.",
   "@settingSendspinDismissKeepsPlayingDescription": {
-    "context": "Settings > Media Player > Floating Player",
-    "description": "Help below this setting.",
-    "x-locations": {
-      "device": [
-        "Settings > Media Player > Floating Player"
-      ],
-      "remoteAdmin": [
-        "Media Player > Floating Player"
-      ]
-    }
-  },
-  "settingSendspinPlayerShortcutTitle": "Toon in het kioskmenu",
-  "@settingSendspinPlayerShortcutTitle": {
-    "context": "Settings > Media Player > Floating Player",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Media Player > Floating Player"
-      ],
-      "remoteAdmin": [
-        "Media Player > Floating Player"
-      ]
-    }
-  },
-  "settingSendspinPlayerShortcutDescription": "Voeg een menuoptie toe waarmee je de zwevende speler toont of verbergt. WAARSCHUWING: als er niets wordt afgespeeld en de wachtrij leeg is, verschijnt de speler niet.",
-  "@settingSendspinPlayerShortcutDescription": {
     "context": "Settings > Media Player > Floating Player",
     "description": "Help below this setting.",
     "x-locations": {
@@ -36123,32 +36007,6 @@
   },
   "settingSendspinMaTokenDescription": "Een langdurig token uit Music Assistant (Instellingen > Gebruikers). Leestoegang is voldoende voor songteksten. De snelkoppeling in het kioskmenu opent de webinterface onder het account waaraan het token is gekoppeld.",
   "@settingSendspinMaTokenDescription": {
-    "context": "Settings > Media Player > Music Assistant",
-    "description": "Help below this setting.",
-    "x-locations": {
-      "device": [
-        "Settings > Media Player > Music Assistant"
-      ],
-      "remoteAdmin": [
-        "Media Player > Music Assistant"
-      ]
-    }
-  },
-  "settingSendspinMaShortcutTitle": "Toon in het kioskmenu",
-  "@settingSendspinMaShortcutTitle": {
-    "context": "Settings > Media Player > Music Assistant",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Media Player > Music Assistant"
-      ],
-      "remoteAdmin": [
-        "Media Player > Music Assistant"
-      ]
-    }
-  },
-  "settingSendspinMaShortcutDescription": "Voeg Music Assistant toe aan het kioskmenu en open de webinterface van de server als venster over het dashboard. Hiervoor is het bovenstaande serveradres vereist.",
-  "@settingSendspinMaShortcutDescription": {
     "context": "Settings > Media Player > Music Assistant",
     "description": "Help below this setting.",
     "x-locations": {
@@ -36750,32 +36608,6 @@
   },
   "settingSendspinFullscreenReturnViewDescription": "De weergave die verschijnt nadat Speelt nu is gesloten.",
   "@settingSendspinFullscreenReturnViewDescription": {
-    "context": "Settings > Media Player > Now Playing > User Interface",
-    "description": "Help below this setting.",
-    "x-locations": {
-      "device": [
-        "Settings > Media Player > Now Playing > User Interface"
-      ],
-      "remoteAdmin": [
-        "Media Player > Now Playing > User Interface"
-      ]
-    }
-  },
-  "settingSendspinFullscreenShortcutTitle": "Toon in het kioskmenu",
-  "@settingSendspinFullscreenShortcutTitle": {
-    "context": "Settings > Media Player > Now Playing > User Interface",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Media Player > Now Playing > User Interface"
-      ],
-      "remoteAdmin": [
-        "Media Player > Now Playing > User Interface"
-      ]
-    }
-  },
-  "settingSendspinFullscreenShortcutDescription": "Voeg een menuoptie toe waarmee Speelt nu wordt geopend. WAARSCHUWING: als er niets wordt afgespeeld en de wachtrij leeg is, verschijnt de weergave niet.",
-  "@settingSendspinFullscreenShortcutDescription": {
     "context": "Settings > Media Player > Now Playing > User Interface",
     "description": "Help below this setting.",
     "x-locations": {
@@ -42970,32 +42802,6 @@
   },
   "settingScreensaverPixelShiftDescription": "Verschuif de afbeelding elke minuut een klein stukje om OLED-schermen te beschermen. Dit geldt niet voor de zwarte schermbeveiliging, waarbij de pixels al uit staan.",
   "@settingScreensaverPixelShiftDescription": {
-    "context": "Settings:Screensaver",
-    "description": "Help below the setting.",
-    "x-locations": {
-      "device": [
-        "Settings > Screensaver"
-      ],
-      "remoteAdmin": [
-        "Screensaver"
-      ]
-    }
-  },
-  "settingScreensaverMenuTitle": "Toon in het kioskmenu",
-  "@settingScreensaverMenuTitle": {
-    "context": "Settings:Screensaver",
-    "description": "Setting label.",
-    "x-locations": {
-      "device": [
-        "Settings > Screensaver"
-      ],
-      "remoteAdmin": [
-        "Screensaver"
-      ]
-    }
-  },
-  "settingScreensaverMenuDescription": "Voeg de optie 'Schermbeveiliging starten' toe aan het kioskmenu.",
-  "@settingScreensaverMenuDescription": {
     "context": "Settings:Screensaver",
     "description": "Help below the setting.",
     "x-locations": {

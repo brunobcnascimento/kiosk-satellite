@@ -543,7 +543,9 @@
   #pageTitle .title-back:hover { background: var(--surface-2); }
   #pageTitle .title-back svg { width: 22px; height: 22px; }
   /* The entry row: a whole-row button, chevroned like the device's. */
-  .row.subpage-entry { cursor: pointer; }
+  .row.subpage-entry, .row.setting-link { cursor: pointer; }
+  .row.setting-link .chev { color: var(--muted); display: flex; flex: none; }
+  .row.setting-link .chev svg { width: 18px; height: 18px; }
   .row.subpage-entry .chev { color: var(--muted); display: flex; flex: none; }
   .row.subpage-entry .chev svg { width: 18px; height: 18px; }
   /* The page's glyph ahead of the name, drawn like the device's ListTile
@@ -993,6 +995,7 @@
     .row.subpage-entry .info .desc { margin-left: 36px;
       flex-basis: calc(100% - 36px); }
     .row.subpage-entry .info .name { flex-basis: 0; }
+    .row.setting-link .info .name { flex-basis: 0; }
     .row.shizuku-action .info .name { flex-basis: 0; }
     /* A switch stays at the right of its row: a long title wraps its
        words instead of pushing the switch onto a line of its own. */

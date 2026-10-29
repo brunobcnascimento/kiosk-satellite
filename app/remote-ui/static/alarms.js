@@ -385,7 +385,7 @@ function decorateRows(tab) {
   }
 }
 
-// The built cards go under the untitled Show in the kiosk menu card, the
+// The built cards go under the untitled Drawer menu items link card, the
 // device's order, or after the fleet banner when a leader pushes this
 // category, so the banner keeps the top of the tab.
 function putTop(tab, nodes) {

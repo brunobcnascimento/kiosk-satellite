@@ -21,7 +21,7 @@ Navigate to **Settings**, then **Kiosk Mode**. This same configuration page is a
 | Disable context menus | Suppresses standard long press menus and text selection features inside the active web view. |
 | Disable pull to refresh | Ignores any pull to refresh swipe gestures while Kiosk Mode is active. |
 | Disable Gestures | Keeps all custom mappings from the [Gestures page](gestures.md) dormant for as long as Kiosk Mode is on. |
-| Allow menu with quick actions | Opts a restricted version of the menu back in: only the harmless actions you explicitly select below this switch will be visible. Everything else remains hidden behind the exit gesture and PIN. |
+| Allow menu with quick actions | Opts a restricted version of the menu back in: only the harmless actions you explicitly select below this switch will be visible. Everything else remains hidden behind the exit gesture and PIN. Which entries the menu offers at all and their order are set in [Drawer menu items](drawer-menu.md). |
 
 ### Allowed Apps
 
@@ -51,12 +51,12 @@ Lockdown Mode renders the screen completely untouchable while keeping the active
 
 While Lockdown Mode is active, all Kiosk Mode protections are temporarily armed at runtime (without altering your permanently stored kiosk settings), wake word detection is actively muted, and the screensaver is suppressed unless explicitly allowed. Turning Lockdown Mode off instantly reverts the device to the exact protection state configured beforehand.
 
-Configure this feature on the **Lockdown Mode** page in Remote Admin. Enable **Show in the kiosk menu** to add a **Lockdown Mode** shortcut that locks the screen with one tap, useful before cleaning it. This toggle is off by default and can be changed while Lockdown Mode is off. For the restricted quick actions menu, also allow **Lockdown Mode** under **Kiosk Mode > Allowed Actions**. Unlock with the configured exit gesture and kiosk PIN if one is set, Remote Admin or the **Lockdown mode** switch in Home Assistant [over ESPHome](esphome.md). If the exit gesture is disabled, unlock remotely.
+Configure this feature on the **Lockdown Mode** page in Remote Admin. Add **Lockdown Mode** under [Device > User Interface > Drawer menu items](drawer-menu.md) to get a menu shortcut that locks the screen with one tap, useful before cleaning it. The entry is off by default. For the restricted quick actions menu, also allow **Lockdown Mode** under **Kiosk Mode > Allowed Actions**. Unlock with the configured exit gesture and kiosk PIN if one is set, Remote Admin or the **Lockdown mode** switch in Home Assistant [over ESPHome](esphome.md). If the exit gesture is disabled, unlock remotely.
 
 | Setting | What it does |
 | --- | --- |
 | Enable Lockdown Mode | Completely disables screen interactions until turned off, either remotely from Home Assistant or physically via the exit gesture. |
-| Show in the kiosk menu | Adds a Lockdown Mode entry that locks the screen. Off by default. |
+| Show in the kiosk menu | Opens [Device > User Interface > Drawer menu items](drawer-menu.md), where the Lockdown Mode entry is turned on. Off by default. |
 | Blackout | Paints the locked screen solid black and completely pauses the dashboard rendering underneath it. This significantly reduces power consumption on a locked device. The panel itself remains lit, and the device stays fully reachable. |
 | Allow screensaver | Permits the screensaver to run while the device is locked, accommodating users who prefer to see a clock rather than a live dashboard. The "Dismiss on motion" feature is deactivated while the lock holds, preventing someone walking past from accidentally unlocking the view. Normal motion behavior resumes the moment the lock lifts. |
 | Lockdown exit gesture | Offers the exact same options as the standard kiosk exit gesture, but as an independent setting so the two can differ. Entering the fast taps anywhere on screen will turn the mode off (after entering the kiosk PIN, if one is configured). |

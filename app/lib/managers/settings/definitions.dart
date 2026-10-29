@@ -43,6 +43,7 @@ class SettingDef<T> {
     this.normalizer,
     this.multiline = false,
     this.placeholder,
+    this.linksTo,
   });
 
   final String key;
@@ -143,6 +144,12 @@ class SettingDef<T> {
   /// JavaScript). Both UIs swap the one-line field for a code-friendly
   /// multi-line editor, and the row shows its description, not the blob.
   final bool multiline;
+
+  /// The key of another setting this row opens instead of holding a value
+  /// of its own: a standard row with a chevron, in both UIs, that goes to
+  /// the target's page and lands on its row. Never stored, exported or
+  /// synced; [defaultValue] only keeps the type.
+  final String? linksTo;
 
   /// Example text shown in the empty editor instead of [description] —
   /// a code sample reads better than prose where code is expected.
@@ -1322,15 +1329,16 @@ const lockdownEnabled = SettingDef<bool>(
   category: 'Lockdown',
 );
 
+/// Where the kiosk menu's Lockdown Mode row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const lockdownMenu = SettingDef<bool>(
   key: 'lockdown.menu',
   type: SettingType.boolean,
   defaultValue: false,
   title: 'Show in the kiosk menu',
-  description:
-      'Add a Lockdown Mode entry to the kiosk menu that locks the screen. '
-      'Use the exit gesture, Remote Admin or Home Assistant to unlock it.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Lockdown',
+  linksTo: 'ui.drawer_items',
 );
 
 // The blackout variant: the same shield painted solid black. The panel
@@ -1459,6 +1467,19 @@ const launcherAutoReturnMedia = SettingDef<bool>(
   description: 'Do not come back during video, music or calls.',
   category: 'Launcher',
   dependsOn: 'launcher.auto_return',
+);
+
+/// The kiosk menu's Apps row, decided in Drawer menu items like every other
+/// row (issue #1194). A link to it, where the launcher is set up.
+const launcherMenu = SettingDef<bool>(
+  key: 'launcher.menu',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'Show in the kiosk menu',
+  description: 'Choose the items the drawer menu shows and their order.',
+  category: 'Launcher',
+  dependsOn: 'launcher.enabled',
+  linksTo: 'ui.drawer_items',
 );
 
 // ── Home Launcher ──────────────────────────────────────────────────────
@@ -5103,16 +5124,16 @@ const screensaverPixelShift = SettingDef<bool>(
   category: 'Screensaver',
 );
 
-/// The kiosk menu's Start Screensaver row, on by default since it always
-/// was. Off takes the row out of the menu (issue #473); the idle timeout,
-/// the gestures, the ESPHome switch and the API commands still start it.
+/// Where the kiosk menu's Start Screensaver row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const screensaverMenu = SettingDef<bool>(
   key: 'screensaver.menu',
   type: SettingType.boolean,
   defaultValue: true,
   title: 'Show in the kiosk menu',
-  description: 'Add a Start Screensaver entry to the kiosk menu.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Screensaver',
+  linksTo: 'ui.drawer_items',
 );
 
 /// Off by default: an animated screensaver is meant to move, and kiosk
@@ -8408,22 +8429,18 @@ const haKioskHideSidebar = SettingDef<bool>(
   subpage: 'User Interface',
 );
 
-/// The kiosk menu's HA Kiosk Mode row, on by default since it always was.
-/// Off takes the row out of the menu on a device that never toggles the
-/// header at the wall (issue #473): a smaller menu keeps the entries that
-/// are used above the fold. The setting itself, the gesture and the
-/// ESPHome switch keep working with the row gone.
+/// Where the kiosk menu's HA Kiosk Mode row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const haKioskMenu = SettingDef<bool>(
   key: 'ha.kiosk_menu',
   type: SettingType.boolean,
   defaultValue: true,
   title: 'Show in the kiosk menu',
-  description:
-      'Add an HA Kiosk Mode entry to the kiosk menu that turns it '
-      'on and off.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Home Assistant',
   section: 'User Interface',
   subpage: 'User Interface',
+  linksTo: 'ui.drawer_items',
 );
 
 /// Swipe navigation between the current dashboard's views (in-page script,
@@ -8834,19 +8851,18 @@ const haHoldReleaseMinutes = SettingDef<num>(
   subpage: 'Hold mode',
 );
 
-/// The on-device way in, opt-in like the Sendspin player's menu entry
-/// (issue #257): the drawer entry reads "Turn On/Off Hold Mode" following
-/// the live state. The active-hold notice shows regardless of this toggle;
-/// this only adds the entry that can also engage a hold.
+/// Where the kiosk menu's Hold Mode row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const haHoldMenu = SettingDef<bool>(
   key: 'ha.hold_menu',
   type: SettingType.boolean,
   defaultValue: false,
   title: 'Show in the kiosk menu',
-  description: 'Adds a menu entry that turns hold mode on and off.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Home Assistant',
   section: 'Hold mode',
   subpage: 'Hold mode',
+  linksTo: 'ui.drawer_items',
 );
 
 // Android WebViews advertise H.265 receive support in the SDP offer whether
@@ -9465,22 +9481,18 @@ const sendspinPlayerActive = SettingDef<bool>(
   perDevice: true,
 );
 
-/// The kiosk menu's way into Music Assistant itself (browsing, queueing,
-/// playlists). Deliberately not a player UI of our own: Music Assistant's
-/// web interface is already complete, already maintained and already the
-/// one the household knows — the shortcut simply puts it a swipe away,
-/// over the dashboard, on the surface a tapped link would get.
+/// Where the kiosk menu's Music Assistant row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const sendspinMaShortcut = SettingDef<bool>(
   key: 'sendspin.ma_shortcut',
   type: SettingType.boolean,
   defaultValue: true,
   title: 'Show in the kiosk menu',
-  description:
-      "Add a Music Assistant entry to the kiosk menu, opening the server's "
-      'web interface over the dashboard. Needs the server address above.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Sendspin',
   subpage: 'Music Assistant',
-  section: 'Kiosk menu',
+  section: 'Music Assistant',
+  linksTo: 'ui.drawer_items',
 );
 
 const sendspinMaOpenFullscreen = SettingDef<bool>(
@@ -9511,7 +9523,6 @@ const sendspinMaAutoClose = SettingDef<num>(
   category: 'Sendspin',
   subpage: 'Music Assistant',
   section: 'Kiosk menu',
-  dependsOn: 'sendspin.ma_shortcut',
   min: 0,
   max: 60,
   step: 5,
@@ -9535,7 +9546,6 @@ const sendspinMaHideClose = SettingDef<bool>(
   category: 'Sendspin',
   subpage: 'Music Assistant',
   section: 'Kiosk menu',
-  dependsOn: 'sendspin.ma_shortcut',
 );
 
 /// Music Assistant's own zoom level (issue #907): its layout reads
@@ -9550,7 +9560,6 @@ const sendspinMaZoom = SettingDef<num>(
   category: 'Sendspin',
   subpage: 'Music Assistant',
   section: 'Kiosk menu',
-  dependsOn: 'sendspin.ma_shortcut',
   min: 0.5,
   max: 4,
   step: 0.05,
@@ -9625,24 +9634,19 @@ const sendspinDismissKeepsPlaying = SettingDef<bool>(
   dependsOn: 'sendspin.player_active',
 );
 
-/// The floating player's own menu entry (issue #257): show or hide the
-/// card without a gesture to configure or remember. Deliberately
-/// independent of `sendspin.show_player` — a player configured not to pop
-/// up on its own can still be summoned from the menu, for this session
-/// only, without that setting changing underneath its owner.
+/// Where the kiosk menu's floating player row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const sendspinPlayerShortcut = SettingDef<bool>(
   key: 'sendspin.player_shortcut',
   type: SettingType.boolean,
   defaultValue: false,
   title: 'Show in the kiosk menu',
-  description:
-      'Add an entry in the kiosk menu that shows or hides the floating '
-      "player. WARNING: If nothing is playing or there is no queue for "
-      "this player, it won't show up.",
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Sendspin',
   subpage: 'Floating Player',
   section: 'Floating Player',
   dependsOn: 'sendspin.player_active',
+  linksTo: 'ui.drawer_items',
 );
 
 // ── Now Playing (Sendspin section) ─────────────────────────────────────
@@ -9900,22 +9904,19 @@ const sendspinFullscreenReturnView = SettingDef<String>(
   dependsOnValue: 'custom',
 );
 
-/// The kiosk menu's way to the Now Playing view on demand, the twin of
-/// the floating player's entry: the entry shows while a track is loaded
-/// and brings the view up, paused with its play button if the music is.
+/// Where the kiosk menu's Now Playing row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const sendspinFullscreenShortcut = SettingDef<bool>(
   key: 'sendspin.fullscreen_shortcut',
   type: SettingType.boolean,
   defaultValue: false,
   title: 'Show in the kiosk menu',
-  description:
-      'Add an entry in the kiosk menu that shows the Now Playing view. '
-      "WARNING: If nothing is playing or there is no queue for this "
-      "player, it won't show up.",
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Sendspin',
   subpage: 'Now Playing',
   section: 'User Interface',
   dependsOn: 'sendspin.fullscreen',
+  linksTo: 'ui.drawer_items',
 );
 
 /// The Now Playing view's player chip, the way into the speaker group
@@ -10124,17 +10125,18 @@ const sendspinLyricsOffset = SettingDef<num>(
 // Browse and play music from Music Assistant, a Home Assistant speaker's
 // media or a Sonos household, on the player Now Playing follows.
 
-/// The Music Library entry in the kiosk menu. The restricted menu also
-/// needs Music Library under Kiosk Mode's Allowed Actions.
+/// Where the kiosk menu's Music Library row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const libraryMenu = SettingDef<bool>(
   key: 'library.menu',
   type: SettingType.boolean,
   defaultValue: true,
   title: 'Show in the kiosk menu',
-  description: 'Add a Music Library entry to the kiosk menu.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Sendspin',
   subpage: 'Music Library',
   section: 'Music Library',
+  linksTo: 'ui.drawer_items',
 );
 
 const libraryIdleCloseMinutes = SettingDef<String>(
@@ -11231,17 +11233,17 @@ const intercomKey = SettingDef<String>(
   placeholder: 'Made when the intercom is enabled',
 );
 
-/// The kiosk menu entry, like the screensaver's and HA kiosk mode's own
-/// opt-outs (issue #473). Kiosk Mode's Allowed Actions still gates it in
-/// the restricted menu.
+/// Where the kiosk menu's Intercom row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const intercomMenu = SettingDef<bool>(
   key: 'intercom.menu',
   type: SettingType.boolean,
   defaultValue: true,
   title: 'Show in the kiosk menu',
-  description: 'Add an Intercom entry to the kiosk menu.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Intercom',
   dependsOn: 'intercom.enabled',
+  linksTo: 'ui.drawer_items',
 );
 
 const intercomAnswerMode = SettingDef<String>(
@@ -11455,15 +11457,16 @@ const alarmsRuntime = SettingDef<String>(
   perDevice: true,
 );
 
-/// The Alarms entry in the kiosk menu. The restricted menu also needs
-/// Alarms under Kiosk Mode's Allowed Actions.
+/// Where the kiosk menu's Alarms row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const alarmsMenu = SettingDef<bool>(
   key: 'alarms.menu',
   type: SettingType.boolean,
   defaultValue: true,
   title: 'Show in the kiosk menu',
-  description: 'Add an Alarms entry to the kiosk menu.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Alarms',
+  linksTo: 'ui.drawer_items',
 );
 
 /// The alarm stream is set to this share of its range while an alarm
@@ -11735,16 +11738,17 @@ const calendarWeatherEntity = SettingDef<String>(
   section: 'Display',
 );
 
-/// The Calendar entry in the kiosk menu. The restricted menu also needs
-/// Calendar under Kiosk Mode's Allowed Actions.
+/// Where the kiosk menu's Calendar row had its own switch. A link to
+/// Drawer menu items now (issue #1194), which decides every row.
 const calendarMenu = SettingDef<bool>(
   key: 'calendar.menu',
   type: SettingType.boolean,
   defaultValue: true,
   title: 'Show in the kiosk menu',
-  description: 'Add a Calendar entry to the kiosk menu.',
+  description: 'Choose the items the drawer menu shows and their order.',
   category: 'Calendar',
   section: 'Kiosk',
+  linksTo: 'ui.drawer_items',
 );
 
 const calendarIdleCloseMinutes = SettingDef<String>(
@@ -12613,6 +12617,21 @@ const uiToastsHidden = SettingDef<String>(
   normalizer: _normalizeToastsHidden,
 );
 
+// Which rows the drawer menu shows and in what order (issue #1194),
+// picked from every row the menu can show. The menu is the app's own, kiosk
+// mode or not: the locked kiosk's quick menu draws the same list minus what
+// Allowed Actions keeps out. See managers/kiosk/drawer_items.dart for the
+// stored shape. Empty is the defaults.
+const uiDrawerItems = SettingDef<String>(
+  key: 'ui.drawer_items',
+  type: SettingType.string,
+  defaultValue: '',
+  title: 'Drawer menu items',
+  description: 'Choose the items the drawer menu shows and their order.',
+  category: 'Device',
+  section: 'User Interface',
+);
+
 /// Every source Show system toast notifications can turn off, in the
 /// order both pickers list them.
 const toastSources = [
@@ -13131,6 +13150,7 @@ const List<SettingDef<Object>> allSettings = [
   launcherAutoReturn,
   launcherAutoReturnSeconds,
   launcherAutoReturnMedia,
+  launcherMenu,
   // The Screen & Audio page: screen first, then the volume mixer, then the
   // hand-built device pickers, then capture tuning. Both UIs render this
   // category in this order.
@@ -13619,9 +13639,9 @@ const List<SettingDef<Object>> allSettings = [
   sendspinSonosGroupVolume,
   sendspinSonosInputs,
   librarySource,
-  libraryMenu,
   libraryNowPlayingButton,
   libraryIdleCloseMinutes,
+  libraryMenu,
   libraryTextScale,
   librarySquareArtwork,
   libraryGridDensity,
@@ -13715,6 +13735,7 @@ const List<SettingDef<Object>> allSettings = [
   uiTheme,
   uiScale,
   uiToastsHidden,
+  uiDrawerItems,
   // The two pages, service first, close the Device page.
   serviceCpuAwake,
   remoteEnabled,
@@ -13774,6 +13795,6 @@ const List<SettingDef<Object>> allSettings = [
   calendarDefaultView,
   calendarWeekStart,
   calendarWeatherEntity,
-  calendarMenu,
   calendarIdleCloseMinutes,
+  calendarMenu,
 ];

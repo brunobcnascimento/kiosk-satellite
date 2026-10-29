@@ -6,6 +6,8 @@ import '../app_container.dart';
 import '../core/command_registry.dart';
 import '../l10n/messages.dart';
 import '../managers/home_assistant/entity_list.dart';
+import '../managers/kiosk/drawer_items.dart';
+import '../managers/settings/definitions.dart';
 import 'kit.dart';
 import 'mdi_icon.dart';
 import 'picker_dialog.dart';
@@ -332,6 +334,80 @@ PickSpec appSpec(BuildContext context, List<Map> apps) => PickSpec(
   chips: false,
   headings: false,
 );
+
+/// Every row the kiosk menu can show, in its default order, for Drawer
+/// menu items (issue #1194): the plugin actions that asked for the
+/// drawer, then the built-in rows. Mirrored on the remote
+/// (drawer_items.js).
+/// The plugin actions that asked for the drawer, running or not: a
+/// stopped plugin keeps its place in the list while it is stopped.
+List<Map<String, Object?>> drawerPluginActions(AppContainer container) => [
+  for (final action in container.plugins.actions)
+    if (action['drawer'] == true) action,
+];
+
+PickSpec drawerItemSpec(BuildContext context, AppContainer container) {
+  final strings = l10n(context);
+  final remoteOff = !container.settings.get(remoteEnabled);
+  final names = <String, (String, String)>{
+    'dashboard': (strings.drawerDashboard, 'mdi:view-dashboard-outline'),
+    'settings': (strings.commonSettings, 'mdi:cog-outline'),
+    'ha_kiosk': (strings.drawerHaKiosk, 'mdi:fullscreen'),
+    'camera': (strings.drawerCameraView, 'mdi:video-outline'),
+    'intercom': (strings.drawerIntercom, 'mdi:cellphone-sound'),
+    'alarms': (strings.alarmsTitle, 'mdi:alarm'),
+    'calendar': (strings.calendarTitle, 'mdi:calendar-month-outline'),
+    'music_library': (strings.libraryTitle, 'mdi:music-box-multiple-outline'),
+    'music_assistant': (strings.drawerMusicAssistant, 'mdi:music'),
+    'player': (
+      kioskAllowSendspinPlayer.localizedTitle(context),
+      'mdi:play-circle-outline',
+    ),
+    'now_playing': (strings.drawerNowPlaying, 'mdi:album'),
+    'screensaver': (strings.drawerScreensaver, 'mdi:weather-night'),
+    'lockdown': (strings.drawerLockdown, 'mdi:lock-outline'),
+    'hold': (
+      kioskAllowHold.localizedTitle(context),
+      'mdi:pause-circle-outline',
+    ),
+    'apps': (strings.drawerApps, 'mdi:apps'),
+    'clear_cache': (strings.drawerClearCache, 'mdi:broom'),
+    'restart': (strings.drawerRestartDevice, 'mdi:restart'),
+    'exit': (strings.drawerExitApplication, 'mdi:power'),
+    'theme': (kioskAllowTheme.localizedTitle(context), 'mdi:theme-light-dark'),
+  };
+  return PickSpec(
+    key: 'drawer_items',
+    loader: () async => PickList([
+      for (final action in drawerPluginActions(container))
+        PickItem(
+          id: drawerPluginItem('${action['pluginId']}', '${action['command']}'),
+          name: strings.drawerPluginAction(
+            '${action['pluginName']}',
+            '${action['title']}',
+          ),
+          icon: 'mdi:puzzle-outline',
+          // Dimmed while its plugin is stopped. The menu leaves it out then.
+          available: action['available'] == true,
+        ),
+      for (final id in drawerItemOrder)
+        PickItem(
+          id: id,
+          name: names[id]!.$1,
+          // Settings stays in the menu while nothing else leads back in.
+          sub: id == 'settings' && remoteOff
+              ? strings.drawerItemsSettingsKept
+              : null,
+          icon: names[id]!.$2,
+        ),
+    ]),
+    searchHint: strings.drawerItemsSearch,
+    noGroup: '',
+    byGroupName: false,
+    chips: false,
+    headings: false,
+  );
+}
 
 /// A fixed list of players, this device's own.
 PickSpec fixedPlayerSpec(

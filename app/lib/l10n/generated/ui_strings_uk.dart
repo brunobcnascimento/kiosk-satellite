@@ -935,6 +935,13 @@ class UiStringsUk extends UiStrings {
   String get drawerThemeAndroid => 'Системна тема';
 
   @override
+  String get drawerItemsSearch => 'Пошук пунктів меню';
+
+  @override
+  String get drawerItemsSettingsKept =>
+      'Завжди показується, поки віддалене адміністрування вимкнено.';
+
+  @override
   String drawerVersion(String version) {
     return 'Версія $version';
   }
@@ -3165,10 +3172,6 @@ class UiStringsUk extends UiStrings {
   }
 
   @override
-  String get settingLibraryMenuDescription =>
-      'Додати пункт «Музична бібліотека» до меню кіоска.';
-
-  @override
   String get settingKioskAllowMusicLibraryDescription =>
       'Переглядати музику та відтворювати її на динаміку.';
 
@@ -4765,13 +4768,6 @@ class UiStringsUk extends UiStrings {
       'Будильник, що дзвонить, з\'являється на цій заставці в її стилі, а не на окремому екрані.';
 
   @override
-  String get settingAlarmsMenuTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingAlarmsMenuDescription =>
-      'Додати пункт «Будильники» до меню кіоска.';
-
-  @override
   String get settingAlarmsVolumeTitle => 'Гучність будильника';
 
   @override
@@ -4956,13 +4952,6 @@ class UiStringsUk extends UiStrings {
   @override
   String get settingCalendarWeatherEntityDescription =>
       'Додає прогноз до кожного дня.';
-
-  @override
-  String get settingCalendarMenuTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingCalendarMenuDescription =>
-      'Додати пункт «Календар» до меню кіоска.';
 
   @override
   String get settingCalendarIdleCloseMinutesTitle =>
@@ -7441,6 +7430,16 @@ class UiStringsUk extends UiStrings {
   String get deviceToastPlugins => 'Дії плагінів';
 
   @override
+  String get settingUiDrawerItemsTitle => 'Пункти бічного меню';
+
+  @override
+  String get settingUiDrawerItemsDescription =>
+      'Виберіть, які пункти показує бічне меню і в якому порядку.';
+
+  @override
+  String get settingShowInKioskMenuTitle => 'Показувати в меню кіоска';
+
+  @override
   String get settingDlnaEnabledTitle => 'Увімкнути рендерер DLNA';
 
   @override
@@ -8178,13 +8177,6 @@ class UiStringsUk extends UiStrings {
       'Вимикає режим утримання самостійно через заданий час. Встановіть 0, щоб утримувати до ручного вимкнення.';
 
   @override
-  String get settingHaHoldMenuTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingHaHoldMenuDescription =>
-      'Додає пункт меню, що вмикає та вимикає режим утримання.';
-
-  @override
   String get haHoldHint =>
       'Закріпити поточний вигляд, автоматичне звільнення, пункт меню';
 
@@ -8538,13 +8530,6 @@ class UiStringsUk extends UiStrings {
       'Приховувати навігаційну бічну панель, доки увімкнено режим кіоска HA.';
 
   @override
-  String get settingHaKioskMenuTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingHaKioskMenuDescription =>
-      'Додати до меню кіоска пункт HA Kiosk Mode, що вмикає та вимикає його.';
-
-  @override
   String get settingHaDashboardCarouselTitle =>
       'Увімкнути карусель панелі керування';
 
@@ -8738,13 +8723,6 @@ class UiStringsUk extends UiStrings {
   @override
   String get settingIntercomKeyPlaceholder =>
       'Створюється під час увімкнення інтеркому';
-
-  @override
-  String get settingIntercomMenuTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingIntercomMenuDescription =>
-      'Додати пункт «Інтерком» до меню кіоска.';
 
   @override
   String get intercomNeedsAdmin =>
@@ -9369,13 +9347,6 @@ class UiStringsUk extends UiStrings {
       'Вимикає взаємодію з екраном, доки його не буде вимкнено через Home Assistant або за допомогою жесту виходу.';
 
   @override
-  String get settingLockdownMenuTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingLockdownMenuDescription =>
-      'Додати пункт режиму блокування до меню кіоска, який блокує екран. Використовуйте жест виходу, віддалене адміністрування або Home Assistant для розблокування.';
-
-  @override
   String get settingLockdownBlackoutTitle => 'Затемнення екрана';
 
   @override
@@ -9505,13 +9476,6 @@ class UiStringsUk extends UiStrings {
   @override
   String get settingSendspinDismissKeepsPlayingDescription =>
       'Зсув плаваючого плеєра жестом ховає його, не зупиняючи музику.';
-
-  @override
-  String get settingSendspinPlayerShortcutTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingSendspinPlayerShortcutDescription =>
-      'Додати пункт до меню кіоска, який показує або ховає плаваючий плеєр. УВАГА: якщо нічого не відтворюється або в цього плеєра немає черги, він не з\'явиться.';
 
   @override
   String get mediaFloatingPage => 'Плаваючий плеєр';
@@ -9653,13 +9617,6 @@ class UiStringsUk extends UiStrings {
   @override
   String get settingSendspinMaTokenDescription =>
       'Довговічний токен із Music Assistant (Налаштування, потім Користувачі). Для текстів пісень достатньо доступу на читання; ярлик меню кіоска відкриває вебінтерфейс від імені власника токена.';
-
-  @override
-  String get settingSendspinMaShortcutTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingSendspinMaShortcutDescription =>
-      'Додати пункт Music Assistant до меню кіоска, який відкриває вебінтерфейс сервера поверх панелі керування. Потребує адресу сервера вище.';
 
   @override
   String get settingSendspinMaOpenFullscreenTitle =>
@@ -9819,14 +9776,6 @@ class UiStringsUk extends UiStrings {
   @override
   String get settingSendspinFullscreenReturnViewDescription =>
       'Вигляд, який з\'являється після закриття «Зараз грає».';
-
-  @override
-  String get settingSendspinFullscreenShortcutTitle =>
-      'Показувати в меню кіоска';
-
-  @override
-  String get settingSendspinFullscreenShortcutDescription =>
-      'Додати пункт до меню кіоска, який показує режим «Зараз грає». УВАГА: якщо нічого не відтворюється або в цього плеєра немає черги, він не з\'явиться.';
 
   @override
   String get settingSendspinSpeakerPillTitle =>
@@ -11555,13 +11504,6 @@ class UiStringsUk extends UiStrings {
   @override
   String get settingScreensaverPixelShiftDescription =>
       'Зсувати зображення щохвилини для захисту матриць OLED. Не застосовується до чорної заставки, де пікселі вже вимкнено.';
-
-  @override
-  String get settingScreensaverMenuTitle => 'Показувати в меню кіоска';
-
-  @override
-  String get settingScreensaverMenuDescription =>
-      'Додати пункт \"Запустити заставку\" до меню кіоска.';
 
   @override
   String get settingScreensaverFollowAnimationScaleTitle =>

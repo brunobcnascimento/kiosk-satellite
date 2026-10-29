@@ -1772,6 +1772,18 @@ abstract class UiStrings {
   /// **'Follow Android'**
   String get drawerThemeAndroid;
 
+  /// Search box hint in the picker of the drawer menu's items.
+  ///
+  /// In en, this message translates to:
+  /// **'Search menu items'**
+  String get drawerItemsSearch;
+
+  /// Note under the Settings item in the drawer menu items picker. It cannot be hidden while the remote admin is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Always shown while remote admin is off.'**
+  String get drawerItemsSettingsKept;
+
   /// Current version below the drawer actions. Tap to check for updates.
   ///
   /// In en, this message translates to:
@@ -5649,12 +5661,6 @@ abstract class UiStrings {
   /// **'{speaker} + {count}'**
   String libraryGroupName(String speaker, String count);
 
-  /// Setting description.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a Music Library entry to the kiosk menu.'**
-  String get settingLibraryMenuDescription;
-
   /// Allowed Actions switch description.
   ///
   /// In en, this message translates to:
@@ -8347,18 +8353,6 @@ abstract class UiStrings {
   /// Setting label.
   ///
   /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingAlarmsMenuTitle;
-
-  /// Setting description.
-  ///
-  /// In en, this message translates to:
-  /// **'Add an Alarms entry to the kiosk menu.'**
-  String get settingAlarmsMenuDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
   /// **'Alarm volume'**
   String get settingAlarmsVolumeTitle;
 
@@ -8667,18 +8661,6 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'Adds the forecast to each day.'**
   String get settingCalendarWeatherEntityDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingCalendarMenuTitle;
-
-  /// Setting description.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a Calendar entry to the kiosk menu.'**
-  String get settingCalendarMenuDescription;
 
   /// Setting label.
   ///
@@ -12929,6 +12911,24 @@ abstract class UiStrings {
   /// **'Plugin actions'**
   String get deviceToastPlugins;
 
+  /// Setting label. Also the label of the rows on other pages that open this setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Drawer menu items'**
+  String get settingUiDrawerItemsTitle;
+
+  /// Help below this setting and below the rows on other pages that open it.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the items the drawer menu shows and their order.'**
+  String get settingUiDrawerItemsDescription;
+
+  /// Label of a row on a feature's page that opens Device > User Interface > Drawer menu items, where the feature's kiosk menu entry is turned on or off.
+  ///
+  /// In en, this message translates to:
+  /// **'Show in the kiosk menu'**
+  String get settingShowInKioskMenuTitle;
+
   /// Setting label.
   ///
   /// In en, this message translates to:
@@ -14171,18 +14171,6 @@ abstract class UiStrings {
   /// **'Turns hold mode off by itself after the set time. Set to 0 to hold until turned off manually.'**
   String get settingHaHoldReleaseMinutesDescription;
 
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingHaHoldMenuTitle;
-
-  /// Help below the setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Adds a menu entry that turns hold mode on and off.'**
-  String get settingHaHoldMenuDescription;
-
   /// Hold subpage summary or duration displayed beside the automatic release slider.
   ///
   /// In en, this message translates to:
@@ -14762,18 +14750,6 @@ abstract class UiStrings {
   /// Setting label.
   ///
   /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingHaKioskMenuTitle;
-
-  /// Help below the setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Add an HA Kiosk Mode entry to the kiosk menu that turns it on and off.'**
-  String get settingHaKioskMenuDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
   /// **'Enable dashboard carousel'**
   String get settingHaDashboardCarouselTitle;
 
@@ -15112,18 +15088,6 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'Made when the intercom is enabled'**
   String get settingIntercomKeyPlaceholder;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingIntercomMenuTitle;
-
-  /// Help below this setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Add an Intercom entry to the kiosk menu.'**
-  String get settingIntercomMenuDescription;
 
   /// Label or guidance in this section.
   ///
@@ -16214,18 +16178,6 @@ abstract class UiStrings {
   /// Setting label.
   ///
   /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingLockdownMenuTitle;
-
-  /// Help below this setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a Lockdown Mode entry to the kiosk menu that locks the screen. Use the exit gesture, Remote Admin or Home Assistant to unlock it.'**
-  String get settingLockdownMenuDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
   /// **'Blackout screen'**
   String get settingLockdownBlackoutTitle;
 
@@ -16438,18 +16390,6 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'Flinging the floating player away hides it without stopping the music.'**
   String get settingSendspinDismissKeepsPlayingDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingSendspinPlayerShortcutTitle;
-
-  /// Help below this setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Add an entry in the kiosk menu that shows or hides the floating player. WARNING: If nothing is playing or there is no queue for this player, it won\'t show up.'**
-  String get settingSendspinPlayerShortcutDescription;
 
   /// Label or guidance in this section.
   ///
@@ -16684,18 +16624,6 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'A long-lived token from Music Assistant (Settings, then Users). Read access is enough for lyrics; the kiosk menu shortcut opens the web interface as whoever the token belongs to.'**
   String get settingSendspinMaTokenDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingSendspinMaShortcutTitle;
-
-  /// Help below this setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a Music Assistant entry to the kiosk menu, opening the server\'s web interface over the dashboard. Needs the server address above.'**
-  String get settingSendspinMaShortcutDescription;
 
   /// Setting label.
   ///
@@ -16966,18 +16894,6 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'The view to show after Now Playing is dismissed.'**
   String get settingSendspinFullscreenReturnViewDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingSendspinFullscreenShortcutTitle;
-
-  /// Help below this setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Add an entry in the kiosk menu that shows the Now Playing view. WARNING: If nothing is playing or there is no queue for this player, it won\'t show up.'**
-  String get settingSendspinFullscreenShortcutDescription;
 
   /// Setting label.
   ///
@@ -19972,18 +19888,6 @@ abstract class UiStrings {
   /// In en, this message translates to:
   /// **'Nudge the image every minute to protect OLED panels. Not for the black screensaver, whose pixels are already off.'**
   String get settingScreensaverPixelShiftDescription;
-
-  /// Setting label.
-  ///
-  /// In en, this message translates to:
-  /// **'Show in the kiosk menu'**
-  String get settingScreensaverMenuTitle;
-
-  /// Help below the setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a Start Screensaver entry to the kiosk menu.'**
-  String get settingScreensaverMenuDescription;
 
   /// Setting label.
   ///

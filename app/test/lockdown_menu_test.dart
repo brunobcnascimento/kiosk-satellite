@@ -86,8 +86,10 @@ void main() {
         expect(find.text('Lockdown Mode'), findsNothing);
         expect(container.settings.get(defs.lockdownEnabled), isFalse);
         expect(defs.lockdownMenu.dependsOn, isNull);
+        // The old switch is a link now; a caller still writing it turns
+        // the row on and off in Drawer menu items.
 
-        await container.settings.set(defs.lockdownMenu, true);
+        await container.settings.setFromJson(defs.lockdownMenu.key, true);
         await tester.pumpAndSettle();
         // Back opens the menu, as a remote's back key does (issue #745).
         await tester.binding.handlePopRoute();
@@ -110,10 +112,10 @@ void main() {
         await container.settings.set(defs.kioskAllowLockdown, true);
         await tester.pumpAndSettle();
 
-        await container.settings.set(defs.lockdownMenu, false);
+        await container.settings.setFromJson(defs.lockdownMenu.key, false);
         await tester.pumpAndSettle();
         expect(find.text('Lockdown Mode'), findsNothing);
-        await container.settings.set(defs.lockdownMenu, true);
+        await container.settings.setFromJson(defs.lockdownMenu.key, true);
         await tester.pumpAndSettle();
 
         await tester.ensureVisible(find.text('Lockdown Mode'));

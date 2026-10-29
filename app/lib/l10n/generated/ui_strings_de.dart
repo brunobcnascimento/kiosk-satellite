@@ -940,6 +940,13 @@ class UiStringsDe extends UiStrings {
   String get drawerThemeAndroid => 'Android-Einstellung verwenden';
 
   @override
+  String get drawerItemsSearch => 'Menüeinträge suchen';
+
+  @override
+  String get drawerItemsSettingsKept =>
+      'Immer sichtbar, solange die Fernverwaltung ausgeschaltet ist.';
+
+  @override
   String drawerVersion(String version) {
     return 'Version $version';
   }
@@ -3196,10 +3203,6 @@ class UiStringsDe extends UiStrings {
   }
 
   @override
-  String get settingLibraryMenuDescription =>
-      'Fügt dem Kiosk-Menü den Eintrag „Musikbibliothek“ hinzu.';
-
-  @override
   String get settingKioskAllowMusicLibraryDescription =>
       'Musik durchsuchen und auf einem Lautsprecher abspielen.';
 
@@ -4829,13 +4832,6 @@ class UiStringsDe extends UiStrings {
       'Ein klingelnder Wecker erscheint in seinem Stil auf diesem Bildschirmschoner statt auf einem eigenen Bildschirm.';
 
   @override
-  String get settingAlarmsMenuTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingAlarmsMenuDescription =>
-      'Fügt dem Kiosk-Menü den Eintrag „Wecker“ hinzu.';
-
-  @override
   String get settingAlarmsVolumeTitle => 'Weckerlautstärke';
 
   @override
@@ -5020,13 +5016,6 @@ class UiStringsDe extends UiStrings {
   @override
   String get settingCalendarWeatherEntityDescription =>
       'Zeigt die Vorhersage für jeden Tag.';
-
-  @override
-  String get settingCalendarMenuTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingCalendarMenuDescription =>
-      'Fügt dem Kiosk-Menü den Eintrag „Kalender“ hinzu.';
 
   @override
   String get settingCalendarIdleCloseMinutesTitle =>
@@ -7549,6 +7538,16 @@ class UiStringsDe extends UiStrings {
   String get deviceToastPlugins => 'Plugin-Aktionen';
 
   @override
+  String get settingUiDrawerItemsTitle => 'Einträge im Seitenmenü';
+
+  @override
+  String get settingUiDrawerItemsDescription =>
+      'Wähle, welche Einträge das Seitenmenü zeigt und in welcher Reihenfolge.';
+
+  @override
+  String get settingShowInKioskMenuTitle => 'Im Kiosk-Menü anzeigen';
+
+  @override
   String get settingDlnaEnabledTitle => 'DLNA-Empfänger aktivieren';
 
   @override
@@ -8289,13 +8288,6 @@ class UiStringsDe extends UiStrings {
       'Deaktiviert den Pausenmodus nach der angegebenen Zeit. Bei 0 bleibt er aktiv, bis er manuell beendet wird.';
 
   @override
-  String get settingHaHoldMenuTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingHaHoldMenuDescription =>
-      'Fügt dem Menü eine Option zum Aktivieren und Deaktivieren des Pausenmodus hinzu.';
-
-  @override
   String get haHoldHint =>
       'Aktuelle Ansicht beibehalten, automatische Beendigung und Menüoption';
 
@@ -8655,13 +8647,6 @@ class UiStringsDe extends UiStrings {
       'Blendet die Navigations-Seitenleiste aus, solange der HA-Kioskmodus aktiv ist.';
 
   @override
-  String get settingHaKioskMenuTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingHaKioskMenuDescription =>
-      'Fügt dem Kiosk-Menü eine Option zum Aktivieren und Deaktivieren des HA-Kioskmodus hinzu.';
-
-  @override
   String get settingHaDashboardCarouselTitle =>
       'Dashboard-Karussell aktivieren';
 
@@ -8856,13 +8841,6 @@ class UiStringsDe extends UiStrings {
   @override
   String get settingIntercomKeyPlaceholder =>
       'Wird beim Aktivieren der Gegensprechanlage erstellt';
-
-  @override
-  String get settingIntercomMenuTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingIntercomMenuDescription =>
-      'Fügt dem Kiosk-Menü den Eintrag „Gegensprechanlage“ hinzu.';
 
   @override
   String get intercomNeedsAdmin =>
@@ -9488,13 +9466,6 @@ class UiStringsDe extends UiStrings {
       'Deaktiviert die Interaktion mit dem Bildschirm, bis der Sperrmodus über Home Assistant oder die Exit-Geste deaktiviert wird.';
 
   @override
-  String get settingLockdownMenuTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingLockdownMenuDescription =>
-      'Fügt dem Kiosk-Menü eine Sperrmodus-Option hinzu, um den Bildschirm zu sperren. Zum Entsperren die Exit-Geste, die Fernverwaltung oder Home Assistant verwenden.';
-
-  @override
   String get settingLockdownBlackoutTitle => 'Bildschirm schwarz schalten';
 
   @override
@@ -9626,13 +9597,6 @@ class UiStringsDe extends UiStrings {
   @override
   String get settingSendspinDismissKeepsPlayingDescription =>
       'Wenn der schwebende Player aus dem Bildschirm geschoben wird, wird er ausgeblendet, ohne die Wiedergabe zu stoppen.';
-
-  @override
-  String get settingSendspinPlayerShortcutTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingSendspinPlayerShortcutDescription =>
-      'Fügt dem Kiosk-Menü einen Eintrag zum Ein- oder Ausblenden des schwebenden Players hinzu. WARNUNG: Wird nicht angezeigt, wenn weder etwas abgespielt wird noch eine Warteschlange für diesen Player vorhanden ist.';
 
   @override
   String get mediaFloatingPage => 'Schwebender Player';
@@ -9776,13 +9740,6 @@ class UiStringsDe extends UiStrings {
   @override
   String get settingSendspinMaTokenDescription =>
       'Ein Langzeit-Token aus Music Assistant unter Einstellungen und anschließend Benutzer. Für Songtexte reicht Leserechte-Zugriff aus. Der Menüeintrag im Kiosk-Menü öffnet die Weboberfläche mit dem Benutzer, zu dem das Token gehört.';
-
-  @override
-  String get settingSendspinMaShortcutTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingSendspinMaShortcutDescription =>
-      'Fügt dem Kiosk-Menü einen Eintrag für Music Assistant hinzu, um die Weboberfläche des Servers über dem Dashboard zu öffnen. Erfordert die oben angegebene Serveradresse.';
 
   @override
   String get settingSendspinMaOpenFullscreenTitle =>
@@ -9945,13 +9902,6 @@ class UiStringsDe extends UiStrings {
   @override
   String get settingSendspinFullscreenReturnViewDescription =>
       'Die Ansicht, die nach dem Schließen von „Jetzt läuft“ angezeigt wird.';
-
-  @override
-  String get settingSendspinFullscreenShortcutTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingSendspinFullscreenShortcutDescription =>
-      'Fügt dem Kiosk-Menü einen Eintrag hinzu, um „Jetzt läuft“ anzuzeigen. WARNUNG: Wird nicht angezeigt, wenn für diesen Player weder eine Wiedergabe noch eine Warteschlange vorhanden ist.';
 
   @override
   String get settingSendspinSpeakerPillTitle => 'Lautsprecherauswahl anzeigen';
@@ -11680,13 +11630,6 @@ class UiStringsDe extends UiStrings {
   @override
   String get settingScreensaverPixelShiftDescription =>
       'Verschiebt das Bild jede Minute leicht, um OLED-Bildschirme zu schützen. Gilt nicht für den Bildschirmschoner „Schwarz“, da dessen Pixel bereits ausgeschaltet sind.';
-
-  @override
-  String get settingScreensaverMenuTitle => 'Im Kiosk-Menü anzeigen';
-
-  @override
-  String get settingScreensaverMenuDescription =>
-      'Fügt dem Kiosk-Menü die Option „Bildschirmschoner starten“ hinzu.';
 
   @override
   String get settingScreensaverFollowAnimationScaleTitle =>

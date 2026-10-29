@@ -288,6 +288,11 @@ class PluginManager extends Manager implements FleetPluginHost {
   /// do not count. Set by the app container.
   void Function(String name)? onActivity;
 
+  /// Runs after a plugin is removed, by anyone, a fleet leader included,
+  /// with its id. Set by the app container, which takes the plugin's
+  /// actions out of Drawer menu items.
+  void Function(String id)? onRemoved;
+
   /// The Home Assistant connection plugins with the `ha` capability share.
   /// Set by the app container before [init].
   HaPluginSocket? haSocket;
@@ -1180,6 +1185,9 @@ class PluginManager extends Manager implements FleetPluginHost {
       if (!_disposed) {
         _readInstalled(result);
         status.value = '';
+      }
+      if (method == 'remove' && args['id'] is String) {
+        onRemoved?.call(args['id'] as String);
       }
       if (count) unawaited(_countActivity(method, args, before));
       return installed.value;

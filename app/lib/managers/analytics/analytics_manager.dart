@@ -15,6 +15,7 @@ import '../alarms/alarm_model.dart';
 import '../browser/url_filter.dart';
 import '../calendar/calendar_model.dart';
 import '../home_assistant/custom_pages.dart';
+import '../kiosk/drawer_items.dart';
 import '../settings/definitions.dart' as defs;
 import '../settings/settings_manager.dart';
 import '../update/update_http_client.dart';
@@ -388,6 +389,7 @@ class AnalyticsManager extends Manager {
   /// entities or credentials).
   Future<Map<String, Object?>> _usage() async {
     final s = _settings;
+    final drawer = DrawerItems.decode(s.get(defs.uiDrawerItems));
     String fleetRole() {
       if (s.get(defs.fleetLeader)) return 'leader';
       if (s.get(defs.fleetLeaderInfo).trim().isNotEmpty) return 'follower';
@@ -708,7 +710,7 @@ class AnalyticsManager extends Manager {
       'alarms_on': alarms.where((a) => a.on).length,
       'alarms_repeating': alarms.where((a) => a.repeats).length,
       'alarms_sunrise': alarms.where((a) => a.sunrise).length,
-      'alarms_menu': s.get(defs.alarmsMenu),
+      'alarms_menu': drawer.shows('alarms'),
       'alarms_tone': s.get(defs.alarmsTone).trim().isEmpty
           ? 'built_in'
           : 'custom',
@@ -730,7 +732,7 @@ class AnalyticsManager extends Manager {
         'calendar_weather': s.get(defs.calendarWeatherEntity).trim().isNotEmpty,
         'calendar_default_view': s.get(defs.calendarDefaultView),
         'calendar_week_start': s.get(defs.calendarWeekStart),
-        'calendar_menu': s.get(defs.calendarMenu),
+        'calendar_menu': drawer.shows('calendar'),
         'calendar_idle_close_minutes': s.get(defs.calendarIdleCloseMinutes),
         'calendar_source': calendarSource is String
             ? calendarSource
@@ -742,7 +744,7 @@ class AnalyticsManager extends Manager {
       // Music Library: switches and picks, and how often it was opened,
       // played from, searched and steered since the last report. Never
       // what was searched for or played.
-      'library_menu': s.get(defs.libraryMenu),
+      'library_menu': drawer.shows('music_library'),
       'library_source': s.get(defs.librarySource).isEmpty
           ? 'auto'
           : s.get(defs.librarySource),

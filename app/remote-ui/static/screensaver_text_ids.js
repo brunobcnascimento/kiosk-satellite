@@ -57,8 +57,6 @@ export const screensaverTextMessageIds = {
   "Single taps interact with the website instead of dismissing.": "settingScreensaverWebsiteDoubleTapDescription",
   "Pixel shift": "settingScreensaverPixelShiftTitle",
   "Nudge the image every minute to protect OLED panels. Not for the black screensaver, whose pixels are already off.": "settingScreensaverPixelShiftDescription",
-  "Show in the kiosk menu": "settingScreensaverMenuTitle",
-  "Add a Start Screensaver entry to the kiosk menu.": "settingScreensaverMenuDescription",
   "Follow Android animation settings": "settingScreensaverFollowAnimationScaleTitle",
   "Pause animated screensavers when Android animations are off.": "settingScreensaverFollowAnimationScaleDescription",
   "Dim level": "settingScreensaverDimLevelTitle",

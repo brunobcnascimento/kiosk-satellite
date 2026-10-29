@@ -1130,7 +1130,7 @@ void main() {
     'drawer localizes conditional actions and preserves plugin values',
     (tester) async {
       final container = await containerFor(tester, const Size(360, 2200));
-      await container.settings.set(defs.haHoldMenu, true);
+      await container.settings.setFromJson(defs.haHoldMenu.key, true);
       container.plugins.enabled.value = true;
       container.plugins.installed.value = [
         {

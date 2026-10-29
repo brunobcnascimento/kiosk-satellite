@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../app_container.dart';
 import '../l10n/messages.dart';
 import '../core/events.dart';
+import '../managers/kiosk/drawer_items.dart';
 import '../managers/sendspin/music_assistant_api.dart';
 import '../managers/settings/definitions.dart' as defs;
 import '../managers/update/update_manager.dart';
@@ -47,23 +48,101 @@ class KioskDrawer extends StatelessWidget {
 
   AppContainer get c => container;
 
-  bool get _showMusicAssistant =>
-      c.settings.get(defs.sendspinMaShortcut) &&
-      musicAssistantWebUrl(c.settings.get(defs.sendspinMaUrl)) != null;
+  /// The rows this menu draws, in order (issue #1194): Drawer menu items'
+  /// pick and arrangement, less the rows with nothing to do here and, in
+  /// the quick-actions menu, the ones Allowed Actions keeps out. The theme
+  /// switcher is in the list when it shows, though it keeps the foot of
+  /// the menu. The kiosk screen asks this too, so a locked kiosk with
+  /// nothing to offer never mounts the edge swipe.
+  static List<String> visibleItems(AppContainer c, {required bool restricted}) {
+    bool allowed(defs.SettingDef<bool> action) =>
+        !restricted || c.settings.get(action);
+    bool can(String id) => switch (id) {
+      'dashboard' => allowed(defs.kioskAllowDashboard),
+      'settings' || 'clear_cache' => !restricted,
+      'ha_kiosk' => allowed(defs.kioskAllowHaKiosk),
+      // Only once the default view actually holds cameras: an empty one is
+      // the placeholder every install starts with, and a menu entry that
+      // can only fail is worse than no entry.
+      'camera' =>
+        allowed(defs.kioskAllowCamera) &&
+            (c.camera.config.defaultView?.cameraIds.isNotEmpty ?? false),
+      // Only while the intercom is on and the remote admin it rides is
+      // serving, since the entry can do nothing without them.
+      'intercom' =>
+        allowed(defs.kioskAllowIntercom) &&
+            c.intercom.enabled &&
+            c.intercom.available,
+      'alarms' => allowed(defs.kioskAllowAlarms),
+      'calendar' => allowed(defs.kioskAllowCalendar),
+      // Once some source is set up to browse.
+      'music_library' =>
+        allowed(defs.kioskAllowMusicLibrary) &&
+            c.musicLibrary.available.isNotEmpty,
+      // Shown only once its address is configured (the same one the
+      // lyrics use).
+      'music_assistant' =>
+        allowed(defs.kioskAllowMusic) &&
+            musicAssistantWebUrl(c.settings.get(defs.sendspinMaUrl)) != null,
+      'player' =>
+        allowed(defs.kioskAllowSendspinPlayer) &&
+            c.settings.get(defs.sendspinPlayerActive),
+      'now_playing' =>
+        allowed(defs.kioskAllowSendspinPlayer) &&
+            c.settings.get(defs.sendspinPlayerActive) &&
+            c.settings.get(defs.sendspinFullscreen),
+      'screensaver' => allowed(defs.kioskAllowScreensaver),
+      'lockdown' => allowed(defs.kioskAllowLockdown),
+      'hold' => allowed(defs.kioskAllowHold),
+      // With the launcher enabled and apps actually whitelisted. The
+      // restricted menu needs an app the locked kiosk allows.
+      'apps' =>
+        allowed(defs.kioskAllowApps) &&
+            c.settings.get(defs.launcherEnabled) &&
+            (restricted ? c.launcher.kioskApps : c.launcher.apps).isNotEmpty,
+      // Restart Device (issue #528): only where the restart can land, as
+      // device owner or over a granted Shizuku connection.
+      'restart' => !restricted && c.kiosk.rebootSupported.value,
+      // No exit while the kiosk IS the device's home screen: killing the
+      // home only has the system relaunch it, so the entry could never
+      // deliver what it promises (issue #219). Restart stays, it comes
+      // back by design.
+      'exit' => !restricted && !c.homeLauncher.roleHeld.value,
+      'theme' => allowed(defs.kioskAllowTheme),
+      _ => isDrawerPluginItem(id),
+    };
+    return DrawerItems.decode(c.settings.get(defs.uiDrawerItems))
+        .arrange(
+          [
+            for (final action in c.plugins.drawerActions)
+              drawerPluginItem('${action['pluginId']}', '${action['command']}'),
+            ...drawerItemOrder,
+          ],
+          // Settings stays while the remote admin is off, or nothing would
+          // lead back into it.
+          forced: {if (!c.settings.get(defs.remoteEnabled)) 'settings'},
+        )
+        .where(can)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Rows carry a hairline above them, all but the first of their group.
-    // The rows are collection-ifs evaluated in order, so a flag consumed as
-    // each visible row is built knows which one leads. Only the Hold mode
-    // row can hide itself after this build; it takes the flag from the
-    // setting as it stands now.
-    var first = true;
-    bool sep() {
-      final divided = !first;
-      first = false;
-      return divided;
+    final items = visibleItems(c, restricted: restricted);
+    final listed = items.where((id) => id != 'theme').toList();
+    // The rows that leave or restart the app sit under a rule of their own
+    // when they close the list, as they do by default.
+    var power = listed.length;
+    while (power > 0 && drawerPowerItems.contains(listed[power - 1])) {
+      power--;
     }
+    // Rows carry a hairline above them, all but the first of their group.
+    final rows = <Widget>[
+      for (final (i, id) in listed.indexed) ...[
+        if (i == power && i > 0) const Divider(height: 1, thickness: 1),
+        _row(context, id, divided: i > 0 && i != power),
+      ],
+    ];
 
     final theme = Theme.of(context);
     return Material(
@@ -149,408 +228,7 @@ class KioskDrawer extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              for (final action in c.plugins.drawerActions)
-                                _item(
-                                  context,
-                                  Icons.extension_outlined,
-                                  l10n(context).drawerPluginAction(
-                                    '${action['pluginName']}',
-                                    '${action['title']}',
-                                  ),
-                                  () async {
-                                    onClose();
-                                    final result = await c.commands
-                                        .execute('runPluginCommand', {
-                                          'id': action['pluginId'],
-                                          'command': action['command'],
-                                        });
-                                    if (!result.ok && context.mounted) {
-                                      showToast(
-                                        context,
-                                        source: 'plugins',
-                                        title: l10n(
-                                          context,
-                                        ).drawerPluginActionErrorTitle,
-                                        message:
-                                            result.error ??
-                                            l10n(
-                                              context,
-                                            ).drawerPluginActionError,
-                                        kind: ToastKind.error,
-                                      );
-                                    }
-                                  },
-                                  divided: sep(),
-                                ),
-                              if (!restricted ||
-                                  c.settings.get(defs.kioskAllowDashboard))
-                                _item(
-                                  divided: sep(),
-                                  context,
-                                  Icons.dashboard_outlined,
-                                  l10n(context).drawerDashboard,
-                                  () {
-                                    onClose();
-                                    c.commands.execute('loadUrl', {
-                                      'url': c.browser.startUrl,
-                                    });
-                                  },
-                                ),
-                              if (!restricted)
-                                _item(
-                                  divided: sep(),
-                                  context,
-                                  Icons.settings_outlined,
-                                  l10n(context).commonSettings,
-                                  () {
-                                    onClose();
-                                    onSettings();
-                                  },
-                                ),
-                              // One tap between hidden and shown — bringing
-                              // the HA header and sidebar back briefly is the
-                              // kind of thing done at the wall, without a trip
-                              // into Settings. The kiosk screen reacts to the
-                              // setting change and restyles the page.
-                              // Behind its own Allowed Action in the
-                              // restricted menu (issue #422): the owner
-                              // who hid the header and sidebar decides
-                              // whether a visitor may bring them back.
-                              // Its own opt-out (issue #473) drops the row
-                              // from both menus; the kiosk screen rebuilds
-                              // the drawer when the toggle flips.
-                              if (c.settings.get(defs.haKioskMenu))
-                                if (!restricted ||
-                                    c.settings.get(defs.kioskAllowHaKiosk))
-                                  _item(
-                                    divided: sep(),
-                                    context,
-                                    c.settings.get(defs.haKioskMode)
-                                        ? Icons.fullscreen_exit
-                                        : Icons.fullscreen,
-                                    l10n(context).drawerHaKiosk,
-                                    () async {
-                                      onClose();
-                                      await c.settings.set(
-                                        defs.haKioskMode,
-                                        !c.settings.get(defs.haKioskMode),
-                                      );
-                                    },
-                                  ),
-                              // Only once the default view actually holds
-                              // cameras: an empty one is the placeholder
-                              // every install starts with, and a menu entry
-                              // that can only fail is worse than no entry.
-                              if (!restricted ||
-                                  c.settings.get(defs.kioskAllowCamera))
-                                if (c.camera.config.defaultView case final view?
-                                    when view.cameraIds.isNotEmpty)
-                                  _item(
-                                    divided: sep(),
-                                    context,
-                                    Icons.videocam_outlined,
-                                    l10n(context).drawerCameraView,
-                                    () {
-                                      onClose();
-                                      c.camera.showView(view.id);
-                                    },
-                                  ),
-                              // The intercom's sheet: Everyone, then the
-                              // kiosks that are ready. Only while the
-                              // intercom is on and the remote admin it
-                              // rides is serving, since the entry can do
-                              // nothing without them. Kiosk Mode's Allowed
-                              // Actions gates it in the restricted menu.
-                              if (c.intercom.enabled &&
-                                  c.intercom.available &&
-                                  c.settings.get(defs.intercomMenu))
-                                if (!restricted ||
-                                    c.settings.get(defs.kioskAllowIntercom))
-                                  _item(
-                                    divided: sep(),
-                                    context,
-                                    Icons.speaker_phone_outlined,
-                                    l10n(context).drawerIntercom,
-                                    () {
-                                      onClose();
-                                      c.commands.execute(
-                                        'intercomOpen',
-                                        const {},
-                                      );
-                                    },
-                                  ),
-                              // The kiosk's own alarms: the full screen
-                              // list, unless Show in the kiosk menu is off.
-                              // Kiosk Mode's Allowed Actions gates it in the
-                              // restricted menu.
-                              if (c.settings.get(defs.alarmsMenu) &&
-                                  (!restricted ||
-                                      c.settings.get(defs.kioskAllowAlarms)))
-                                _item(
-                                  divided: sep(),
-                                  context,
-                                  Icons.alarm,
-                                  l10n(context).alarmsTitle,
-                                  () {
-                                    onClose();
-                                    c.commands.execute('openAlarms', const {});
-                                  },
-                                ),
-                              // The family calendar, the same way: the full
-                              // screen calendar, unless Show in the kiosk
-                              // menu is off, and Allowed Actions in the
-                              // restricted menu.
-                              if (c.settings.get(defs.calendarMenu) &&
-                                  (!restricted ||
-                                      c.settings.get(defs.kioskAllowCalendar)))
-                                _item(
-                                  divided: sep(),
-                                  context,
-                                  Icons.calendar_month_outlined,
-                                  l10n(context).calendarTitle,
-                                  () {
-                                    onClose();
-                                    c.commands.execute(
-                                      'openCalendar',
-                                      const {},
-                                    );
-                                  },
-                                ),
-                              // The music library, the same way, once some
-                              // source is set up to browse.
-                              if (c.settings.get(defs.libraryMenu) &&
-                                  c.musicLibrary.available.isNotEmpty &&
-                                  (!restricted ||
-                                      c.settings.get(
-                                        defs.kioskAllowMusicLibrary,
-                                      )))
-                                _item(
-                                  divided: sep(),
-                                  context,
-                                  Icons.library_music_outlined,
-                                  l10n(context).libraryTitle,
-                                  () {
-                                    onClose();
-                                    c.commands.execute(
-                                      'openMusicLibrary',
-                                      const {},
-                                    );
-                                  },
-                                ),
-                              // Music Assistant's own web interface, over
-                              // the dashboard on the same surface a tapped
-                              // link gets — browsing, queueing and
-                              // playlists belong to the server that
-                              // already does all of it well. Shown only
-                              // once its address is configured (the same
-                              // one the lyrics use): an entry that can
-                              // only fail is worse than no entry.
-                              if (!restricted ||
-                                  c.settings.get(defs.kioskAllowMusic))
-                                if (_showMusicAssistant)
-                                  _item(
-                                    divided: sep(),
-                                    context,
-                                    'assets/svg/music-assistant.svg',
-                                    l10n(context).drawerMusicAssistant,
-                                    () {
-                                      onClose();
-                                      c.commands.execute(
-                                        'showMusicAssistant',
-                                        const {},
-                                      );
-                                    },
-                                  ),
-                              // The floating player's menu entry (issue
-                              // #257). The label follows the card live —
-                              // Show also recovers a paused queue the app
-                              // has never seen (the reveal event), and
-                              // works while the auto-show setting is off;
-                              // Hide hides the card without stopping the
-                              // music, unlike the fling, because a menu
-                              // tap is deliberate about exactly this.
-                              if (!restricted ||
-                                  c.settings.get(defs.kioskAllowSendspinPlayer))
-                                if (c.settings.get(defs.sendspinPlayerActive) &&
-                                    c.settings.get(defs.sendspinPlayerShortcut))
-                                  _sendspinItem(context, divided: sep()),
-                              // The Now Playing view's entry: the same
-                              // opt-in shape as the card's, and like it
-                              // only while there is a track to show.
-                              if (!restricted ||
-                                  c.settings.get(defs.kioskAllowSendspinPlayer))
-                                if (c.settings.get(defs.sendspinPlayerActive) &&
-                                    c.settings.get(defs.sendspinFullscreen) &&
-                                    c.settings.get(
-                                      defs.sendspinFullscreenShortcut,
-                                    ))
-                                  _nowPlayingItem(context, divided: sep()),
-                              // Same opt-out shape as HA Kiosk Mode (issue
-                              // #473): the screensaver setting decides
-                              // whether the row is offered at all.
-                              if (c.settings.get(defs.screensaverMenu))
-                                if (!restricted ||
-                                    c.settings.get(defs.kioskAllowScreensaver))
-                                  _item(
-                                    divided: sep(),
-                                    context,
-                                    Icons.dark_mode_outlined,
-                                    l10n(context).drawerScreensaver,
-                                    () {
-                                      onClose();
-                                      c.commands.execute(
-                                        'startScreensaver',
-                                        const {},
-                                      );
-                                    },
-                                  ),
-                              if (c.settings.get(defs.lockdownMenu) &&
-                                  (!restricted ||
-                                      c.settings.get(defs.kioskAllowLockdown)))
-                                _item(
-                                  divided: sep(),
-                                  context,
-                                  Icons.lock_outline,
-                                  l10n(context).drawerLockdown,
-                                  () async {
-                                    onClose();
-                                    await c.settings.set(
-                                      defs.lockdownEnabled,
-                                      true,
-                                    );
-                                  },
-                                ),
-                              // Hold mode's menu entry (issue #266): opt-in
-                              // like the Sendspin one, and unlike the notice
-                              // below it can also ENGAGE a hold. The label
-                              // follows the live state, and the opt-in gate
-                              // sits INSIDE the builder: the drawer widget
-                              // stays mounted between opens, so a gate in
-                              // the collection-if would freeze at whatever
-                              // the toggle said when the kiosk screen last
-                              // rebuilt (a remote-admin flip never shows).
-                              if (!restricted ||
-                                  c.settings.get(defs.kioskAllowHold))
-                                _holdItem(
-                                  context,
-                                  divided: c.settings.get(defs.haHoldMenu)
-                                      ? sep()
-                                      : !first,
-                                ),
-                              // Only with the launcher enabled and apps
-                              // actually whitelisted: an empty launcher is
-                              // the placeholder every install starts with,
-                              // and a menu entry that can only fail is
-                              // worse than no entry. The restricted menu
-                              // needs an app the locked kiosk allows.
-                              if (!restricted ||
-                                  c.settings.get(defs.kioskAllowApps))
-                                if (c.settings.get(defs.launcherEnabled) &&
-                                    (restricted
-                                            ? c.launcher.kioskApps
-                                            : c.launcher.apps)
-                                        .isNotEmpty)
-                                  _item(
-                                    divided: sep(),
-                                    context,
-                                    Icons.apps_outlined,
-                                    l10n(context).drawerApps,
-                                    () {
-                                      onClose();
-                                      c.launcher.open(unlocked: !restricted);
-                                    },
-                                  ),
-                              if (!restricted)
-                                _item(
-                                  divided: sep(),
-                                  context,
-                                  Icons.cleaning_services_outlined,
-                                  l10n(context).drawerClearCache,
-                                  () {
-                                    onClose();
-                                    c.commands.execute(
-                                      'clearWebCache',
-                                      const {},
-                                    );
-                                  },
-                                ),
-                              // The group rule: the hairlines' geometry, a
-                              // shade stronger, so the rows either side of
-                              // it sit exactly like every other row.
-                              //
-                              // No exit while the kiosk IS the device's
-                              // home screen: killing the home only has the
-                              // system relaunch it, so the entry could
-                              // never deliver what it promises (issue
-                              // #219). Turn the Home Launcher off first;
-                              // Restart stays, it comes back by design.
-                              if (!restricted &&
-                                  (c.kiosk.rebootSupported.value ||
-                                      !c.homeLauncher.roleHeld.value))
-                                const Divider(height: 1, thickness: 1),
-                              // Restart Device (issue #528): only where the
-                              // restart can land, as device owner or over a
-                              // granted Shizuku connection. The kiosk
-                              // manager keeps the answer current, and the
-                              // gate sits inside the builder like Hold's.
-                              if (!restricted && c.kiosk.rebootSupported.value)
-                                _item(
-                                  divided: false,
-                                  context,
-                                  Icons.restart_alt_outlined,
-                                  l10n(context).drawerRestartDevice,
-                                  () async {
-                                    onClose();
-                                    if (context.mounted &&
-                                        await showConfirmDialog(
-                                          context,
-                                          title: l10n(
-                                            context,
-                                          ).drawerRestartDevice,
-                                          message: l10n(
-                                            context,
-                                          ).drawerRestartConfirm,
-                                          confirmLabel: l10n(
-                                            context,
-                                          ).drawerRestart,
-                                        )) {
-                                      await c.commands.execute(
-                                        'rebootDevice',
-                                        const {},
-                                      );
-                                    }
-                                  },
-                                ),
-                              if (!restricted && !c.homeLauncher.roleHeld.value)
-                                _item(
-                                  divided: c.kiosk.rebootSupported.value,
-                                  context,
-                                  Icons.power_settings_new_outlined,
-                                  l10n(context).drawerExitApplication,
-                                  () async {
-                                    onClose();
-                                    if (context.mounted &&
-                                        await showConfirmDialog(
-                                          context,
-                                          title: l10n(
-                                            context,
-                                          ).drawerExitApplication,
-                                          message: l10n(
-                                            context,
-                                          ).drawerExitConfirm,
-                                          confirmLabel: l10n(
-                                            context,
-                                          ).drawerExit,
-                                        )) {
-                                      await c.commands.execute(
-                                        'exitApp',
-                                        const {},
-                                      );
-                                    }
-                                  },
-                                ),
-                            ],
+                            children: [...rows],
                           ),
                         ),
                       ),
@@ -719,7 +397,7 @@ class KioskDrawer extends StatelessWidget {
               // Flipping it is the kind of thing done at the wall, at night,
               // without a trip into Settings; it applies live (main.dart
               // listens for the setting) and the drawer stays open.
-              if (!restricted || c.settings.get(defs.kioskAllowTheme))
+              if (items.contains('theme'))
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 10, 12, 14),
                   child: Center(
@@ -754,6 +432,177 @@ class KioskDrawer extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// The row for [id], one of [visibleItems].
+  Widget _row(BuildContext context, String id, {required bool divided}) {
+    void run(String command) {
+      onClose();
+      c.commands.execute(command, const {});
+    }
+
+    Widget item(Object icon, String label, VoidCallback onTap) =>
+        _item(context, icon, label, onTap, divided: divided);
+    final strings = l10n(context);
+    switch (id) {
+      case 'dashboard':
+        return item(Icons.dashboard_outlined, strings.drawerDashboard, () {
+          onClose();
+          c.commands.execute('loadUrl', {'url': c.browser.startUrl});
+        });
+      case 'settings':
+        return item(Icons.settings_outlined, strings.commonSettings, () {
+          onClose();
+          onSettings();
+        });
+      // One tap between hidden and shown: bringing the HA header and
+      // sidebar back briefly is the kind of thing done at the wall,
+      // without a trip into Settings. The kiosk screen reacts to the
+      // setting change and restyles the page. Behind its own Allowed
+      // Action in the restricted menu (issue #422): the owner who hid the
+      // header and sidebar decides whether a visitor may bring them back.
+      case 'ha_kiosk':
+        return item(
+          c.settings.get(defs.haKioskMode)
+              ? Icons.fullscreen_exit
+              : Icons.fullscreen,
+          strings.drawerHaKiosk,
+          () async {
+            onClose();
+            await c.settings.set(
+              defs.haKioskMode,
+              !c.settings.get(defs.haKioskMode),
+            );
+          },
+        );
+      case 'camera':
+        return item(Icons.videocam_outlined, strings.drawerCameraView, () {
+          onClose();
+          if (c.camera.config.defaultView case final view?) {
+            c.camera.showView(view.id);
+          }
+        });
+      // The intercom's sheet: Everyone, then the kiosks that are ready.
+      case 'intercom':
+        return item(
+          Icons.speaker_phone_outlined,
+          strings.drawerIntercom,
+          () => run('intercomOpen'),
+        );
+      // The kiosk's own alarms: the full screen list.
+      case 'alarms':
+        return item(Icons.alarm, strings.alarmsTitle, () => run('openAlarms'));
+      // The family calendar, the same way.
+      case 'calendar':
+        return item(
+          Icons.calendar_month_outlined,
+          strings.calendarTitle,
+          () => run('openCalendar'),
+        );
+      case 'music_library':
+        return item(
+          Icons.library_music_outlined,
+          strings.libraryTitle,
+          () => run('openMusicLibrary'),
+        );
+      // Music Assistant's own web interface, over the dashboard on the
+      // same surface a tapped link gets: browsing, queueing and playlists
+      // belong to the server that already does all of it well.
+      case 'music_assistant':
+        return item(
+          'assets/svg/music-assistant.svg',
+          strings.drawerMusicAssistant,
+          () => run('showMusicAssistant'),
+        );
+      case 'player':
+        return _sendspinItem(context, divided: divided);
+      case 'now_playing':
+        return _nowPlayingItem(context, divided: divided);
+      case 'screensaver':
+        return item(
+          Icons.dark_mode_outlined,
+          strings.drawerScreensaver,
+          () => run('startScreensaver'),
+        );
+      case 'lockdown':
+        return item(Icons.lock_outline, strings.drawerLockdown, () async {
+          onClose();
+          await c.settings.set(defs.lockdownEnabled, true);
+        });
+      case 'hold':
+        return _holdItem(context, divided: divided);
+      case 'apps':
+        return item(Icons.apps_outlined, strings.drawerApps, () {
+          onClose();
+          c.launcher.open(unlocked: !restricted);
+        });
+      case 'clear_cache':
+        return item(
+          Icons.cleaning_services_outlined,
+          strings.drawerClearCache,
+          () => run('clearWebCache'),
+        );
+      case 'restart':
+        return item(
+          Icons.restart_alt_outlined,
+          strings.drawerRestartDevice,
+          () async {
+            onClose();
+            if (context.mounted &&
+                await showConfirmDialog(
+                  context,
+                  title: l10n(context).drawerRestartDevice,
+                  message: l10n(context).drawerRestartConfirm,
+                  confirmLabel: l10n(context).drawerRestart,
+                )) {
+              await c.commands.execute('rebootDevice', const {});
+            }
+          },
+        );
+      case 'exit':
+        return item(
+          Icons.power_settings_new_outlined,
+          strings.drawerExitApplication,
+          () async {
+            onClose();
+            if (context.mounted &&
+                await showConfirmDialog(
+                  context,
+                  title: l10n(context).drawerExitApplication,
+                  message: l10n(context).drawerExitConfirm,
+                  confirmLabel: l10n(context).drawerExit,
+                )) {
+              await c.commands.execute('exitApp', const {});
+            }
+          },
+        );
+    }
+    final action = c.plugins.drawerActions.firstWhere(
+      (a) => drawerPluginItem('${a['pluginId']}', '${a['command']}') == id,
+    );
+    return item(
+      Icons.extension_outlined,
+      strings.drawerPluginAction(
+        '${action['pluginName']}',
+        '${action['title']}',
+      ),
+      () async {
+        onClose();
+        final result = await c.commands.execute('runPluginCommand', {
+          'id': action['pluginId'],
+          'command': action['command'],
+        });
+        if (!result.ok && context.mounted) {
+          showToast(
+            context,
+            source: 'plugins',
+            title: l10n(context).drawerPluginActionErrorTitle,
+            message: result.error ?? l10n(context).drawerPluginActionError,
+            kind: ToastKind.error,
+          );
+        }
+      },
     );
   }
 
@@ -811,18 +660,16 @@ class KioskDrawer extends StatelessWidget {
     );
   }
 
-  /// The Hold mode row. The opt-in gate sits INSIDE the builder (see the
-  /// call site), so the row can hide itself after the list is built; its
-  /// [divided] is taken from the setting as it stands at that build.
+  /// The Hold mode row (issue #266). Unlike the notice below the list it
+  /// can also ENGAGE a hold. The label follows the live state: the drawer
+  /// widget stays mounted between opens, so it listens for the flip
+  /// itself (a remote-admin flip shows too).
   Widget _holdItem(BuildContext context, {required bool divided}) {
     return StreamBuilder<SettingChanged>(
       stream: c.bus.on<SettingChanged>().where(
-        (e) => e.key == defs.haHoldMode.key || e.key == defs.haHoldMenu.key,
+        (e) => e.key == defs.haHoldMode.key,
       ),
       builder: (context, _) {
-        if (!c.settings.get(defs.haHoldMenu)) {
-          return const SizedBox.shrink();
-        }
         final on = c.settings.get(defs.haHoldMode);
         return _item(
           divided: divided,

@@ -9,6 +9,7 @@ import '../../core/headless.dart';
 import '../../core/tls_identity.dart';
 import '../../core/manager.dart';
 import '../device_camera/camera_resolutions.dart';
+import '../kiosk/drawer_items.dart';
 import '../wake_word/pryon/pryon_catalog.dart';
 import 'definitions.dart';
 
@@ -498,6 +499,31 @@ class SettingsManager extends Manager {
         jsonEncode(packages),
       );
     }
+    // The kiosk menu's rows each had their own Show in the kiosk menu
+    // switch before Drawer menu items decided them all (issue #1194).
+    // Seeded once from those switches, in the menu's old order, and the
+    // old values go: the switches are links now and hold nothing.
+    if (_prefs.get(_prefix + uiDrawerItems.key) == null) {
+      final hidden = <String>{
+        for (final MapEntry(key: key, value: id)
+            in drawerItemLinks.entries)
+          if (!(_prefs.get(_prefix + key) as bool? ??
+              !drawerItemsOffByDefault.contains(id)))
+            id,
+      };
+      final items = DrawerItems(
+        shown: [
+          for (final id in drawerItemOrder)
+            if (!hidden.contains(id)) id,
+        ],
+        hidden: hidden,
+      );
+      await _prefs.setString(_prefix + uiDrawerItems.key, items.encode());
+      for (final key in drawerItemLinks.keys) {
+        await _prefs.remove(_prefix + key);
+      }
+      log.info(name, 'seeded the drawer menu items from the menu switches');
+    }
     // The Sonos page's own lyrics switch: the Lyrics page's Enable lyrics
     // covers every source now.
     await _prefs.remove('${_prefix}sendspin.sonos_lyrics');
@@ -781,6 +807,19 @@ class SettingsManager extends Manager {
       );
       key = screenHideNavigationBar.key;
     }
+    // A backup, a fleet leader or an API caller from before Drawer menu
+    // items still sends a row's own switch; it turns that row on or off.
+    // A batch that carries the list itself already says it all.
+    if (drawerItemLinks[key] case final id? when value is bool) {
+      if (batch[uiDrawerItems.key] is String) return true;
+      final items = DrawerItems.decode(get(uiDrawerItems));
+      await set(
+        uiDrawerItems,
+        items.withItem(id, value).encode(),
+        source: source,
+      );
+      return true;
+    }
     final def = defByKey(key);
     if (def == null) return false;
     // A backup, a fleet leader or an API caller from before Wake to
@@ -865,6 +904,7 @@ class SettingsManager extends Manager {
           'alsoDependsOnValue': def.alsoDependsOnValue,
         if (def.hidden || deviceHiddenKeys.contains(def.key)) 'hidden': true,
         if (def.multiline) 'multiline': true,
+        if (def.linksTo != null) 'linksTo': def.linksTo,
         if (def.placeholder != null) 'placeholder': def.placeholder,
         if (def.options != null) 'options': optionsFor(def),
         if (def.key == cameraRtspResolution.key)
@@ -911,7 +951,8 @@ class SettingsManager extends Manager {
   /// Full config for provisioning. Secrets included only when [withSecrets].
   Map<String, Object?> export({bool withSecrets = false}) => {
     for (final def in allSettings)
-      if (!def.secret || withSecrets) def.key: get(def),
+      if ((!def.secret || withSecrets) && def.linksTo == null)
+        def.key: get(def),
   };
 
   /// Drops one specific device's identity from an incoming settings [map],

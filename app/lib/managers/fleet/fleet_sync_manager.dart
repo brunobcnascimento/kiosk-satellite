@@ -1396,7 +1396,8 @@ class FleetSyncManager extends Manager {
 
   /// Whether one setting travels under [profile].
   static bool syncs(defs.SettingDef<Object> def, SyncProfile profile) {
-    if (def.perDevice) return false;
+    // A link holds no value of its own; its target travels instead.
+    if (def.perDevice || def.linksTo != null) return false;
     final lead = defs.fleetFollowsKey[def.key];
     if (lead != null) {
       final leadDef = defs.allSettings.where((d) => d.key == lead).first;
@@ -2186,6 +2187,7 @@ class FleetSyncManager extends Manager {
         // A setting that follows another one travels with it, so excluding
         // it alone would do nothing.
         if (!d.perDevice &&
+            d.linksTo == null &&
             !defs.fleetCredentialKeys.contains(d.key) &&
             !defs.fleetDashboardKeys.contains(d.key) &&
             !defs.fleetFollowsKey.containsKey(d.key) &&

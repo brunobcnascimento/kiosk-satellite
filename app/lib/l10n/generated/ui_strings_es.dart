@@ -940,6 +940,13 @@ class UiStringsEs extends UiStrings {
   String get drawerThemeAndroid => 'Seguir Android';
 
   @override
+  String get drawerItemsSearch => 'Buscar elementos del menú';
+
+  @override
+  String get drawerItemsSettingsKept =>
+      'Siempre visible mientras la administración remota está desactivada.';
+
+  @override
   String drawerVersion(String version) {
     return 'Versión $version';
   }
@@ -3180,10 +3187,6 @@ class UiStringsEs extends UiStrings {
   }
 
   @override
-  String get settingLibraryMenuDescription =>
-      'Añade la opción Biblioteca musical al menú del kiosko.';
-
-  @override
   String get settingKioskAllowMusicLibraryDescription =>
       'Explorar música y reproducirla en un altavoz.';
 
@@ -4798,13 +4801,6 @@ class UiStringsEs extends UiStrings {
       'Una alarma que suena se muestra en este protector de pantalla, con su estilo, en lugar de en su propia pantalla.';
 
   @override
-  String get settingAlarmsMenuTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingAlarmsMenuDescription =>
-      'Añade la opción Alarmas al menú del kiosko.';
-
-  @override
   String get settingAlarmsVolumeTitle => 'Volumen de alarma';
 
   @override
@@ -4986,13 +4982,6 @@ class UiStringsEs extends UiStrings {
   @override
   String get settingCalendarWeatherEntityDescription =>
       'Añade la previsión a cada día.';
-
-  @override
-  String get settingCalendarMenuTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingCalendarMenuDescription =>
-      'Añade la opción Calendario al menú del kiosko.';
 
   @override
   String get settingCalendarIdleCloseMinutesTitle => 'Cerrar si está inactivo';
@@ -7506,6 +7495,16 @@ class UiStringsEs extends UiStrings {
   String get deviceToastPlugins => 'Acciones de plugins';
 
   @override
+  String get settingUiDrawerItemsTitle => 'Elementos del menú lateral';
+
+  @override
+  String get settingUiDrawerItemsDescription =>
+      'Elige qué elementos muestra el menú lateral y en qué orden.';
+
+  @override
+  String get settingShowInKioskMenuTitle => 'Mostrar en el menú del kiosko';
+
+  @override
   String get settingDlnaEnabledTitle => 'Activar receptor DLNA';
 
   @override
@@ -8246,13 +8245,6 @@ class UiStringsEs extends UiStrings {
       'Desactiva el modo de pausa al cumplirse el tiempo indicado. Con 0, continúa hasta desactivarlo manualmente.';
 
   @override
-  String get settingHaHoldMenuTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingHaHoldMenuDescription =>
-      'Añade una opción al menú para activar y desactivar el modo de pausa.';
-
-  @override
   String get haHoldHint =>
       'Mantiene la vista actual, finalización automática y opción de menú';
 
@@ -8612,13 +8604,6 @@ class UiStringsEs extends UiStrings {
       'Oculta la barra lateral de navegación mientras está activo el modo kiosko de HA.';
 
   @override
-  String get settingHaKioskMenuTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingHaKioskMenuDescription =>
-      'Añade una opción al menú del kiosko para activar y desactivar el modo kiosko de HA.';
-
-  @override
   String get settingHaDashboardCarouselTitle =>
       'Activar el carrusel del panel de control';
 
@@ -8812,13 +8797,6 @@ class UiStringsEs extends UiStrings {
   @override
   String get settingIntercomKeyPlaceholder =>
       'Se crea al activar el intercomunicador';
-
-  @override
-  String get settingIntercomMenuTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingIntercomMenuDescription =>
-      'Añade la opción Intercomunicador al menú del kiosko.';
 
   @override
   String get intercomNeedsAdmin =>
@@ -9446,13 +9424,6 @@ class UiStringsEs extends UiStrings {
       'Desactiva las interacciones con la pantalla hasta que se desactive desde Home Assistant o con el gesto de salida.';
 
   @override
-  String get settingLockdownMenuTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingLockdownMenuDescription =>
-      'Añade una opción de modo de bloqueo al menú del kiosko para bloquear la pantalla. Usa el gesto de salida, la administración remota o Home Assistant para desbloquearla.';
-
-  @override
   String get settingLockdownBlackoutTitle => 'Pantalla en negro';
 
   @override
@@ -9582,14 +9553,6 @@ class UiStringsEs extends UiStrings {
   @override
   String get settingSendspinDismissKeepsPlayingDescription =>
       'Deslizar el reproductor flotante fuera de la pantalla lo oculta sin detener la música.';
-
-  @override
-  String get settingSendspinPlayerShortcutTitle =>
-      'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingSendspinPlayerShortcutDescription =>
-      'Añade una entrada al menú del kiosko para mostrar u ocultar el reproductor flotante. ADVERTENCIA: No aparece si no hay nada en reproducción ni una cola para este reproductor.';
 
   @override
   String get mediaFloatingPage => 'Reproductor flotante';
@@ -9732,13 +9695,6 @@ class UiStringsEs extends UiStrings {
   @override
   String get settingSendspinMaTokenDescription =>
       'Un token de larga duración de Music Assistant, en Settings y luego Users. El acceso de lectura es suficiente para las letras. El acceso directo del menú del kiosko abre la interfaz web con el usuario al que pertenece el token.';
-
-  @override
-  String get settingSendspinMaShortcutTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingSendspinMaShortcutDescription =>
-      'Añade una entrada de Music Assistant al menú del kiosko para abrir la interfaz web del servidor sobre el panel de control. Requiere la dirección del servidor indicada arriba.';
 
   @override
   String get settingSendspinMaOpenFullscreenTitle =>
@@ -9901,14 +9857,6 @@ class UiStringsEs extends UiStrings {
   @override
   String get settingSendspinFullscreenReturnViewDescription =>
       'La vista que se muestra al cerrar Reproduciendo Ahora.';
-
-  @override
-  String get settingSendspinFullscreenShortcutTitle =>
-      'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingSendspinFullscreenShortcutDescription =>
-      'Añade una entrada al menú del kiosko para mostrar Reproduciendo Ahora. ADVERTENCIA: No aparece si no hay nada en reproducción ni una cola para este reproductor.';
 
   @override
   String get settingSendspinSpeakerPillTitle => 'Mostrar selector de altavoces';
@@ -11640,13 +11588,6 @@ class UiStringsEs extends UiStrings {
   @override
   String get settingScreensaverPixelShiftDescription =>
       'Mueve ligeramente la imagen cada minuto para proteger las pantallas OLED. No se aplica al protector de pantalla Negro, cuyos píxeles ya están apagados.';
-
-  @override
-  String get settingScreensaverMenuTitle => 'Mostrar en el menú del kiosko';
-
-  @override
-  String get settingScreensaverMenuDescription =>
-      'Añade la opción Iniciar protector de pantalla al menú del kiosko.';
 
   @override
   String get settingScreensaverFollowAnimationScaleTitle =>

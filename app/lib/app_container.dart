@@ -32,6 +32,7 @@ import 'managers/sendspin/plugin_ma_socket.dart';
 import 'managers/js_api/js_api_manager.dart';
 import 'managers/js_api/page_ha_socket.dart';
 import 'managers/js_api/page_state_manager.dart';
+import 'managers/kiosk/drawer_items.dart';
 import 'managers/kiosk/kiosk_manager.dart';
 import 'managers/launcher/app_launcher_manager.dart';
 import 'managers/launcher/home_launcher_manager.dart';
@@ -228,6 +229,15 @@ class AppContainer {
         fleetSync.following && fleetSync.syncedPlugins.containsKey(id);
     plugins.onActivity = (name) =>
         unawaited(UsageCounters.bump(settings, name));
+    // A removed plugin's rows leave the drawer menu's list, so a reinstall
+    // starts fresh like any new plugin action (issue #1194).
+    plugins.onRemoved = (id) {
+      final items = DrawerItems.decode(settings.get(uiDrawerItems));
+      final pruned = items.withoutPlugin(id);
+      if (pruned.encode() != items.encode()) {
+        unawaited(settings.set(uiDrawerItems, pruned.encode()));
+      }
+    };
     intercom = IntercomManager(bus, commands, log, settings);
     alarms = AlarmManager(bus, commands, log, settings)
       ..screensaverModeOverride = () => screensaver.modeOverride.value;

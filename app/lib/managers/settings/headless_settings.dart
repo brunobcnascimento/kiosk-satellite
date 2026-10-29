@@ -48,6 +48,8 @@ class HeadlessSettings {
     defs.uiTheme.key,
     defs.uiScale.key,
     defs.uiToastsHidden.key,
+    // No drawer menu: there is no screen to swipe it in on.
+    defs.uiDrawerItems.key,
     defs.disableImpeller.key,
     defs.legacyWebView.key,
     defs.remoteEnabled.key,
@@ -56,13 +58,11 @@ class HeadlessSettings {
     defs.wakeWordReturnToBackground.key,
     defs.voiceTimerAlertPill.key,
     defs.voiceTimerNameOnAlert.key,
-    // Intercom: no menu, no talk button, and the buttons are gestures.
-    defs.intercomMenu.key,
+    // Intercom: no talk button, and the buttons are gestures.
     defs.intercomTalkMode.key,
     defs.intercomHangupKey.key,
     defs.intercomHangupKeyRinging.key,
-    // Alarms: no menu, no panel to light.
-    defs.alarmsMenu.key,
+    // Alarms: no panel to light.
     defs.alarmsSunriseMinutes.key,
     // Gestures: the hand hold needs the camera.
     defs.handGestureHoldSeconds.key,
@@ -129,8 +129,10 @@ class HeadlessSettings {
   /// Before any manager reads its settings and any page renders.
   Future<void> init() async {
     for (final def in defs.allSettings) {
+      // A link to Drawer menu items goes with the menu, which is not here.
       if (_hiddenCategories.contains(def.category) ||
           _hiddenKeys.contains(def.key) ||
+          def.linksTo != null ||
           _hiddenPart(def)) {
         defs.deviceHiddenKeys.add(def.key);
       }
