@@ -25730,6 +25730,18 @@ abstract class UiStrings {
   /// Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged.
   ///
   /// In en, this message translates to:
+  /// **'Fine-tune stop word sensitivity'**
+  String get settingVoiceStopWordFineTuneTitle;
+
+  /// Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjusts the stop word sensitivity in smaller steps. Raise it if you often have to repeat \"stop\", lower it if answers stop by mistake.'**
+  String get settingVoiceStopWordFineTuneDescription;
+
+  /// Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged.
+  ///
+  /// In en, this message translates to:
   /// **'Enable wake word arbitration'**
   String get settingVoiceWakeArbitrationTitle;
 

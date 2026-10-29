@@ -14734,6 +14734,14 @@ class UiStringsEn extends UiStrings {
       'Say \"stop\" to cut off an answer, a timer alert or an announcement.';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle =>
+      'Fine-tune stop word sensitivity';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      'Adjusts the stop word sensitivity in smaller steps. Raise it if you often have to repeat \"stop\", lower it if answers stop by mistake.';
+
+  @override
   String get settingVoiceWakeArbitrationTitle => 'Enable wake word arbitration';
 
   @override

@@ -14913,6 +14913,14 @@ class UiStringsNl extends UiStrings {
       'Zeg \'stop\' om een antwoord, timerwaarschuwing of aankondiging af te breken.';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle =>
+      'Gevoeligheid van stopwoord fijnafstellen';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      'Past de gevoeligheid van het stopwoord in kleinere stappen aan. Verhoog dit als je \'stop\' vaak moet herhalen en verlaag het als antwoorden per ongeluk stoppen.';
+
+  @override
   String get settingVoiceWakeArbitrationTitle =>
       'Wekwoordarbitrage inschakelen';
 

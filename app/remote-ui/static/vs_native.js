@@ -573,11 +573,11 @@ export async function renderNativeVs(root, byKey) {
     if (wake) {
       // Engine, the language of Amazon's engine, Home Assistant's wake
       // words (which follow both), then sensitivity and its fine-tune, the
-      // noise gate and the stop word in one card, the engine's own tuning
-      // after.
+      // noise gate and the stop word with its fine-tune in one card, the
+      // engine's own tuning after.
       const first = document.createElement('div');
       first.className = 'card';
-      for (const key of ['voice.wake_word_engine', 'voice.amazon_locale', 'voice.wake_word_sensitivity', 'voice.wake_word_fine_tune', 'voice.noise_gate', 'voice.stop_word']) {
+      for (const key of ['voice.wake_word_engine', 'voice.amazon_locale', 'voice.wake_word_sensitivity', 'voice.wake_word_fine_tune', 'voice.noise_gate', 'voice.stop_word', 'voice.stop_word_fine_tune']) {
         const row = wake.querySelector(`[data-key="${key}"]`);
         if (row) first.appendChild(row);
         if (key === 'voice.amazon_locale') first.appendChild(selectsBlock(WAKE_ROWS));

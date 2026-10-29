@@ -7653,6 +7653,26 @@ const voiceStopWord = SettingDef<bool>(
   dependsOn: 'voice.enabled',
 );
 
+/// [voiceWakeWordFineTune] for the stop word, which keeps a slider of its
+/// own: a stop word that fires too easily cuts answers short, so raising
+/// the wake words must not raise it too. Per device for the same reason.
+const voiceStopWordFineTune = SettingDef<num>(
+  key: 'voice.stop_word_fine_tune',
+  type: SettingType.number,
+  defaultValue: 0,
+  min: -10,
+  max: 10,
+  step: 1,
+  title: 'Fine-tune stop word sensitivity',
+  description:
+      'Adjusts the stop word sensitivity in smaller steps. Raise it if you '
+      'often have to repeat "stop", lower it if answers stop by mistake.',
+  category: 'Voice Satellite',
+  subpage: 'Wake Word',
+  perDevice: true,
+  dependsOn: 'voice.stop_word',
+);
+
 /// Kiosks that hear the same wake word settle which one answers: each
 /// broadcasts how loud the wake word reached it and the loudest one goes on
 /// while the others go back to listening. Off by default: a single kiosk
@@ -13565,6 +13585,7 @@ const List<SettingDef<Object>> allSettings = [
   voiceWakeWordFineTune,
   voiceNoiseGate,
   voiceStopWord,
+  voiceStopWordFineTune,
   voiceWakeArbitration,
   voiceWakeArbitrationWindowMs,
   voiceWakeArbitrationOffsetDb,

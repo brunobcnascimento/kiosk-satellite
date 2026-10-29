@@ -15024,6 +15024,14 @@ class UiStringsFr extends UiStrings {
       'Dites « stop » pour interrompre une réponse, une alerte de minuteur ou une annonce.';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle =>
+      'Réglage fin de la sensibilité du mot d\'arrêt';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      'Ajuste la sensibilité du mot d\'arrêt par petits pas. Augmentez-la si vous devez souvent répéter « stop », baissez-la si les réponses s\'arrêtent par erreur.';
+
+  @override
   String get settingVoiceWakeArbitrationTitle =>
       'Activer l\'arbitrage du mot de réveil';
 

@@ -166,6 +166,7 @@ void main() {
       defs.voiceWakeWordFineTune.key,
       defs.voiceNoiseGate.key,
       defs.voiceStopWord.key,
+      defs.voiceStopWordFineTune.key,
       defs.voiceWakeArbitration.key,
       defs.voiceWakeArbitrationWindowMs.key,
       defs.voiceWakeArbitrationOffsetDb.key,

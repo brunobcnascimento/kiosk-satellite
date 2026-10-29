@@ -53689,6 +53689,16 @@
     "context": "Settings > Voice Satellite > Wake Word",
     "description": "Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged."
   },
+  "settingVoiceStopWordFineTuneTitle": "Empfindlichkeit des Stoppworts feinjustieren",
+  "@settingVoiceStopWordFineTuneTitle": {
+    "context": "Settings > Voice Satellite > Wake Word",
+    "description": "Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged."
+  },
+  "settingVoiceStopWordFineTuneDescription": "Passt die Empfindlichkeit des Stoppworts in kleineren Schritten an. Erhöhe sie, wenn du „stop“ oft wiederholen musst, und senke sie, wenn Antworten versehentlich abbrechen.",
+  "@settingVoiceStopWordFineTuneDescription": {
+    "context": "Settings > Voice Satellite > Wake Word",
+    "description": "Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged."
+  },
   "settingVoiceWakeArbitrationTitle": "Aktivierungswort-Arbitrierung aktivieren",
   "@settingVoiceWakeArbitrationTitle": {
     "context": "Settings > Voice Satellite > Wake Word",

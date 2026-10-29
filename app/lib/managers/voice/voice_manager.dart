@@ -465,7 +465,8 @@ class VoiceManager extends Manager {
               e.key == defs.voiceWakeWordSensitivity.key ||
               e.key == defs.voiceWakeWordFineTune.key ||
               e.key == defs.voiceNoiseGate.key ||
-              e.key == defs.voiceStopWord.key) {
+              e.key == defs.voiceStopWord.key ||
+              e.key == defs.voiceStopWordFineTune.key) {
             unawaited(_sync());
           }
           // Another engine offers other wake words, and Amazon's engine
@@ -2703,6 +2704,7 @@ class VoiceManager extends Manager {
       activeIds: _activeIds(),
       sensitivity: _settings.get(defs.voiceWakeWordSensitivity),
       fineTune: _settings.get(defs.voiceWakeWordFineTune),
+      stopFineTune: _settings.get(defs.voiceStopWordFineTune),
       noiseGate: _settings.get(defs.voiceNoiseGate),
       stopWord: _settings.get(defs.voiceStopWord),
       external: _external,

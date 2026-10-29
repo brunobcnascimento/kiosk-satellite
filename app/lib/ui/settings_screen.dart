@@ -4057,6 +4057,7 @@ class _CategoryContentState extends State<_CategoryContent> {
             voiceWakeWordFineTune,
             voiceNoiseGate,
             voiceStopWord,
+            voiceStopWordFineTune,
           ];
           return [
             SearchLandingTarget(
@@ -4079,11 +4080,12 @@ class _CategoryContentState extends State<_CategoryContent> {
                     ),
                   VoiceHaSelects(container: container, rows: voiceWakeWordRows),
                   for (final def in native.skip(1))
-                    SettingTile(
-                      container: container,
-                      def: def,
-                      onChanged: changed,
-                    ),
+                    if (container.settings.visible(def))
+                      SettingTile(
+                        container: container,
+                        def: def,
+                        onChanged: changed,
+                      ),
                 ],
               ),
             ),

@@ -5068,6 +5068,10 @@ String messageById(UiStrings strings, String? id, String fallback) =>
       'settingVoiceStopWordTitle' => strings.settingVoiceStopWordTitle,
       'settingVoiceStopWordDescription' =>
         strings.settingVoiceStopWordDescription,
+      'settingVoiceStopWordFineTuneTitle' =>
+        strings.settingVoiceStopWordFineTuneTitle,
+      'settingVoiceStopWordFineTuneDescription' =>
+        strings.settingVoiceStopWordFineTuneDescription,
       'settingVoiceWakeArbitrationTitle' =>
         strings.settingVoiceWakeArbitrationTitle,
       'settingVoiceWakeArbitrationDescription' =>

@@ -13962,6 +13962,13 @@ class UiStringsZh extends UiStrings {
   String get settingVoiceStopWordDescription => '说出“stop”可打断回复、计时器提醒或播报。';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle => '停止词灵敏度微调';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      '以更小的幅度调整停止词灵敏度。如果经常需要重复“stop”，请调高；如果回复经常被误打断，请调低。';
+
+  @override
   String get settingVoiceWakeArbitrationTitle => '启用唤醒词仲裁';
 
   @override
@@ -28785,6 +28792,13 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get settingVoiceStopWordDescription => '说出“stop”可打断回复、计时器提醒或播报。';
+
+  @override
+  String get settingVoiceStopWordFineTuneTitle => '停止词灵敏度微调';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      '以更小的幅度调整停止词灵敏度。如果经常需要重复“stop”，请调高；如果回复经常被误打断，请调低。';
 
   @override
   String get settingVoiceWakeArbitrationTitle => '启用唤醒词仲裁';

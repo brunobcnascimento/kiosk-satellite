@@ -14893,6 +14893,14 @@ class UiStringsUk extends UiStrings {
       'Скажіть «stop», щоб перервати відповідь, сповіщення таймера або оголошення.';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle =>
+      'Точне налаштування чутливості стоп-слова';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      'Змінює чутливість стоп-слова меншими кроками. Підвищте її, якщо часто доводиться повторювати «stop», і знизьте, якщо відповіді обриваються помилково.';
+
+  @override
   String get settingVoiceWakeArbitrationTitle =>
       'Увімкнути арбітраж слова активації';
 

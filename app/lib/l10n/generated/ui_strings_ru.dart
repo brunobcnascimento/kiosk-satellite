@@ -14830,6 +14830,14 @@ class UiStringsRu extends UiStrings {
       'Скажите «стоп», чтобы оборвать ответ, оповещение таймера или объявление.';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle =>
+      'Точная настройка чувствительности стоп-слова';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      'Меняет чувствительность стоп-слова более мелкими шагами. Повысьте, если «стоп» часто приходится повторять, и понизьте, если ответы обрываются по ошибке.';
+
+  @override
   String get settingVoiceWakeArbitrationTitle =>
       'Включить арбитраж слова пробуждения';
 

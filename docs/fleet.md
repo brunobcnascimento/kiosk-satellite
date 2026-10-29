@@ -147,6 +147,7 @@ Certain settings remain unique to each kiosk regardless of the profile configura
 | Diagnostics | `wake_word.diagnostics` |
 | Wake word arbitration offset | `voice.wake_arbitration_offset_db` |
 | Wake word fine-tune | `voice.wake_word_fine_tune` |
+| Stop word fine-tune | `voice.stop_word_fine_tune` |
 | Realtime talk over sensitivity | `voice.realtime_talk_over_sensitivity` |
 | Wake words this kiosk listens for | `voice.wake_words`, `voice.pending_selects` |
 | Local state | `voice.runtime`, `voice.timer_position`, `voice.dock_position`, `voice.realtime_openai_validated`, `voice.realtime_xai_validated`, `voice.realtime_gemini_validated`, `screensaver.saved_brightness`, `screensaver.immich_validated`, `sendspin.player_active`, `sendspin.player_pos`, `sendspin.sonos_hosts` |

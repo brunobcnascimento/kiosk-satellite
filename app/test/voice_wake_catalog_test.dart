@@ -89,6 +89,17 @@ void main() {
     // The stop word keeps the preset.
     expect(vsww.stopModel?.confidenceScale, 0.95);
     expect(oww.stopModel?.cutoff, closeTo(0.6, 1e-9));
+    // Its own fine-tune moves only the stop word.
+    final stop = buildWakeConfig(
+      engine: WakeWordEngineType.openWakeWord,
+      activeIds: const [],
+      sensitivity: 'very',
+      stopFineTune: 5,
+      noiseGate: false,
+      stopWord: true,
+    );
+    expect(stop.stopModel?.cutoff, closeTo(0.55, 1e-9));
+    expect(stop.models.single.cutoff, closeTo(0.4, 1e-9));
     // 0 leaves the preset alone.
     expect(
       config(WakeWordEngineType.vsWakeWord, 0).models.single.confidenceScale,

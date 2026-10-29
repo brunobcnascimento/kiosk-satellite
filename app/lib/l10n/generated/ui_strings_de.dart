@@ -15059,6 +15059,14 @@ class UiStringsDe extends UiStrings {
       'Sag „stop“, um eine Antwort, einen Timer-Alarm oder eine Durchsage abzubrechen.';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle =>
+      'Empfindlichkeit des Stoppworts feinjustieren';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      'Passt die Empfindlichkeit des Stoppworts in kleineren Schritten an. Erhöhe sie, wenn du „stop“ oft wiederholen musst, und senke sie, wenn Antworten versehentlich abbrechen.';
+
+  @override
   String get settingVoiceWakeArbitrationTitle =>
       'Aktivierungswort-Arbitrierung aktivieren';
 

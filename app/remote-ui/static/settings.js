@@ -284,10 +284,10 @@ async function flushSettingsUpdates() {
     const shapeChanged = JSON.stringify({ ...previous, value: null })
       !== JSON.stringify({ ...setting, value: null });
     const hasDependants = state.settings.some(s => s.dependsOn === setting.key || s.alsoDependsOn === setting.key);
-    // Background listening and wake word arbitration each gate one row in
-    // their own card. Their live update can use the same dependency
-    // placement as a local save.
-    if (!shapeChanged && ['wake_word.background', 'voice.wake_arbitration'].includes(setting.key) && rows.length
+    // Background listening, wake word arbitration and the stop word each
+    // gate one row in their own card. Their live update can use the same
+    // dependency placement as a local save.
+    if (!shapeChanged && ['wake_word.background', 'voice.wake_arbitration', 'voice.stop_word'].includes(setting.key) && rows.length
         && rows.every(row => row.updateSetting?.() && syncGatedRows(setting.key, row))) {
       continue;
     }

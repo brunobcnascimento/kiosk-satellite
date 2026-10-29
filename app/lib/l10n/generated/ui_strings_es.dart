@@ -15031,6 +15031,14 @@ class UiStringsEs extends UiStrings {
       'Di «stop» para cortar una respuesta, una alerta de temporizador o un anuncio.';
 
   @override
+  String get settingVoiceStopWordFineTuneTitle =>
+      'Ajuste fino de la sensibilidad de la palabra de parada';
+
+  @override
+  String get settingVoiceStopWordFineTuneDescription =>
+      'Ajusta la sensibilidad de la palabra de parada en pasos más pequeños. Súbelo si a menudo tienes que repetir «stop» y bájalo si las respuestas se detienen por error.';
+
+  @override
   String get settingVoiceWakeArbitrationTitle =>
       'Activar el arbitraje de la palabra de activación';
 

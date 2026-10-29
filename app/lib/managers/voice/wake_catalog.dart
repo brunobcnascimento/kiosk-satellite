@@ -235,11 +235,7 @@ const _pryonOffsets = {'slightly': 0.02, 'moderately': 0.0, 'very': -0.06};
 // to 0.41 on a Dot, so the Echo images have the engine accept it from
 // 0.18. "Very sensitive" also takes the near misses just under that, which
 // arrive about a second later.
-const _pryonStopOffsets = {
-  'slightly': 0.04,
-  'moderately': 0.0,
-  'very': -0.03,
-};
+const _pryonStopOffsets = {'slightly': 0.04, 'moderately': 0.0, 'very': -0.03};
 
 /// What Amazon's engine adds to its own threshold, which it reports with
 /// each detection.
@@ -271,8 +267,8 @@ double owwCutoffFor(String sensitivity, {bool stop = false, double tune = 0}) {
 /// meaning more sensitive. It moves the wake words between and past the
 /// presets: at the ends, the confidence gates by 0.2, openWakeWord's
 /// cutoff by 0.1 and Amazon's threshold by 0.06, the step between its
-/// Moderately and Very sensitive. The stop word keeps the preset, since a
-/// stop word that fires too easily cuts answers short.
+/// Moderately and Very sensitive. The stop word has a slider of its own,
+/// since a stop word that fires too easily cuts answers short.
 double wakeTuneFor(num fineTune) => fineTune.clamp(-10, 10) / 10;
 
 EnergyGateConfig energyGateFor(String sensitivity, {required bool enabled}) =>
@@ -298,7 +294,7 @@ List<OfferedWakeWord> listenedWakeWords(
 
 /// The engine config for the settings: the active wake words (slot 1
 /// first), the stop classifier when stop word interruption is on, the gates
-/// the sensitivity and its fine-tune resolve to. Ids the engine does not
+/// the sensitivity and the fine-tunes resolve to. Ids the engine does not
 /// offer are dropped; with none left, slot 1 falls back to the engine's
 /// first.
 WakeWordConfig buildWakeConfig({
@@ -306,6 +302,7 @@ WakeWordConfig buildWakeConfig({
   required List<String> activeIds,
   required String sensitivity,
   num fineTune = 0,
+  num stopFineTune = 0,
   required bool noiseGate,
   required bool stopWord,
   List<ExternalWakeWord> external = const [],
@@ -322,8 +319,9 @@ WakeWordConfig buildWakeConfig({
   final oww = engine == WakeWordEngineType.openWakeWord;
   final pryon = engine == WakeWordEngineType.pryon;
   final tune = wakeTuneFor(fineTune);
+  final stopTune = wakeTuneFor(stopFineTune);
   WakeWordModelRef ref(OfferedWakeWord w, {bool stop = false}) {
-    final t = stop ? 0.0 : tune;
+    final t = stop ? stopTune : tune;
     return WakeWordModelRef(
       id: w.id,
       wakeWord: w.phrase,
