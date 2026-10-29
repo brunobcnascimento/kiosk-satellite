@@ -2516,6 +2516,10 @@ const settingMessageIds = <String, Map<String, String>>{
     "title": "settingLibraryGridDensityTitle",
     "description": "settingLibraryGridDensityDescription",
   },
+  "library.source_picker": {
+    "title": "settingLibrarySourcePickerTitle",
+    "description": "settingLibrarySourcePickerDescription",
+  },
   "library.text_scale": {
     "title": "settingSendspinFullscreenTextScaleTitle",
     "description": "settingLibraryTextScaleDescription",

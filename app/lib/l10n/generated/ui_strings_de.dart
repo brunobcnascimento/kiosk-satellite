@@ -3020,6 +3020,13 @@ class UiStringsDe extends UiStrings {
       'Größe der Kacheln in der Bibliothek. Kompakt zeigt mehr pro Reihe.';
 
   @override
+  String get settingLibrarySourcePickerTitle => 'Quellenauswahl anzeigen';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      'Zeigt die Quellenauswahl in der Bibliothek. Schalte sie aus, damit die Bibliothek bei der oben gewählten Quelle bleibt.';
+
+  @override
   String get libraryDensityComfortable => 'Großzügig';
 
   @override

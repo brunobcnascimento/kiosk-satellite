@@ -161,7 +161,8 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
       if (mounted &&
           (e.key == defs.librarySquareArtwork.key ||
               e.key == defs.libraryGridDensity.key ||
-              e.key == defs.libraryTextScale.key)) {
+              e.key == defs.libraryTextScale.key ||
+              e.key == defs.librarySourcePicker.key)) {
         setState(() {});
       }
     });
@@ -618,6 +619,17 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
     _ => Icons.folder_outlined,
   };
 
+  /// Whether the library shows its source, which Show source selection
+  /// can turn off.
+  bool get _showsSource =>
+      c.musicLibrary.available.isNotEmpty &&
+      c.settings.get(defs.librarySourcePicker);
+
+  /// Whether the source can be switched here: more than one is set up and
+  /// the picker is shown.
+  bool get _switchesSource =>
+      _showsSource && c.musicLibrary.available.length > 1;
+
   Future<void> _pickSource() async {
     final s = l10n(context);
     final keys = c.musicLibrary.available;
@@ -909,7 +921,7 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
           child: _eyebrow(LibraryLayout.roomy),
         ),
       ),
-      if (c.musicLibrary.available.isNotEmpty)
+      if (_showsSource)
         Padding(
           padding: const EdgeInsets.only(bottom: 14),
           child: Material(
@@ -917,7 +929,7 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
             borderRadius: BorderRadius.circular(Ks.radiusRow),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
-              onTap: c.musicLibrary.available.length > 1 ? _pickSource : null,
+              onTap: _switchesSource ? _pickSource : null,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 14, 10),
                 child: Row(
@@ -959,7 +971,7 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
                         ],
                       ),
                     ),
-                    if (c.musicLibrary.available.length > 1)
+                    if (_switchesSource)
                       Icon(
                         Icons.expand_more_rounded,
                         color: theme.colorScheme.onSurfaceVariant,
@@ -1048,9 +1060,7 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
     ];
     // The eyebrow and the source stay put over the list on a tall screen.
     // A shorter one scrolls them away with it, so the list keeps the room.
-    final header = children
-        .take(c.musicLibrary.available.isNotEmpty ? 2 : 1)
-        .toList();
+    final header = children.take(_showsSource ? 2 : 1).toList();
     final nav = children.skip(header.length).toList();
     return LayoutBuilder(
       builder: (context, box) {
@@ -1126,7 +1136,7 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
                   child: Column(
                     children: [
                       const SizedBox(height: 4),
-                      if (c.musicLibrary.available.length > 1)
+                      if (_switchesSource)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Tooltip(
@@ -1271,7 +1281,7 @@ class _MusicLibraryScreenState extends State<MusicLibraryScreen> {
                     const SizedBox(width: 8),
                     _speakerPill(height: 40, iconOnly: true),
                   ] else ...[
-                    if (c.musicLibrary.available.length > 1) ...[
+                    if (_switchesSource) ...[
                       Flexible(child: _sourcePill()),
                       const SizedBox(width: 8),
                     ],

@@ -2990,6 +2990,13 @@ class UiStringsRu extends UiStrings {
       'Размер плиток в библиотеке. Компактная вмещает больше в ряд.';
 
   @override
+  String get settingLibrarySourcePickerTitle => 'Показывать выбор источника';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      'Показывает выбор источника в библиотеке. Отключите, чтобы библиотека оставалась на источнике, выбранном выше.';
+
+  @override
   String get libraryDensityComfortable => 'Просторная';
 
   @override

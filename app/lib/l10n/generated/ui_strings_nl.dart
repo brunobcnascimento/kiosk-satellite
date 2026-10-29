@@ -2996,6 +2996,13 @@ class UiStringsNl extends UiStrings {
       'Grootte van de tegels in de bibliotheek. Compact toont meer per rij.';
 
   @override
+  String get settingLibrarySourcePickerTitle => 'Bronkeuze tonen';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      'Toont de bronkeuze in de bibliotheek. Zet uit om de bibliotheek op de hierboven gekozen bron te houden.';
+
+  @override
   String get libraryDensityComfortable => 'Ruim';
 
   @override

@@ -754,6 +754,7 @@ class AnalyticsManager extends Manager {
       'library_grid_density': s.get(defs.libraryGridDensity),
       'library_text_scale': s.get(defs.libraryTextScale).round(),
       'library_square_artwork': s.get(defs.librarySquareArtwork),
+      'library_source_picker': s.get(defs.librarySourcePicker),
       'library_album_artists': s.get(defs.libraryAlbumArtists),
       for (final k in libraryActivity)
         k: UsageCounters.bucket(_reportedCounts[k] ?? 0),

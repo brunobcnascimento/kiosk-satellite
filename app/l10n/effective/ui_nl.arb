@@ -11503,6 +11503,32 @@
       ]
     }
   },
+  "settingLibrarySourcePickerTitle": "Bronkeuze tonen",
+  "@settingLibrarySourcePickerTitle": {
+    "context": "Music Library",
+    "description": "Setting label: show the picker in the library that switches between Music Assistant, Home Assistant and Sonos.",
+    "x-locations": {
+      "device": [
+        "Settings > Media Player > Music Library"
+      ],
+      "remoteAdmin": [
+        "Media Player > Music Library"
+      ]
+    }
+  },
+  "settingLibrarySourcePickerDescription": "Toont de bronkeuze in de bibliotheek. Zet uit om de bibliotheek op de hierboven gekozen bron te houden.",
+  "@settingLibrarySourcePickerDescription": {
+    "context": "Music Library",
+    "description": "Setting description. 'The source set above' is the Source setting earlier on the same page.",
+    "x-locations": {
+      "device": [
+        "Settings > Media Player > Music Library"
+      ],
+      "remoteAdmin": [
+        "Media Player > Music Library"
+      ]
+    }
+  },
   "libraryDensityComfortable": "Ruim",
   "@libraryDensityComfortable": {
     "context": "Music Library",

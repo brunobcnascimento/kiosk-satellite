@@ -2991,6 +2991,13 @@ class UiStringsUk extends UiStrings {
       'Розмір плиток у бібліотеці. Компактна вміщує більше в ряд.';
 
   @override
+  String get settingLibrarySourcePickerTitle => 'Показувати вибір джерела';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      'Показує вибір джерела в бібліотеці. Вимкніть, щоб бібліотека лишалася на джерелі, вибраному вище.';
+
+  @override
   String get libraryDensityComfortable => 'Простора';
 
   @override

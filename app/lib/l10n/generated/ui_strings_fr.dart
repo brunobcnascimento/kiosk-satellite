@@ -3005,6 +3005,14 @@ class UiStringsFr extends UiStrings {
       'Taille des vignettes de la bibliothèque. Compacte en affiche plus par ligne.';
 
   @override
+  String get settingLibrarySourcePickerTitle =>
+      'Afficher le choix de la source';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      'Affiche le choix de la source dans la bibliothèque. Désactivez-le pour garder la bibliothèque sur la source choisie plus haut.';
+
+  @override
   String get libraryDensityComfortable => 'Confortable';
 
   @override

@@ -5325,6 +5325,18 @@ abstract class UiStrings {
   /// **'Size of the tiles in the library. Compact fits more in a row.'**
   String get settingLibraryGridDensityDescription;
 
+  /// Setting label: show the picker in the library that switches between Music Assistant, Home Assistant and Sonos.
+  ///
+  /// In en, this message translates to:
+  /// **'Show source selection'**
+  String get settingLibrarySourcePickerTitle;
+
+  /// Setting description. 'The source set above' is the Source setting earlier on the same page.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the source picker in the library. Turn off to keep the library on the source set above.'**
+  String get settingLibrarySourcePickerDescription;
+
   /// Grid density option: larger tiles, fewer in a row.
   ///
   /// In en, this message translates to:

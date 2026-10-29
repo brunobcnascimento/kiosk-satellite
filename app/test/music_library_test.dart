@@ -734,11 +734,12 @@ void main() {
     Future<AppContainer> container({
       LibrarySource? source,
       int textScale = 100,
+      bool ha = false,
     }) async {
       SharedPreferences.setMockInitialValues({
         'ks.library.text_scale': textScale,
-        'ks.ha.url': '',
-        'ks.ha.token': '',
+        'ks.ha.url': ha ? 'http://ha.local:8123' : '',
+        'ks.ha.token': ha ? 'token' : '',
         'ks.sendspin.ma_url': 'ma.local:8095',
         'ks.sendspin.ma_token': 'token',
         'ks.sendspin.client_id': 'tablet',
@@ -1013,6 +1014,46 @@ void main() {
       c.sendspin.nowPlaying.value = null;
       await tester.pump(const Duration(seconds: 7));
     });
+
+    // Each layout draws the source its own way: a box over the side
+    // navigation, a button atop the rail and a pill in the header.
+    for (final (name, size, picker) in [
+      ('a tablet', const Size(1280, 800), find.text('Source')),
+      ('an Echo Show 5', const Size(960, 480), find.byTooltip('Source')),
+      ('a phone', const Size(390, 844), find.text('Music Assistant')),
+    ]) {
+      testWidgets('Show source selection hides the picker on $name', (
+        tester,
+      ) async {
+        final c = await container(ha: true);
+        tester.view.physicalSize = size;
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.reset);
+        c.musicLibrary.visible.value = true;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Stack(children: [MusicLibraryOverlay(container: c)]),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(picker.first);
+        await tester.pumpAndSettle();
+        expect(find.byType(SimpleDialog), findsOneWidget);
+        await tester.tap(find.text('Home Assistant').last);
+        await tester.pumpAndSettle();
+        expect(c.settings.get(defs.librarySource), 'ha');
+        // Turned off while the library is open, as from the remote admin.
+        await c.settings.set(defs.librarySourcePicker, false);
+        await tester.pumpAndSettle();
+        expect(find.text('Source'), findsNothing);
+        expect(find.byTooltip('Source'), findsNothing);
+        expect(find.text('Home Assistant'), findsNothing);
+        c.musicLibrary.visible.value = false;
+        await tester.pump();
+      });
+    }
 
     testWidgets('each grid density step changes the tile size', (tester) async {
       final source = _FakeSource(album);

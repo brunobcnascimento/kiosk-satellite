@@ -2908,6 +2908,13 @@ class UiStringsZh extends UiStrings {
   String get settingLibraryGridDensityDescription => '音乐库中卡片的大小。紧凑可在每行显示更多。';
 
   @override
+  String get settingLibrarySourcePickerTitle => '显示来源选择';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      '在音乐库中显示来源选择器。关闭后，音乐库将保持在上方设置的来源。';
+
+  @override
   String get libraryDensityComfortable => '宽松';
 
   @override
@@ -17717,6 +17724,13 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get settingLibraryGridDensityDescription => '音乐库中卡片的大小。紧凑可在每行显示更多。';
+
+  @override
+  String get settingLibrarySourcePickerTitle => '显示来源选择';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      '在音乐库中显示来源选择器。关闭后，音乐库将保持在上方设置的来源。';
 
   @override
   String get libraryDensityComfortable => '宽松';

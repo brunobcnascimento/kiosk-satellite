@@ -10240,6 +10240,21 @@ const libraryGridDensity = SettingDef<String>(
   },
 );
 
+/// The source picker in the library (issue #1201). Off keeps the library
+/// on [librarySource], which only Settings and the remote admin change.
+const librarySourcePicker = SettingDef<bool>(
+  key: 'library.source_picker',
+  type: SettingType.boolean,
+  defaultValue: true,
+  title: 'Show source selection',
+  description:
+      'Show the source picker in the library. Turn off to keep the library '
+      'on the source set above.',
+  category: 'Sendspin',
+  subpage: 'Music Library',
+  section: 'User Interface',
+);
+
 /// The order each library list was left in, as JSON: the list's key to
 /// a LibrarySort name, for example {"playlists": "recentlyPlayed"}.
 /// Hidden: set from the sort menu in the library, not a settings row.
@@ -13645,6 +13660,7 @@ const List<SettingDef<Object>> allSettings = [
   libraryTextScale,
   librarySquareArtwork,
   libraryGridDensity,
+  librarySourcePicker,
   librarySort,
   libraryAlbumArtists,
   sendspinSonosHosts,

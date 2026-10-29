@@ -11503,6 +11503,32 @@
       ]
     }
   },
+  "settingLibrarySourcePickerTitle": "显示来源选择",
+  "@settingLibrarySourcePickerTitle": {
+    "context": "Music Library",
+    "description": "Setting label: show the picker in the library that switches between Music Assistant, Home Assistant and Sonos.",
+    "x-locations": {
+      "device": [
+        "Settings > Media Player > Music Library"
+      ],
+      "remoteAdmin": [
+        "Media Player > Music Library"
+      ]
+    }
+  },
+  "settingLibrarySourcePickerDescription": "在音乐库中显示来源选择器。关闭后，音乐库将保持在上方设置的来源。",
+  "@settingLibrarySourcePickerDescription": {
+    "context": "Music Library",
+    "description": "Setting description. 'The source set above' is the Source setting earlier on the same page.",
+    "x-locations": {
+      "device": [
+        "Settings > Media Player > Music Library"
+      ],
+      "remoteAdmin": [
+        "Media Player > Music Library"
+      ]
+    }
+  },
   "libraryDensityComfortable": "宽松",
   "@libraryDensityComfortable": {
     "context": "Music Library",

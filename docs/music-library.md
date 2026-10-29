@@ -132,5 +132,6 @@ The **User Interface** group below them sets how the library looks:
 | Text scale | The size of the text in the library, from 50% to 200%. Rows get taller with it, and the menus grow with it but keep their normal size below 100%. The title at the top, the navigation, the pickers and the player bar's track and times grow at a slower rate and keep their normal size below 100%. 100% by default. |
 | Square artwork | Shows artists in square tiles, like albums and playlists, instead of circles. Off by default. |
 | Grid density | The size of the tiles in the library's grids and rows. **Comfortable** makes them larger and **Compact** fits more in a row. **Standard** by default. |
+| Show source selection | Shows the source picker in the library. Turn it off to keep the library on the **Source** set above, so nobody at the kiosk can switch it. The source can still be changed in Settings and in the remote admin. On by default. |
 
 The **Voice Control** group opens the guide to [playing music by voice](#playing-music-by-voice).

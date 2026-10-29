@@ -2977,6 +2977,13 @@ class UiStringsEn extends UiStrings {
       'Size of the tiles in the library. Compact fits more in a row.';
 
   @override
+  String get settingLibrarySourcePickerTitle => 'Show source selection';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      'Show the source picker in the library. Turn off to keep the library on the source set above.';
+
+  @override
   String get libraryDensityComfortable => 'Comfortable';
 
   @override

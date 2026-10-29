@@ -794,6 +794,10 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingLibraryGridDensityTitle,
       'settingLibraryGridDensityDescription' =>
         strings.settingLibraryGridDensityDescription,
+      'settingLibrarySourcePickerTitle' =>
+        strings.settingLibrarySourcePickerTitle,
+      'settingLibrarySourcePickerDescription' =>
+        strings.settingLibrarySourcePickerDescription,
       'libraryDensityComfortable' => strings.libraryDensityComfortable,
       'libraryDensityStandard' => strings.libraryDensityStandard,
       'libraryDensityCompact' => strings.libraryDensityCompact,

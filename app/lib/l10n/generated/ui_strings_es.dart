@@ -3006,6 +3006,13 @@ class UiStringsEs extends UiStrings {
       'Tamaño de los mosaicos de la biblioteca. Compacta muestra más por fila.';
 
   @override
+  String get settingLibrarySourcePickerTitle => 'Mostrar selector de fuente';
+
+  @override
+  String get settingLibrarySourcePickerDescription =>
+      'Muestra el selector de fuente en la biblioteca. Desactívalo para que la biblioteca se quede en la fuente elegida arriba.';
+
+  @override
   String get libraryDensityComfortable => 'Amplia';
 
   @override
