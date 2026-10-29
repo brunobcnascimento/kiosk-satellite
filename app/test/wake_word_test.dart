@@ -272,6 +272,69 @@ void main() {
     },
   );
 
+  test('native wake does not wait for dashboard JavaScript', () async {
+    await settings.set(defs.voiceRuntime, 'native');
+    await commands.execute('setWakeWordConfig', vsConfig);
+
+    var socketChecks = 0;
+    final stalledSocket = Completer<CommandResult>();
+    commands.register(
+      Command(
+        name: 'ensureHaConnected',
+        description: 'stalled dashboard socket',
+        handler: (_) {
+          socketChecks++;
+          return stalledSocket.future;
+        },
+      ),
+    );
+    final detections = <WakeWordDetected>[];
+    bus.on<WakeWordDetected>().listen(detections.add);
+
+    // If native voice still waits for the browser, this never completes.
+    final response = await commands
+        .execute('simulateWakeWord', const {})
+        .timeout(const Duration(seconds: 1));
+    await Future<void>.delayed(Duration.zero);
+
+    expect(response.ok, isTrue);
+    expect(socketChecks, 0);
+    expect(detections, hasLength(1));
+  });
+
+  test('dashboard wake still waits for the frontend socket', () async {
+    await settings.set(defs.voiceRuntime, 'dashboard');
+    await commands.execute('setWakeWordConfig', vsConfig);
+
+    var socketChecks = 0;
+    final socketReady = Completer<CommandResult>();
+    commands.register(
+      Command(
+        name: 'ensureHaConnected',
+        description: 'dashboard socket guard',
+        handler: (_) {
+          socketChecks++;
+          return socketReady.future;
+        },
+      ),
+    );
+    final detections = <WakeWordDetected>[];
+    bus.on<WakeWordDetected>().listen(detections.add);
+
+    final wake = commands.execute('simulateWakeWord', const {});
+    for (var i = 0; i < 10 && socketChecks == 0; i++) {
+      await Future<void>.delayed(Duration.zero);
+    }
+    expect(socketChecks, 1);
+    expect(detections, isEmpty);
+
+    socketReady.complete(const CommandResult.ok());
+    final response = await wake.timeout(const Duration(seconds: 1));
+    await Future<void>.delayed(Duration.zero);
+    expect(response.ok, isTrue);
+    expect(detections, hasLength(1));
+  });
+
   test(
     'detection releases the mic before publishing, page resume re-arms',
     () async {
