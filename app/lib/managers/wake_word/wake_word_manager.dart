@@ -1836,13 +1836,18 @@ class WakeWordManager extends Manager
     // screen by the time it reacts; the audio it will ask us for is already in
     // the pre-roll, so the trip costs nothing.
     await _comeForwardIfBehind();
-    // A wake heard from the background may land on a websocket Chromium let die
-    // while the WebView was hidden. Make it live and re-subscribed BEFORE Voice
-    // Satellite starts its pipeline on it, or the run comes back as a duplicate
-    // wake-up (a reconnect mid-pipeline) or a broken, reload-only page. A quick
-    // no-op when the socket is already up, so foreground wakes pay nothing; the
-    // deferred audio is in the pre-roll, so the short wait loses no speech.
-    await commands.execute('ensureHaConnected', const {});
+    // Dashboard Voice Satellite starts its pipeline through the HA frontend
+    // websocket, which Chromium may have dropped in the background. Reconnect
+    // that page before the dashboard initiates a conversation.
+    //
+    // Native Voice Satellite uses an independent Home Assistant transport.
+    // Waiting for the dashboard's JavaScript bridge in that mode can block
+    // every wake word for six seconds if evaluateJavascript returns null,
+    // even when the native assistant is connected and ready. Do not gate the
+    // native voice handoff on the dashboard page.
+    if (_settings.get(defs.voiceRuntime) != 'native') {
+      await commands.execute('ensureHaConnected', const {});
+    }
     bus.publish(WakeWordDetected(model: model.id, phrase: model.wakeWord));
     _standDownIfOvertaken();
 
