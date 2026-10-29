@@ -7,6 +7,9 @@ All notable changes to Kiosk Satellite are documented here. Full release notes f
 ### Added
 - **Fine-tune the stop word sensitivity.** A new **Fine-tune stop word sensitivity** slider under **Stop word interruption** in **Voice Satellite > Wake Word** adjusts the stop word sensitivity in smaller steps, from -10 to +10, and goes past Slightly and Very sensitive at its ends. Raise it if you often have to repeat "stop" and lower it if answers stop by mistake. It shows while **Stop word interruption** is on and works with every wake word engine. The default of 0 keeps the current behavior and **Fine-tune sensitivity** still only moves the wake words. The setting belongs to each device and fleets do not sync it.
 
+### Fixed
+- **The dashboard carousel skips views hidden from the user.** A view whose visibility in Home Assistant is limited to certain users no longer shows up in the carousel for everyone else. The carousel now uses the same rule as the dashboard's header, so swiping only reaches the views the logged-in user can see in its tabs (#1206).
+
 ## v2026.10.43 - 2026-10-29
 
 ### Changed

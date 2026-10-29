@@ -57,8 +57,9 @@
 /// (pushState + location-changed), read against the view list the loaded
 /// frontend itself holds (hui-root.lovelace.config.views) — no websocket
 /// round trip, and strategy dashboards whose views the frontend generated
-/// client-side just work. Views marked subview or visible:false are
-/// skipped; fewer than two eligible views leaves the script inert.
+/// client-side just work. Subviews and views the header hides from the
+/// logged-in user are skipped; fewer than two eligible views leaves the
+/// script inert.
 ///
 /// Touch listeners mirror the pull-to-refresh probe: capture-phase and
 /// passive, so the page can neither swallow them nor be slowed by them.
@@ -225,6 +226,21 @@ const dashboardCarouselScript = '''
        hr.shadowRoot.querySelector('#view'));
   }
 
+  // The same rule hui-root uses for its view tabs: visible unset or true
+  // shows the view to everyone, a list shows it only to the users it
+  // names and anything else hides it.
+  function viewVisible(hr, v) {
+    if (v.visible === undefined || v.visible === true) return true;
+    if (!Array.isArray(v.visible)) return false;
+    var user = hr.hass && hr.hass.user;
+    var id = user && user.id;
+    if (!id) return false;
+    for (var i = 0; i < v.visible.length; i++) {
+      if (v.visible[i] && v.visible[i].user === id) return true;
+    }
+    return false;
+  }
+
   // Eligible views and where the current route sits among them, or null
   // when the carousel has nothing to do here (single view, off-dashboard).
   function routeInfo(hr) {
@@ -234,7 +250,7 @@ const dashboardCarouselScript = '''
     var eligible = [];
     for (var i = 0; i < views.length; i++) {
       var v = views[i] || {};
-      if (v.subview === true || v.visible === false) continue;
+      if (v.subview === true || !viewVisible(hr, v)) continue;
       // A view is addressable by its path or its index; keep both so the
       // current route matches whichever form got it here.
       eligible.push({
