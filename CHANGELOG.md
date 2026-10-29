@@ -2,7 +2,7 @@
 
 All notable changes to Kiosk Satellite are documented here. Full release notes for each version are available on the [releases page](https://github.com/jxlarrea/kiosk-satellite/releases).
 
-## Unreleased
+## v2026.10.43 - 2026-10-29
 
 ### Changed
 - **A new echo canceller, built for tablets.** The kiosk now removes its own sounds from the microphone with its own canceller instead of WebRTC's. A linear filter takes out what it can predict from what the kiosk plays, and a small neural network trained on recordings of eleven devices playing through their own speakers, the Portal Mini and an Echo Show 8 on a plain LineageOS image among them, and on realtime conversations recorded on a Galaxy Tab S8, a wall-mounted Tab S8+, a Portal Mini, a Fire HD 10 and an Echo Dot, removes the rest while keeping your voice. On a tablet, where the speaker sits in the same case as the microphone, the stop word now gets through a long answer and barge-in works during a realtime conversation, which the old canceller managed only rarely. The reference is stereo, so a speaker pair is cancelled as two paths. Devices whose microphone already cancels its own echo, such as the Echo Show and the Portal, are detected and left alone. CPU use stays where it was, and the app drops the WebRTC audio processing and Abseil libraries.
